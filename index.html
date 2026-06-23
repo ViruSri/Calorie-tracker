@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calorie Tracker</title>
+    <title>NutraAI Pro Ultimate</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -18,7 +18,7 @@
 
 <div class="max-w-md mx-auto space-y-6">
     <header class="text-center py-2 flex justify-between items-center">
-        <h1 class="text-2xl font-black text-indigo-500 tracking-tight drop-shadow-[0_0_15px_rgba(99,102,241,0.2)]">Calorie Tracker</h1>
+        <h1 class="text-2xl font-black text-indigo-500 tracking-tight drop-shadow-[0_0_15px_rgba(99,102,241,0.2)]">NutraAI Pro</h1>
         <div class="flex flex-col items-end gap-1.5">
             <div class="flex gap-2">
                 <button onclick="runDualBackupEngine()" class="text-[10px] font-bold text-indigo-300 bg-indigo-950/40 border border-indigo-900 px-2 py-1.5 rounded-lg active:scale-95 transition-all cursor-pointer">📥 Backup</button>
@@ -279,6 +279,7 @@
                 <div class="grid grid-cols-2 gap-2 text-xs font-medium" id="milestones-checkbox-grid">
                 </div>
             </div>
+
         </div>
 
         <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-4">
@@ -590,10 +591,12 @@
             totalTodayFiber += item.fiber || 0;
         });
 
+        const activeDynamicTarget = state.targets.calories;
+
         state.rollingWeeklyEaten += totalTodayEaten;
-        state.rollingWeeklyTdee += state.targets.tdee;
+        state.rollingWeeklyTdee += activeDynamicTarget; 
         state.rollingMonthlyEaten += totalTodayEaten;
-        state.rollingMonthlyTdee += state.targets.tdee;
+        state.rollingMonthlyTdee += activeDynamicTarget; 
 
         const existingIdx = state.calorieHistory.findIndex(h => h.date === shortDateStr);
         const dataPayload = {
@@ -601,7 +604,7 @@
             year: fullIsoYear,
             monthName: fullIsoMonthName,
             eaten: totalTodayEaten,
-            target: state.targets.calories,
+            target: activeDynamicTarget, 
             tdee: state.targets.tdee,
             steps: state.steps || 0,
             protein: totalTodayP,
@@ -698,7 +701,10 @@
             monthGroupings[monthKey].forEach(day => {
                 const row = document.createElement('div');
                 row.className = "pt-1.5 pb-1 flex justify-between text-[11px] items-center px-2";
-                const directDeficit = day.tdee - day.eaten;
+                
+                const savedTargetBudget = Number(day.target || state.targets.calories);
+                const caloriesEaten = Number(day.eaten);
+                const directDeficit = savedTargetBudget - caloriesEaten;
                 
                 const pG = Math.round(day.protein || 0);
                 const cG = Math.round(day.carbs || 0);
@@ -717,7 +723,7 @@
                         </span>
                     </div>
                     <div class="text-right space-y-0.5 self-start pt-0.5">
-                        <span class="block font-medium text-slate-400">${day.eaten} / <span class="text-indigo-400 font-bold">${day.target}</span> kcal</span>
+                        <span class="block font-medium text-slate-400">${caloriesEaten.toFixed(1)} / <span class="text-indigo-400 font-bold">${savedTargetBudget}</span> kcal</span>
                         <span class="block">${formatDeficitOutput(directDeficit)}</span>
                     </div>
                 `;
@@ -749,30 +755,35 @@
     }
 
     function calculateInsightsDashboard() {
-        if(state.calorieHistory.length === 0) {
-            document.getElementById('deficit-day').innerHTML = "0 kcal";
-            document.getElementById('deficit-week').innerHTML = "0 kcal";
-            document.getElementById('deficit-month').innerHTML = "0 kcal";
-            return;
-        }
-        const lastDay = state.calorieHistory[state.calorieHistory.length - 1];
-        const todayDeficit = lastDay.tdee - lastDay.eaten;
-        document.getElementById('deficit-day').innerHTML = todayDeficit >= 0 ? `+${todayDeficit} kcal` : `${todayDeficit} kcal`;
+        // 1. CALCULATE TODAY'S TRUE LIVE DYNAMIC DEFICIT
+        let todayEaten = 0;
+        state.logs.forEach(l => todayEaten += l.calories);
+        const todayDeficit = state.targets.calories - todayEaten;
+        
+        document.getElementById('deficit-day').innerHTML = todayDeficit >= 0 ? `+${todayDeficit.toFixed(1)} kcal` : `${todayDeficit.toFixed(1)} kcal`;
         applyBurnGlowEffect('glow-day', todayDeficit);
 
-        const targetSliceWeekly = state.calorieHistory.slice(-7);
-        let wEaten = 0, wTdee = 0;
-        targetSliceWeekly.forEach(d => { wEaten += d.eaten; wTdee += d.tdee; });
-        const rollingWeekDef = wTdee - wEaten;
-        document.getElementById('deficit-week').innerHTML = rollingWeekDef >= 0 ? `+${rollingWeekDef} kcal` : `${rollingWeekDef} kcal`;
-        applyBurnGlowEffect('glow-week', rollingWeekDef);
+        // 2. DYNAMIC WEEKLY ACCUMULATION (Archived History past 6 days + Today's live deficit)
+        const targetSliceWeekly = state.calorieHistory.slice(-6); 
+        let weeklyAccumulatedDeficit = 0;
+        targetSliceWeekly.forEach(d => {
+            weeklyAccumulatedDeficit += ((d.target || state.targets.calories) - d.eaten);
+        });
+        weeklyAccumulatedDeficit += todayDeficit; // Inject current un-archived target variance
 
-        const targetSliceMonthly = state.calorieHistory.slice(-30);
-        let mEaten = 0, mTdee = 0;
-        targetSliceMonthly.forEach(d => { mEaten += d.eaten; mTdee += d.tdee; });
-        const rollingMonthDef = mTdee - mEaten;
-        document.getElementById('deficit-month').innerHTML = rollingMonthDef >= 0 ? `+${rollingMonthDef} kcal` : `${rollingMonthDef} kcal`;
-        applyBurnGlowEffect('glow-month', rollingMonthDef);
+        document.getElementById('deficit-week').innerHTML = weeklyAccumulatedDeficit >= 0 ? `+${weeklyAccumulatedDeficit.toFixed(1)} kcal` : `${weeklyAccumulatedDeficit.toFixed(1)} kcal`;
+        applyBurnGlowEffect('glow-week', weeklyAccumulatedDeficit);
+
+        // 3. DYNAMIC MONTHLY ACCUMULATION (Archived History past 29 days + Today's live deficit)
+        const targetSliceMonthly = state.calorieHistory.slice(-29);
+        let monthlyAccumulatedDeficit = 0;
+        targetSliceMonthly.forEach(d => {
+            monthlyAccumulatedDeficit += ((d.target || state.targets.calories) - d.eaten);
+        });
+        monthlyAccumulatedDeficit += todayDeficit; // Inject current un-archived target variance
+
+        document.getElementById('deficit-month').innerHTML = monthlyAccumulatedDeficit >= 0 ? `+${monthlyAccumulatedDeficit.toFixed(1)} kcal` : `${monthlyAccumulatedDeficit.toFixed(1)} kcal`;
+        applyBurnGlowEffect('glow-month', monthlyAccumulatedDeficit);
     }
 
     function renderCalorieChart() {
@@ -823,7 +834,7 @@
             datasets = [
                 { label: 'Protein (g)', data: state.calorieHistory.map(h => h.protein || 0), borderColor: '#10b981', borderWidth: 2, fill: false, tension: 0.2 },
                 { label: 'Carbs (g)', data: state.calorieHistory.map(h => h.carbs || 0), borderColor: '#f59e0b', borderWidth: 2, fill: false, tension: 0.2 },
-                { label: 'Fats (g)', data: state.calorieHistory.map(h => h.fats || 0), borderColor: '#f43f5e', borderWidth: 2, fill: false, tension: 0.2 }
+                { label: 'Fats (g)', data: state.calorieHistory.map(h => h.fats || 0), borderColor: '#f43f5e', borderWidth: 2, fill: false, tension: 0.2 },
             ];
         } else if (currentChartMetric === 'fiber') {
             datasets = [
@@ -1085,7 +1096,6 @@
 
         const shortDateStr = new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
         
-        // --- Smart Overwrite Tracking Deduplication Architecture ---
         const existingDayIdx = state.weightHistory.findIndex(entry => entry.date === shortDateStr);
         if (existingDayIdx > -1) {
             state.weightHistory[existingDayIdx].weight = weightVal;
@@ -1093,7 +1103,6 @@
             state.weightHistory.push({ date: shortDateStr, weight: weightVal });
         }
         
-        // Sync new scale weight back to master profile core data immediately
         state.profile.weight = weightVal;
         document.getElementById('weight-input').value = weightVal; 
         
