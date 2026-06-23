@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutraAI Pro Ultimate</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        /* Custom scrollbar for timeline */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 999px; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen p-4 md:p-6 select-none">
+
+<div class="max-w-md mx-auto space-y-6">
+    <header class="text-center py-2 flex justify-between items-center">
+        <h1 class="text-2xl font-black text-indigo-500 tracking-tight drop-shadow-[0_0_15px_rgba(99,102,241,0.2)]">NutraAI Pro</h1>
+        <div class="flex flex-col items-end gap-1.5">
+            <div class="flex gap-2">
+                <button onclick="runDualBackupEngine()" class="text-[10px] font-bold text-indigo-300 bg-indigo-950/40 border border-indigo-900 px-2 py-1.5 rounded-lg active:scale-95 transition-all cursor-pointer">📥 Backup</button>
+                <label class="text-[10px] font-bold text-emerald-300 bg-emerald-950/40 border border-emerald-900 px-2 py-1.5 rounded-lg active:scale-95 transition-all cursor-pointer inline-block">
+                    📤 Import
+                    <input type="file" id="import-file" onchange="importStateData(event)" class="hidden">
+                </label>
+            </div>
+            <button onclick="hardResetWholeAppStorage()" class="text-[9px] font-bold text-rose-400 bg-rose-950/20 border border-rose-950 px-2 py-1 rounded-md active:scale-95 transition-all cursor-pointer">⚠️ Reset App Data</button>
+        </div>
+    </header>
+    
+    <nav class="grid grid-cols-3 bg-slate-900 p-1.5 rounded-xl border border-slate-800 gap-1 shadow-inner">
+        <button id="btn-tracker" onclick="switchTab('tracker')" class="py-2.5 text-xs font-bold rounded-lg bg-indigo-600 text-white transition-all active:scale-95 shadow-sm">🍽️ Log</button>
+        <button id="btn-trends" onclick="switchTab('trends')" class="py-2.5 text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-800 transition-all active:scale-95">📈 Trends</button>
+        <button id="btn-weight" onclick="switchTab('weight')" class="py-2.5 text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-800 transition-all active:scale-95">⚖️ Weight</button>
+    </nav>
+
+    <div id="view-tracker" class="space-y-6">
+        <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+            <h2 class="text-sm font-bold text-slate-200 flex items-center gap-2">👤 Profile & Goals</h2>
+            <form id="tdee-form" class="space-y-3">
+                <div class="grid grid-cols-3 gap-2">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Current (kg)</label>
+                        <input type="number" step="0.1" id="weight-input" value="88" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Goal (kg)</label>
+                        <input type="number" step="0.1" id="goal-weight-input" value="75" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Time (Months)</label>
+                        <input type="number" id="duration-input" value="6" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-indigo-500">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Age</label>
+                        <input type="number" id="age-input" value="25" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Height (cm)</label>
+                        <input type="number" id="height-input" value="169" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-indigo-500">
+                    </div>
+                </div>
+                <div id="dynamic-deficit-notice" class="text-[11px] text-indigo-400 bg-indigo-950/40 border border-indigo-900/60 p-2.5 rounded-xl font-medium">
+                    Calculating trajectory...
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold py-2.5 rounded-xl transition-all active:scale-95 cursor-pointer">Update Targets</button>
+            </form>
+        </div>
+
+        <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+            <h2 class="text-sm font-bold text-slate-200">Daily Intake Summary</h2>
+            <div class="grid grid-cols-2 gap-3">
+                <div id="card-cal" class="relative overflow-hidden bg-slate-950 p-3 rounded-xl border border-slate-850 transition-all duration-500">
+                    <div id="fill-cal" class="absolute top-0 left-0 bottom-0 bg-indigo-500/10 transition-all duration-500 pointer-events-none" style="width: 0%"></div>
+                    <div class="relative z-10 text-[10px] font-bold text-slate-400 uppercase">Calories</div>
+                    <div class="relative z-10 text-base font-black text-indigo-400 my-0.5" id="tot-cal">0 / 0 kcal</div>
+                </div>
+                <div id="card-p" class="relative overflow-hidden bg-slate-950 p-3 rounded-xl border border-slate-850 transition-all duration-500">
+                    <div id="fill-p" class="absolute top-0 left-0 bottom-0 bg-emerald-500/10 transition-all duration-500 pointer-events-none" style="width: 0%"></div>
+                    <div class="relative z-10 text-[10px] font-bold text-slate-400 uppercase">Protein</div>
+                    <div class="relative z-10 text-base font-black text-emerald-400 my-0.5" id="tot-p">0g / 0g</div>
+                </div>
+                <div id="card-c" class="relative overflow-hidden bg-slate-950 p-3 rounded-xl border border-slate-850 transition-all duration-500">
+                    <div id="fill-c" class="absolute top-0 left-0 bottom-0 bg-amber-500/10 transition-all duration-500 pointer-events-none" style="width: 0%"></div>
+                    <div class="relative z-10 text-[10px] font-bold text-slate-400 uppercase">Carbs</div>
+                    <div class="relative z-10 text-base font-black text-amber-400 my-0.5" id="tot-c">0g / 0g</div>
+                </div>
+                <div id="card-f" class="relative overflow-hidden bg-slate-950 p-3 rounded-xl border border-slate-850 transition-all duration-500">
+                    <div id="fill-f" class="absolute top-0 left-0 bottom-0 bg-rose-500/10 transition-all duration-500 pointer-events-none" style="width: 0%"></div>
+                    <div class="relative z-10 text-[10px] font-bold text-slate-400 uppercase">Fats</div>
+                    <div class="relative z-10 text-base font-black text-rose-400 my-0.5" id="tot-f">0g / 0g</div>
+                </div>
+            </div>
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-850 text-center text-xs font-bold text-indigo-300 relative overflow-hidden">
+                🌾 Fiber Intake: <span id="tot-fiber" class="text-white font-black">0g</span> / 35g
+            </div>
+        </div>
+
+        <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-3">
+            <h2 class="text-sm font-bold text-slate-200 flex items-center gap-2">🐾 Daily Steps</h2>
+            <form id="steps-log-form" onsubmit="saveDailySteps(event)" class="flex gap-2">
+                <input type="number" id="daily-steps-val" placeholder="e.g., 10000" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-indigo-500" required>
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-5 rounded-xl transition-all active:scale-95 cursor-pointer">Save Steps</button>
+            </form>
+            <div class="text-xs text-indigo-300 font-bold bg-indigo-950/40 p-2.5 rounded-xl border border-indigo-900/40 text-center">
+                Logged Today: <span id="active-steps-display" class="text-white font-black">0</span> steps 
+                <span id="active-steps-bonus" class="text-emerald-400 block mt-1 font-semibold"></span>
+            </div>
+        </div>
+
+        <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-sm font-bold text-slate-200">Manual Entry Form</h2>
+                <button type="button" onclick="parseMacrosFromClipboard()" class="text-[10px] font-extrabold text-indigo-400 bg-indigo-950/50 border border-indigo-900/60 px-2.5 py-1.5 rounded-lg active:scale-95 transition-all cursor-pointer">📋 Paste Macros</button>
+            </div>
+            <form id="macro-log-form" onsubmit="handleFormSubmit(event)" class="space-y-3">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Item Name</label>
+                    <input type="text" id="food-name" placeholder="e.g., Chicken Shawarma" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-indigo-500" required>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Protein (g)</label>
+                        <input type="number" step="0.1" id="food-p" placeholder="0" value="0" oninput="autoCalculateCalories()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Carbs (g)</label>
+                        <input type="number" step="0.1" id="food-c" placeholder="0" value="0" oninput="autoCalculateCalories()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Fats (g)</label>
+                        <input type="number" step="0.1" id="food-f" placeholder="0" value="0" oninput="autoCalculateCalories()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Calories (kcal)</label>
+                        <input type="number" step="0.1" id="food-cal" placeholder="0" oninput="checkCalorieDeviation()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 font-bold text-indigo-400" required>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Dietary Fiber (g)</label>
+                        <input type="number" step="0.1" id="food-fiber" placeholder="0" value="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Time Eaten</label>
+                        <input type="time" id="food-time" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-2 pt-2">
+                    <button type="button" onclick="logFormItem(true)" class="bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold py-3 rounded-xl transition-all active:scale-95 cursor-pointer">⭐ Save to Favs</button>
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold py-3 rounded-xl transition-all active:scale-95 cursor-pointer">Log Daily Entry</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-3">
+            <h2 class="text-sm font-bold text-slate-200">⭐ Favorite Presets</h2>
+            <div id="favs-container" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-sm font-bold text-slate-200">Today's Timeline</h2>
+                <div class="bg-slate-950 border border-slate-850 rounded-xl p-3 grid grid-cols-2 gap-2 items-center">
+                    <div>
+                        <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1">Archive Target Date</label>
+                        <input type="date" id="archive-date-picker" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-xs text-white focus:outline-none">
+                    </div>
+                    <div class="pt-4">
+                        <button onclick="archiveAndResetDay()" class="w-full text-xs font-bold text-amber-400 bg-amber-950/40 hover:bg-amber-950/70 border border-amber-900 px-3 py-1.5 rounded-lg transition-all active:scale-95 cursor-pointer">☀️ End & Archive Day</button>
+                    </div>
+                </div>
+            </div>
+            <div id="food-timeline-groups" class="space-y-4 max-h-96 overflow-y-auto pr-1"></div>
+        </div>
+    </div>
+
+    <div id="view-trends" class="space-y-6 hidden">
+        <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+            <h2 class="text-sm font-bold text-slate-200 flex items-center gap-2">🔥 Rolling Deficit Status</h2>
+            <div class="grid grid-cols-3 gap-2 text-center">
+                <div id="glow-day" class="bg-slate-950 p-2.5 rounded-xl border border-slate-850 transition-all duration-500">
+                    <div class="text-[9px] font-bold text-slate-400 uppercase">Today</div>
+                    <div id="deficit-day" class="text-xs font-black mt-1">0 kcal</div>
+                </div>
+                <div id="glow-week" class="bg-slate-950 p-2.5 rounded-xl border border-slate-850 transition-all duration-500">
+                    <div class="text-[9px] font-bold text-slate-400 uppercase">Current Week</div>
+                    <div id="deficit-week" class="text-xs font-black mt-1">0 kcal</div>
+                </div>
+                <div id="glow-month" class="bg-slate-950 p-2.5 rounded-xl border border-slate-850 transition-all duration-500">
+                    <div class="text-[9px] font-bold text-slate-400 uppercase">Current Month</div>
+                    <div id="deficit-month" class="text-xs font-black mt-1">0 kcal</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+            <div class="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
+                <h2 id="chart-title" class="text-sm font-bold text-slate-200">Calorie Target Baseline Trend</h2>
+                <div class="flex bg-slate-950 border border-slate-850 p-0.5 rounded-lg gap-0.5">
+                    <button id="btn-chart-cal" onclick="changeChartMetric('calories')" class="px-2.5 py-1 text-[10px] font-bold rounded-md bg-indigo-600 text-white transition-all cursor-pointer">Calories</button>
+                    <button id="btn-chart-macros" onclick="changeChartMetric('macros')" class="px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer">Macros</button>
+                    <button id="btn-chart-fiber" onclick="changeChartMetric('fiber')" class="px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer">Fiber</button>
+                </div>
+            </div>
+            <div class="bg-slate-950 p-2 rounded-xl border border-slate-850">
+                <canvas id="calorieChart" width="100" height="60"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-5">
+            <div class="flex justify-between items-center">
+                <h2 class="text-sm font-bold text-slate-200">📜 Historical Balance Ledgers</h2>
+                <button onclick="clearHistory('trends')" class="text-[10px] font-bold text-rose-400 bg-rose-950/40 border border-rose-900 px-2.5 py-1 rounded-lg active:scale-95 transition-all cursor-pointer">Reset Ledgers</button>
+            </div>
+            <div class="space-y-2">
+                <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">📅 Archived Daily Summaries</h3>
+                <div id="ledger-daily-accordion" class="space-y-2 max-h-80 overflow-y-auto pr-1"></div>
+            </div>
+            <div class="space-y-2">
+                <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">🗓️ Weekly Closed Ledger</h3>
+                <div class="bg-slate-950 rounded-xl border border-slate-850 max-h-32 overflow-y-auto p-2">
+                    <ul id="ledger-weekly" class="divide-y divide-slate-900 text-xs space-y-1.5"></ul>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">🏢 Monthly Closed Ledger</h3>
+                <div class="bg-slate-950 rounded-xl border border-slate-850 max-h-32 overflow-y-auto p-2">
+                    <ul id="ledger-monthly" class="divide-y divide-slate-900 text-xs space-y-1.5"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-weight" class="space-y-6 hidden">
+        <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+            <h2 class="text-sm font-bold text-slate-200">Log Daily Weight</h2>
+            <form id="weight-log-form" class="flex gap-2">
+                <input type="number" step="0.1" id="daily-weight-val" placeholder="e.g., 87.5" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-indigo-500" required>
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-5 rounded-xl transition-all active:scale-95 cursor-pointer">Save Log</button>
+            </form>
+
+            <div class="grid grid-cols-2 gap-3 pt-1">
+                <div id="weight-glow-total" class="bg-slate-950 p-3 rounded-xl border border-slate-850 transition-all duration-500">
+                    <div class="text-[9px] font-bold text-slate-400 uppercase tracking-wide">Total Journey Progress</div>
+                    <div id="weight-stat-total" class="text-base font-black text-emerald-400 mt-0.5">0.0 kg</div>
+                </div>
+                <div id="weight-glow-velocity" class="bg-slate-950 p-3 rounded-xl border border-slate-850 transition-all duration-500">
+                    <div class="text-[9px] font-bold text-slate-400 uppercase tracking-wide">7-Day Trailing Speed</div>
+                    <div id="weight-stat-velocity" class="text-base font-black text-indigo-400 mt-0.5">0.0 kg</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+            <div class="space-y-2">
+                <div class="flex justify-between items-center text-xs font-bold text-slate-300">
+                    <span class="flex items-center gap-1.5">🏁 Goal Target Trajectory</span>
+                    <span id="weight-progress-percent" class="text-indigo-400 font-black bg-indigo-950 px-2 py-0.5 rounded-md border border-indigo-900/60">0%</span>
+                </div>
+                <div class="w-full bg-slate-950 rounded-full h-4 border border-slate-850 p-0.5 overflow-hidden shadow-inner">
+                    <div id="weight-progress-bar" class="bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-500 h-full rounded-full transition-all duration-700 shadow-[0_0_10px_rgba(99,102,241,0.5)]" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="bg-slate-950 p-4 border border-slate-850 rounded-xl space-y-3">
+                <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider border-b border-slate-900 pb-1.5 flex justify-between items-center">
+                    <span>🏆 Milestone Roadmap Checklist</span>
+                    <span id="next-objective-badge" class="text-[9px] text-amber-400 font-bold bg-amber-950/40 border border-amber-900 px-2 py-0.5 rounded">Calculating...</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs font-medium" id="milestones-checkbox-grid">
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-sm font-bold text-slate-200">Weight Progression Graph</h2>
+                <button onclick="clearHistory('weight')" class="text-[10px] font-bold text-rose-400 bg-rose-950/40 border border-rose-900 px-2.5 py-1 rounded-lg active:scale-95 transition-all cursor-pointer">Clear History</button>
+            </div>
+            <div class="bg-slate-950 p-2 rounded-xl border border-slate-850">
+                <canvas id="weightChart" width="100" height="60"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Safe Browser Sandboxing Engine Wrappers ---
+    function safeGetItem(key) {
+        try {
+            return localStorage.getItem(key);
+        } catch (e) {
+            console.warn("Storage security alert: Direct access blocked by runtime sandbox layers. App running in temporary RAM mode.");
+            return window.__fallbackRAMState?.[key] || null;
+        }
+    }
+
+    function safeSetItem(key, value) {
+        try {
+            localStorage.setItem(key, value);
+        } catch (e) {
+            if (!window.__fallbackRAMState) window.__fallbackRAMState = {};
+            window.__fallbackRAMState[key] = value;
+        }
+    }
+
+    function hardResetWholeAppStorage() {
+        if (!confirm("CRITICAL RESET: This will wipe out all local history, metrics, weight data points, and custom parameters. Proceed?")) return;
+        try {
+            localStorage.removeItem('nutraProDeficitState');
+        } catch(e) {}
+        window.__fallbackRAMState = {};
+        location.reload();
+    }
+
+    let state = {
+        profile: { weight: 88, goalWeight: 75, durationMonths: 6, height: 169, age: 25, activity: 1.2 },
+        targets: { calories: 2315, protein: 176, carbs: 230, fats: 64, tdee: 2815 },
+        logs: [],
+        favorites: [],
+        calorieHistory: [], 
+        weightHistory: [],
+        steps: 0, 
+        rollingWeeklyEaten: 0,
+        rollingWeeklyTdee: 0,
+        rollingMonthlyEaten: 0,
+        rollingMonthlyTdee: 0,
+        weeklyLedger: [],
+        monthlyLedger: [],
+        lastArchivedDate: ""
+    };
+
+    let calChartInstance = null;
+    let weightChartInstance = null;
+    let currentChartMetric = "calories"; 
+
+    const cachedState = safeGetItem('nutraProDeficitState');
+    if (cachedState) {
+        try {
+            state = JSON.parse(cachedState);
+            if(!state.weeklyLedger) state.weeklyLedger = [];
+            if(!state.monthlyLedger) state.monthlyLedger = [];
+            if(!state.rollingWeeklyEaten) { state.rollingWeeklyEaten = 0; state.rollingWeeklyTdee = 0; }
+            if(!state.rollingMonthlyEaten) { state.rollingMonthlyEaten = 0; state.rollingMonthlyTdee = 0; }
+            if(state.steps === undefined) state.steps = 0;
+            if(!state.weightHistory) state.weightHistory = [];
+            state.profile.activity = 1.2; 
+        } catch(e) {
+            console.error("State core extraction error", e);
+        }
+    }
+
+    function initInputs() {
+        document.getElementById('weight-input').value = state.profile.weight;
+        document.getElementById('goal-weight-input').value = state.profile.goalWeight || 75;
+        document.getElementById('duration-input').value = state.profile.durationMonths || 6;
+        document.getElementById('height-input').value = state.profile.height;
+        document.getElementById('age-input').value = state.profile.age;
+        setDefaultTime();
+        
+        const todayStr = new Date().toISOString().split('T')[0];
+        document.getElementById('archive-date-picker').value = todayStr;
+        document.getElementById('active-steps-display').innerText = (state.steps || 0).toLocaleString();
+        updateStepsBonusDisplay();
+    }
+
+    function setDefaultTime() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        document.getElementById('food-time').value = `${hours}:${minutes}`;
+    }
+
+    async function parseMacrosFromClipboard() {
+        try {
+            const text = await navigator.clipboard.readText();
+            if (!text) {
+                alert("Clipboard is empty! Copy text containing macro values first.");
+                return;
+            }
+
+            const calRegex     = /(?:calories|cals|cal|kcal)[:\s]*(\d+(?:\.\d+)?)|(\d+(?:\.\d+)?)\s*(?:kcal|cals|cal|calories)?\b/i;
+            const proteinRegex = /(?:protein|prot|p)[:\s]*(\d+(?:\.\d+)?)|(\d+(?:\.\d+)?)\s*(?:g\s*)?p(?:rotein|rot)?\b/i;
+            const carbsRegex   = /(?:carbs|carb|c)[:\s]*(\d+(?:\.\d+)?)|(\d+(?:\.\d+)?)\s*(?:g\s*)?c(?:carbs|carb)?\b/i;
+            const fatsRegex    = /(?:fats|fat|f)[:\s]*(\d+(?:\.\d+)?)|(\d+(?:\.\d+)?)\s*(?:g\s*)?f(?:ats|at)?\b/i;
+            const fiberRegex   = /(?:fiber|fibre|fib)[:\s]*(\d+(?:\.\d+)?)|(\d+(?:\.\d+)?)\s*(?:g\s*)?fib(?:er|re)?\b/i;
+
+            const matchValue = (regex) => {
+                const match = text.match(regex);
+                if (!match) return 0;
+                return parseFloat(match[1] || match[2]) || 0;
+            };
+
+            const cal = matchValue(calRegex);
+            const p = matchValue(proteinRegex);
+            const c = matchValue(carbsRegex);
+            const f = matchValue(fatsRegex);
+            const fib = matchValue(fiberRegex);
+
+            let matchesFound = false;
+            if (p > 0) { document.getElementById('food-p').value = p; matchesFound = true; }
+            if (c > 0) { document.getElementById('food-c').value = c; matchesFound = true; }
+            if (f > 0) { document.getElementById('food-f').value = f; matchesFound = true; }
+            if (fib > 0) { document.getElementById('food-fiber').value = fib; matchesFound = true; }
+
+            if (matchesFound) {
+                if (cal > 0) {
+                    document.getElementById('food-cal').value = cal;
+                    checkCalorieDeviation();
+                } else {
+                    autoCalculateCalories();
+                }
+            } else {
+                alert("Could not discern distinct numerical macro mappings from clipboard text.");
+            }
+            
+        } catch (err) {
+            alert("Clipboard context access blocked or unsupported by this browser session.");
+            console.error(err);
+        }
+    }
+
+    function updateStepsBonusDisplay() {
+        const bonusEl = document.getElementById('active-steps-bonus');
+        if (bonusEl) {
+            const addedCals = Math.round(state.steps * 0.04);
+            if (addedCals > 0) {
+                bonusEl.innerText = `🔥 +${addedCals} kcal dynamic activity boost added!`;
+            } else {
+                bonusEl.innerText = '';
+            }
+        }
+    }
+
+    function saveDailySteps(e) {
+        if (e) e.preventDefault();
+        const val = parseInt(document.getElementById('daily-steps-val').value) || 0;
+        state.steps = val;
+        document.getElementById('active-steps-display').innerText = val.toLocaleString();
+        document.getElementById('daily-steps-val').value = '';
+        
+        calculateTargets();
+        updateStepsBonusDisplay();
+        safeSetItem('nutraProDeficitState', JSON.stringify(state));
+    }
+
+    function autoCalculateCalories() {
+        const p = parseFloat(document.getElementById('food-p').value) || 0;
+        const c = parseFloat(document.getElementById('food-c').value) || 0;
+        const f = parseFloat(document.getElementById('food-f').value) || 0;
+        const calculatedCals = (p * 4) + (c * 4) + (f * 9);
+        const calInput = document.getElementById('food-cal');
+        calInput.value = calculatedCals > 0 ? calculatedCals.toFixed(1) : '';
+        calInput.className = "w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 text-indigo-400";
+    }
+
+    function checkCalorieDeviation() {
+        const p = parseFloat(document.getElementById('food-p').value) || 0;
+        const c = parseFloat(document.getElementById('food-c').value) || 0;
+        const f = parseFloat(document.getElementById('food-f').value) || 0;
+        const enteredCal = parseFloat(document.getElementById('food-cal').value) || 0;
+        const macroSum = (p * 4) + (c * 4) + (f * 9);
+        const calInput = document.getElementById('food-cal');
+        
+        if (macroSum > 0 && Math.abs(enteredCal - macroSum) > (macroSum * 0.15)) {
+            calInput.className = "w-full bg-slate-950 border border-amber-500 rounded-xl p-2.5 text-sm font-bold focus:outline-none text-amber-400";
+        } else {
+            calInput.className = "w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm font-bold focus:outline-none focus:border-indigo-500 text-indigo-400";
+        }
+    }
+
+    function categorizeMealType(timeString) {
+        if (!timeString) return "🍿 Snacks";
+        const [hours] = timeString.split(':').map(Number);
+        if (hours >= 5 && hours < 11) return "🌅 Breakfast";
+        if (hours >= 11 && hours < 16) return "☀️ Lunch";
+        if (hours >= 16 && hours < 23) return "🌙 Dinner";
+        return "🍿 Snacks";
+    }
+
+    function switchTab(tab) {
+        ['tracker', 'trends', 'weight'].forEach(t => {
+            document.getElementById(`view-${t}`).classList.add('hidden');
+            document.getElementById(`btn-${t}`).className = "py-2.5 text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-800 transition-all active:scale-95";
+        });
+        document.getElementById(`view-${tab}`).classList.remove('hidden');
+        document.getElementById(`btn-${tab}`).className = "py-2.5 text-xs font-bold rounded-lg bg-indigo-600 text-white transition-all active:scale-95 shadow-sm";
+
+        if (tab === 'trends') {
+            calculateInsightsDashboard();
+            renderCalorieChart();
+            renderLedgersUI();
+        }
+        if (tab === 'weight') renderWeightChart();
+    }
+
+    function changeChartMetric(metric) {
+        currentChartMetric = metric;
+        const titleEl = document.getElementById('chart-title');
+        if(metric === 'calories') titleEl.innerText = "Calorie Target Baseline Trend";
+        if(metric === 'macros') titleEl.innerText = "Macronutrient Balance Overview (g)";
+        if(metric === 'fiber') titleEl.innerText = "Historical Fiber Intake Trends";
+
+        ['cal', 'macros', 'fiber'].forEach(m => {
+            const btn = document.getElementById(`btn-chart-${m}`);
+            if(m === (metric === 'calories' ? 'cal' : metric)) {
+                btn.className = "px-2.5 py-1 text-[10px] font-bold rounded-md bg-indigo-600 text-white transition-all cursor-pointer";
+            } else {
+                btn.className = "px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer";
+            }
+        });
+        renderCalorieChart();
+    }
+
+    function calculateTargets() {
+        const p = state.profile;
+        let bmr = (10 * p.weight) + (6.25 * p.height) - (5 * p.age) + 5;
+        
+        const baseTdee = Math.round(bmr * 1.2); 
+        const dynamicStepsBonus = Math.round((state.steps || 0) * 0.04);
+        const totalCalculatedTdee = baseTdee + dynamicStepsBonus;
+        state.targets.tdee = totalCalculatedTdee;
+
+        const kgToLose = p.weight - p.goalWeight;
+        let recommendedDeficit = 500;
+
+        if (kgToLose > 0 && p.durationMonths > 0) {
+            const totalKcalDeficitNeeded = kgToLose * 7700;
+            const totalDaysAvailable = p.durationMonths * 30.4;
+            recommendedDeficit = Math.round(totalKcalDeficitNeeded / totalDaysAvailable);
+            if (recommendedDeficit > 1000) recommendedDeficit = 1000;
+            if (recommendedDeficit < 300) recommendedDeficit = 300;
+        } else if (kgToLose <= 0) {
+            recommendedDeficit = 0;
+        }
+
+        state.targets.calories = Math.max(1200, totalCalculatedTdee - recommendedDeficit);
+        state.targets.protein = Math.round(p.weight * 2);
+        state.targets.fats = Math.round((state.targets.calories * 0.25) / 9);
+        const remainingCal = state.targets.calories - ((state.targets.protein * 4) + (state.targets.fats * 9));
+        state.targets.carbs = Math.round(remainingCal / 4);
+
+        const noticeEl = document.getElementById('dynamic-deficit-notice');
+        if(noticeEl) {
+            if(kgToLose > 0) {
+                let noticeText = `🎯 Target Deficit: -${recommendedDeficit} kcal/day to lose ${kgToLose.toFixed(1)}kg in ${p.durationMonths} months.`;
+                if (dynamicStepsBonus > 0) noticeText += ` (+${dynamicStepsBonus} kcal step allocation injected).`;
+                noticeEl.innerText = noticeText;
+            } else {
+                noticeEl.innerText = `⚖️ Maintenance baseline set. Goal weight reached or higher than current weight.`;
+            }
+        }
+        saveAndRender();
+    }
+
+    function archiveAndResetDay() {
+        if (state.logs.length === 0 && state.steps === 0) {
+            alert("Please input items or steps on your dashboard before closing the ledger day!");
+            return;
+        }
+        const selectedDateVal = document.getElementById('archive-date-picker').value;
+        if (!selectedDateVal) {
+            alert("Please pick a valid calendar target date mapping destination!");
+            return;
+        }
+        const targetDateObj = new Date(selectedDateVal + "T12:00:00");
+        const dateStringLabel = targetDateObj.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+        const shortDateStr = targetDateObj.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+        const fullIsoYear = targetDateObj.getFullYear();
+        const fullIsoMonthName = targetDateObj.toLocaleDateString(undefined, { month: 'long' });
+
+        if (!confirm(`Are you sure you want to lock and archive these totals to the specific date: ${dateStringLabel}?`)) return;
+
+        let totalTodayEaten = 0;
+        let totalTodayP = 0, totalTodayC = 0, totalTodayF = 0, totalTodayFiber = 0;
+        state.logs.forEach(item => {
+            totalTodayEaten += item.calories;
+            totalTodayP += item.protein || 0;
+            totalTodayC += item.carbs || 0;
+            totalTodayF += item.fats || 0;
+            totalTodayFiber += item.fiber || 0;
+        });
+
+        state.rollingWeeklyEaten += totalTodayEaten;
+        state.rollingWeeklyTdee += state.targets.tdee;
+        state.rollingMonthlyEaten += totalTodayEaten;
+        state.rollingMonthlyTdee += state.targets.tdee;
+
+        const existingIdx = state.calorieHistory.findIndex(h => h.date === shortDateStr);
+        const dataPayload = {
+            date: shortDateStr,
+            year: fullIsoYear,
+            monthName: fullIsoMonthName,
+            eaten: totalTodayEaten,
+            target: state.targets.calories,
+            tdee: state.targets.tdee,
+            steps: state.steps || 0,
+            protein: totalTodayP,
+            carbs: totalTodayC,
+            fats: totalTodayF,
+            fiber: totalTodayFiber
+        };
+
+        if (existingIdx > -1) {
+            state.calorieHistory[existingIdx] = dataPayload;
+        } else {
+            state.calorieHistory.push(dataPayload);
+        }
+
+        state.calorieHistory.sort((a,b) => new Date(a.date) - new Date(b.date));
+
+        if (targetDateObj.getDay() === 0 || (state.lastArchivedDate && getDaysBetween(new Date(state.lastArchivedDate), targetDateObj) >= 7)) {
+            const weekNetDeficit = state.rollingWeeklyTdee - state.rollingWeeklyEaten;
+            state.weeklyLedger.unshift({ period: `Week ending ${shortDateStr}`, eaten: state.rollingWeeklyEaten, tdee: state.rollingWeeklyTdee, deficit: weekNetDeficit });
+            state.rollingWeeklyEaten = 0;
+            state.rollingWeeklyTdee = 0;
+        }
+
+        const tomorrow = new Date(targetDateObj);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        if (tomorrow.getDate() === 1 || (state.lastArchivedDate && getDaysBetween(new Date(state.lastArchivedDate), targetDateObj) >= 30)) {
+            const monthNetDeficit = state.rollingMonthlyTdee - state.rollingMonthlyEaten;
+            state.monthlyLedger.unshift({ period: targetDateObj.toLocaleDateString(undefined, { month: 'long', year: 'numeric' }), eaten: state.rollingMonthlyEaten, tdee: state.rollingMonthlyTdee, deficit: monthNetDeficit });
+            state.rollingMonthlyEaten = 0;
+            state.rollingMonthlyTdee = 0;
+        }
+
+        state.lastArchivedDate = targetDateObj.toISOString();
+        state.logs = [];
+        state.steps = 0;
+        saveAndRender();
+        initInputs();
+        alert(`Data balance closed and archived to ${dateStringLabel}!`);
+    }
+
+    function getDaysBetween(d1, d2) {
+        return Math.round((d2 - d1) / (1000 * 60 * 60 * 24));
+    }
+
+    function formatDeficitOutput(deficitVal) {
+        if (deficitVal >= 0) {
+            return `<span class="text-emerald-400 font-bold">+${deficitVal.toFixed(1)} kcal deficit</span>`;
+        } else {
+            return `<span class="text-rose-500 font-extrabold">⚠️ Surplus ${Math.abs(deficitVal).toFixed(1)} kcal</span>`;
+        }
+    }
+
+    function applyBurnGlowEffect(elementId, deficitVal) {
+        const block = document.getElementById(elementId);
+        if(!block) return;
+        if(deficitVal >= 0) {
+            block.className = "bg-slate-950 p-2.5 rounded-xl border border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.15)] transition-all duration-500";
+        } else {
+            block.className = "bg-slate-950 p-2.5 rounded-xl border border-rose-500/40 shadow-[0_0_15px_rgba(244,63,94,0.15)] transition-all duration-500";
+        }
+    }
+
+    function renderLedgersUI() {
+        const accordionContainer = document.getElementById('ledger-daily-accordion');
+        accordionContainer.innerHTML = '';
+        
+        if (state.calorieHistory.length === 0) {
+            accordionContainer.innerHTML = `<div class="text-center text-xs text-slate-500 py-4 font-semibold">No data ledgers archived yet.</div>`;
+            return;
+        }
+
+        const monthGroupings = {};
+        state.calorieHistory.forEach(day => {
+            const mName = day.monthName || "Active Track Timeline";
+            if (!monthGroupings[mName]) monthGroupings[mName] = [];
+            monthGroupings[mName].push(day);
+        });
+
+        Object.keys(monthGroupings).forEach((monthKey, idx) => {
+            const monthWrapper = document.createElement('div');
+            monthWrapper.className = "bg-slate-950/70 border border-slate-850 rounded-xl overflow-hidden mb-2";
+            
+            const monthHeader = document.createElement('button');
+            monthHeader.className = "w-full text-left px-4 py-2 text-xs font-black text-indigo-400 bg-slate-900/60 flex justify-between items-center cursor-pointer hover:bg-slate-900";
+            monthHeader.innerHTML = `<span>📅 ${monthKey}</span> <span class="text-[10px] text-slate-500">Click to unfold</span>`;
+            
+            const daysContainer = document.createElement('div');
+            daysContainer.className = "p-2 space-y-1 divide-y divide-slate-900/50 hidden";
+            
+            monthHeader.onclick = () => {
+                daysContainer.classList.toggle('hidden');
+            };
+
+            monthGroupings[monthKey].forEach(day => {
+                const row = document.createElement('div');
+                row.className = "pt-1.5 pb-1 flex justify-between text-[11px] items-center px-2";
+                const directDeficit = day.tdee - day.eaten;
+                
+                const pG = Math.round(day.protein || 0);
+                const cG = Math.round(day.carbs || 0);
+                const fG = Math.round(day.fats || 0);
+                const fibG = (day.fiber !== undefined) ? day.fiber.toFixed(1) : "0.0";
+
+                row.innerHTML = `
+                    <div class="space-y-0.5">
+                        <span class="font-extrabold text-slate-300 block">${day.date}</span>
+                        <span class="text-[9px] text-slate-500 block">🐾 ${day.steps.toLocaleString()} steps</span>
+                        <span class="text-[10px] font-medium text-slate-400 flex items-center gap-2 mt-0.5 bg-slate-900/40 px-1.5 py-0.5 rounded border border-slate-850/50">
+                            <span>🧪 ${cG}g</span>
+                            <span>🥩 ${pG}g</span>
+                            <span>🥑 ${fG}g</span>
+                            <span>🌾 ${fibG}g</span>
+                        </span>
+                    </div>
+                    <div class="text-right space-y-0.5 self-start pt-0.5">
+                        <span class="block font-medium text-slate-400">${day.eaten} / <span class="text-indigo-400 font-bold">${day.target}</span> kcal</span>
+                        <span class="block">${formatDeficitOutput(directDeficit)}</span>
+                    </div>
+                `;
+                daysContainer.appendChild(row);
+            });
+
+            monthWrapper.appendChild(monthHeader);
+            monthWrapper.appendChild(daysContainer);
+            accordionContainer.appendChild(monthWrapper);
+        });
+        
+        const weeklyUl = document.getElementById('ledger-weekly');
+        weeklyUl.innerHTML = state.weeklyLedger.length === 0 ? `<li class="text-center text-slate-600 py-2">No weekly ledger items</li>` : '';
+        state.weeklyLedger.forEach(item => {
+            const li = document.createElement('li');
+            li.className = "py-2 flex justify-between items-center";
+            li.innerHTML = `<span class="font-bold text-slate-400">${item.period}</span> <span>In: ${item.eaten} kcal | ${formatDeficitOutput(item.deficit)}</span>`;
+            weeklyUl.appendChild(li);
+        });
+
+        const monthlyUl = document.getElementById('ledger-monthly');
+        monthlyUl.innerHTML = state.monthlyLedger.length === 0 ? `<li class="text-center text-slate-600 py-2">No monthly ledger items</li>` : '';
+        state.monthlyLedger.forEach(item => {
+            const li = document.createElement('li');
+            li.className = "py-2 flex justify-between items-center";
+            li.innerHTML = `<span class="font-bold text-slate-400">${item.period}</span> <span>In: ${item.eaten} kcal | ${formatDeficitOutput(item.deficit)}</span>`;
+            monthlyUl.appendChild(li);
+        });
+    }
+
+    function calculateInsightsDashboard() {
+        if(state.calorieHistory.length === 0) {
+            document.getElementById('deficit-day').innerHTML = "0 kcal";
+            document.getElementById('deficit-week').innerHTML = "0 kcal";
+            document.getElementById('deficit-month').innerHTML = "0 kcal";
+            return;
+        }
+        const lastDay = state.calorieHistory[state.calorieHistory.length - 1];
+        const todayDeficit = lastDay.tdee - lastDay.eaten;
+        document.getElementById('deficit-day').innerHTML = todayDeficit >= 0 ? `+${todayDeficit} kcal` : `${todayDeficit} kcal`;
+        applyBurnGlowEffect('glow-day', todayDeficit);
+
+        const targetSliceWeekly = state.calorieHistory.slice(-7);
+        let wEaten = 0, wTdee = 0;
+        targetSliceWeekly.forEach(d => { wEaten += d.eaten; wTdee += d.tdee; });
+        const rollingWeekDef = wTdee - wEaten;
+        document.getElementById('deficit-week').innerHTML = rollingWeekDef >= 0 ? `+${rollingWeekDef} kcal` : `${rollingWeekDef} kcal`;
+        applyBurnGlowEffect('glow-week', rollingWeekDef);
+
+        const targetSliceMonthly = state.calorieHistory.slice(-30);
+        let mEaten = 0, mTdee = 0;
+        targetSliceMonthly.forEach(d => { mEaten += d.eaten; mTdee += d.tdee; });
+        const rollingMonthDef = mTdee - mEaten;
+        document.getElementById('deficit-month').innerHTML = rollingMonthDef >= 0 ? `+${rollingMonthDef} kcal` : `${rollingMonthDef} kcal`;
+        applyBurnGlowEffect('glow-month', rollingMonthDef);
+    }
+
+    function renderCalorieChart() {
+        const ctx = document.getElementById('calorieChart').getContext('2d');
+        if (calChartInstance) calChartInstance.destroy();
+
+        if (state.calorieHistory.length === 0) {
+            ctx.clearRect(0,0,100,60);
+            return;
+        }
+
+        const labels = state.calorieHistory.map(h => h.date);
+        let datasets = [];
+
+        if (currentChartMetric === 'calories') {
+            datasets = [
+                {
+                    label: 'Calories Eaten',
+                    data: state.calorieHistory.map(h => h.eaten),
+                    borderColor: '#6366f1',
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.1,
+                    yAxisID: 'y'
+                },
+                {
+                    label: 'Target Goal Budget',
+                    data: state.calorieHistory.map(h => h.target),
+                    borderColor: '#34d399',
+                    borderWidth: 1.5,
+                    borderDash: [4, 4],
+                    fill: false,
+                    tension: 0,
+                    yAxisID: 'y'
+                },
+                {
+                    label: 'Daily Steps Run',
+                    data: state.calorieHistory.map(h => h.steps),
+                    type: 'bar',
+                    backgroundColor: 'rgba(129, 140, 248, 0.15)',
+                    hoverBackgroundColor: 'rgba(129, 140, 248, 0.3)',
+                    yAxisID: 'ySteps',
+                    barThickness: 12
+                }
+            ];
+        } else if (currentChartMetric === 'macros') {
+            datasets = [
+                { label: 'Protein (g)', data: state.calorieHistory.map(h => h.protein || 0), borderColor: '#10b981', borderWidth: 2, fill: false, tension: 0.2 },
+                { label: 'Carbs (g)', data: state.calorieHistory.map(h => h.carbs || 0), borderColor: '#f59e0b', borderWidth: 2, fill: false, tension: 0.2 },
+                { label: 'Fats (g)', data: state.calorieHistory.map(h => h.fats || 0), borderColor: '#f43f5e', borderWidth: 2, fill: false, tension: 0.2 }
+            ];
+        } else if (currentChartMetric === 'fiber') {
+            datasets = [
+                {
+                    label: 'Fiber Consumed (g)',
+                    data: state.calorieHistory.map(h => h.fiber || 0),
+                    borderColor: '#818cf8',
+                    backgroundColor: 'rgba(129, 140, 248, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.1
+                }
+            ];
+        }
+
+        const scalesConfig = {
+            x: { grid: { color: '#1e293b' }, ticks: { color: '#94a3b8', font: { size: 9 } } },
+            y: { grid: { color: '#1e293b' }, ticks: { color: '#94a3b8', font: { size: 9 } } }
+        };
+
+        if (currentChartMetric === 'calories') {
+            scalesConfig.ySteps = {
+                type: 'linear',
+                position: 'right',
+                grid: { drawOnChartArea: false },
+                ticks: { color: '#818cf8', font: { size: 8 } },
+                title: { display: true, text: 'Steps Run Count', color: '#818cf8', font: { size: 9, weight: 'bold' } }
+            };
+        }
+
+        calChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: { labels, datasets },
+            options: {
+                responsive: true,
+                scales: scalesConfig,
+                plugins: { legend: { labels: { color: '#f8fafc', font: { size: 10 } } } }
+            }
+        });
+    }
+
+    function clearHistory(type) {
+        if (!confirm("Are you sure you want to permanently delete this dataset history?")) return;
+        
+        if (type === 'trends') {
+            state.calorieHistory = [];
+            state.weeklyLedger = [];
+            state.monthlyLedger = [];
+            state.rollingWeeklyEaten = 0; state.rollingWeeklyTdee = 0;
+            state.rollingMonthlyEaten = 0; state.rollingMonthlyTdee = 0;
+        }
+        if (type === 'weight') {
+            state.weightHistory = [];
+        }
+        
+        saveAndRender();
+        
+        if (type === 'trends') { 
+            calculateInsightsDashboard(); 
+            renderCalorieChart(); 
+            renderLedgersUI(); 
+        }
+        if (type === 'weight') {
+            renderWeightChart();
+        }
+    }
+
+    function calculateWeightMilestonesUI() {
+        const grid = document.getElementById('milestones-checkbox-grid');
+        const badge = document.getElementById('next-objective-badge');
+        if (!grid || !badge) return;
+        grid.innerHTML = '';
+
+        const startWeight = parseFloat(state.weightHistory[0]?.weight || state.profile.weight);
+        const targetWeight = parseFloat(state.profile.goalWeight || 75);
+        const currentWeight = parseFloat(state.weightHistory.length > 0 ? state.weightHistory[state.weightHistory.length - 1].weight : state.profile.weight);
+
+        const totalDeltaNeeded = startWeight - targetWeight;
+        const totalDeltaAchieved = startWeight - currentWeight;
+        
+        let pct = 0;
+        if (totalDeltaNeeded > 0) {
+            pct = Math.min(100, Math.max(0, Math.round((totalDeltaAchieved / totalDeltaNeeded) * 100)));
+        } else if (currentWeight <= targetWeight) {
+            pct = 100;
+        }
+
+        document.getElementById('weight-progress-percent').innerText = `${pct}%`;
+        document.getElementById('weight-progress-bar').style.width = `${pct}%`;
+        document.getElementById('weight-stat-total').innerText = `${totalDeltaAchieved.toFixed(1)} kg dropped`;
+
+        if(state.weightHistory.length >= 7) {
+            const last7Days = state.weightHistory.slice(-7);
+            const diff = parseFloat(last7Days[0].weight) - parseFloat(last7Days[last7Days.length-1].weight);
+            document.getElementById('weight-stat-velocity').innerText = `${diff >= 0 ? '-' : '+'}${Math.abs(diff).toFixed(1)} kg/wk`;
+        } else {
+            document.getElementById('weight-stat-velocity').innerText = 'Needs 7 Days';
+        }
+
+        const segments = 4;
+        let milestoneTargets = [];
+        
+        const symbols = ['📉', '🎯', '🔥', '👑'];
+        for (let i = 1; i <= segments; i++) {
+            const milestoneWeight = startWeight - ((totalDeltaNeeded / segments) * i);
+            milestoneTargets.push({ 
+                label: `Reach ${milestoneWeight.toFixed(1)}kg`, 
+                target: parseFloat(milestoneWeight.toFixed(1)), 
+                symbol: symbols[i - 1] || '📉',
+                type: 'weight' 
+            });
+        }
+
+        let continuousStepStreaks = 0;
+        state.calorieHistory.forEach(day => {
+            if (day.steps >= 10000) {
+                continuousStepStreaks++;
+            } else {
+                continuousStepStreaks = 0;
+            }
+        });
+        
+        milestoneTargets.push({ 
+            label: `7-Day 10k Steps Streak`, 
+            currentStreak: continuousStepStreaks, 
+            targetStreak: 7, 
+            symbol: '🐾',
+            type: 'streak' 
+        });
+
+        let nextObjectiveSet = false;
+
+        milestoneTargets.forEach(m => {
+            const item = document.createElement('div');
+            item.className = "flex items-center gap-2 bg-slate-950/40 p-2 rounded-lg border border-slate-900";
+            
+            let isDone = false;
+            if (m.type === 'weight') {
+                isDone = currentWeight <= m.target;
+            } else if (m.type === 'streak') {
+                isDone = m.currentStreak >= m.targetStreak;
+            }
+
+            if (!isDone && !nextObjectiveSet) {
+                badge.innerText = m.type === 'weight' ? `Next: ${m.target.toFixed(1)}kg` : `Next: 10k Run Streak`;
+                nextObjectiveSet = true;
+            }
+
+            item.innerHTML = `
+                <input type="checkbox" ${isDone ? 'checked' : ''} disabled class="accent-emerald-500 rounded border-slate-800 bg-slate-900 w-3.5 h-3.5 pointer-events-none">
+                <span class="${isDone ? 'line-through text-slate-500 font-normal' : 'text-slate-300 font-semibold'} text-[11px] flex items-center gap-1">
+                    <span>${m.symbol}</span>
+                    <span>${m.label} ${m.type === 'streak' ? `(${m.currentStreak}/${m.targetStreak}d)` : ''}</span>
+                </span>
+            `;
+            grid.appendChild(item);
+        });
+
+        if (!nextObjectiveSet) badge.innerText = "🎉 All Clear!";
+    }
+
+    function renderWeightChart() {
+        const ctx = document.getElementById('weightChart').getContext('2d');
+        if (weightChartInstance) weightChartInstance.destroy();
+
+        if (state.weightHistory.length === 0) {
+            ctx.clearRect(0,0,100,60);
+            calculateWeightMilestonesUI();
+            return;
+        }
+
+        const labels = state.weightHistory.map(w => w.date);
+        weightChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [{
+                    label: 'Logged Scale Body Mass (kg)',
+                    data: state.weightHistory.map(w => w.weight),
+                    borderColor: '#818cf8',
+                    backgroundColor: 'rgba(129,140,248,0.05)',
+                    borderWidth: 2,
+                    tension: 0.15,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { grid: { color: '#1e293b' }, ticks: { color: '#94a3b8', font: { size: 9 } } },
+                    y: { grid: { color: '#1e293b' }, ticks: { color: '#94a3b8', font: { size: 9 } } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        calculateWeightMilestonesUI();
+    }
+
+    function handleFormSubmit(e) {
+        e.preventDefault();
+        const loggedItem = {
+            name: document.getElementById('food-name').value,
+            protein: parseFloat(document.getElementById('food-p').value) || 0,
+            carbs: parseFloat(document.getElementById('food-c').value) || 0,
+            fats: parseFloat(document.getElementById('food-f').value) || 0,
+            fiber: parseFloat(document.getElementById('food-fiber').value) || 0,
+            calories: parseFloat(document.getElementById('food-cal').value) || 0,
+            time: document.getElementById('food-time').value
+        };
+
+        state.logs.push(loggedItem);
+        document.getElementById('macro-log-form').reset();
+        setDefaultTime();
+        saveAndRender();
+    }
+
+    function logFormItem(toFavsOnly = false) {
+        const favItem = {
+            name: document.getElementById('food-name').value || "Unnamed Preset",
+            protein: parseFloat(document.getElementById('food-p').value) || 0,
+            carbs: parseFloat(document.getElementById('food-c').value) || 0,
+            fats: parseFloat(document.getElementById('food-f').value) || 0,
+            fiber: parseFloat(document.getElementById('food-fiber').value) || 0,
+            calories: parseFloat(document.getElementById('food-cal').value) || 0
+        };
+        if(!favItem.calories) { alert("Input core metric calories baseline values!"); return; }
+        
+        state.favorites.push(favItem);
+        saveAndRender();
+        alert("Preset registered into custom favorites array vault.");
+    }
+
+    function deleteFavItem(idx, e) {
+        if(e) e.stopPropagation();
+        state.favorites.splice(idx, 1);
+        saveAndRender();
+    }
+
+    function selectFavItem(item) {
+        document.getElementById('food-name').value = item.name;
+        document.getElementById('food-p').value = item.protein;
+        document.getElementById('food-c').value = item.carbs;
+        document.getElementById('food-f').value = item.fats;
+        document.getElementById('food-fiber').value = item.fiber;
+        document.getElementById('food-cal').value = item.calories;
+        checkCalorieDeviation();
+    }
+
+    function deleteLogItem(idx) {
+        state.logs.splice(idx, 1);
+        saveAndRender();
+    }
+
+    document.getElementById('weight-log-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const weightVal = parseFloat(document.getElementById('daily-weight-val').value);
+        if(!weightVal) return;
+
+        const shortDateStr = new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+        
+        // --- Smart Overwrite Tracking Deduplication Architecture ---
+        const existingDayIdx = state.weightHistory.findIndex(entry => entry.date === shortDateStr);
+        if (existingDayIdx > -1) {
+            state.weightHistory[existingDayIdx].weight = weightVal;
+        } else {
+            state.weightHistory.push({ date: shortDateStr, weight: weightVal });
+        }
+        
+        // Sync new scale weight back to master profile core data immediately
+        state.profile.weight = weightVal;
+        document.getElementById('weight-input').value = weightVal; 
+        
+        document.getElementById('daily-weight-val').value = '';
+        
+        calculateTargets(); 
+        renderWeightChart();
+        alert("Weight verification cataloged! Profile intake targets automatically adjusted.");
+    });
+
+    function saveAndRender() {
+        safeSetItem('nutraProDeficitState', JSON.stringify(state));
+        renderDashboardTotals();
+    }
+
+    function renderDashboardTotals() {
+        let totCal = 0, totP = 0, totC = 0, totF = 0, totFib = 0;
+        state.logs.forEach(l => {
+            totCal += l.calories; totP += l.protein; totC += l.carbs; totF += l.fats; totFib += l.fiber;
+        });
+
+        document.getElementById('tot-cal').innerText = `${Math.round(totCal)} / ${state.targets.calories} kcal`;
+        document.getElementById('tot-p').innerText = `${Math.round(totP)}g / ${state.targets.protein}g`;
+        document.getElementById('tot-c').innerText = `${Math.round(totC)}g / ${state.targets.carbs}g`;
+        document.getElementById('tot-f').innerText = `${Math.round(totF)}g / ${state.targets.fats}g`;
+        document.getElementById('tot-fiber').innerText = `${Math.round(totFib)}g`;
+
+        const getPct = (cur, tar) => tar > 0 ? Math.min(100, (cur / tar) * 100) : 0;
+        document.getElementById('fill-cal').style.width = `${getPct(totCal, state.targets.calories)}%`;
+        document.getElementById('fill-p').style.width = `${getPct(totP, state.targets.protein)}%`;
+        document.getElementById('fill-c').style.width = `${getPct(totC, state.targets.carbs)}%`;
+        document.getElementById('fill-f').style.width = `${getPct(totF, state.targets.fats)}%`;
+
+        const favsContainer = document.getElementById('favs-container');
+        favsContainer.innerHTML = '';
+        state.favorites.forEach((item, idx) => {
+            const pill = document.createElement('button');
+            pill.className = "bg-slate-950 hover:bg-slate-850 border border-slate-800 text-left text-xs px-3 py-1.5 rounded-xl flex items-center gap-2 group text-slate-300 font-medium transition-all active:scale-95";
+            pill.onclick = () => selectFavItem(item);
+            pill.innerHTML = `
+                <span>${item.name} <span class="text-indigo-400 font-bold text-[10px]">${item.calories}</span></span>
+                <span onclick="deleteFavItem(${idx}, event)" class="text-[10px] text-slate-600 hover:text-rose-400 font-black pl-1 transition-colors">✕</span>
+            `;
+            favsContainer.appendChild(pill);
+        });
+
+        const groupsContainer = document.getElementById('food-timeline-groups');
+        groupsContainer.innerHTML = '';
+        
+        if (state.logs.length === 0) {
+            groupsContainer.innerHTML = `<div class="text-center text-xs text-slate-500 font-medium py-4">Timeline log engine empty. Ready to accept dynamic input queries.</div>`;
+            return;
+        }
+
+        const mealBuckets = { "🌅 Breakfast": [], "☀️ Lunch": [], "🌙 Dinner": [], "🍿 Snacks": [] };
+        state.logs.forEach((item, index) => {
+            const bucketKey = categorizeMealType(item.time);
+            mealBuckets[bucketKey].push({ item, index });
+        });
+
+        Object.keys(mealBuckets).forEach(bucketKey => {
+            const itemsInBucket = mealBuckets[bucketKey];
+            if (itemsInBucket.length === 0) return;
+
+            const categoryGroupBlock = document.createElement('div');
+            categoryGroupBlock.className = "space-y-1.5 border-l-2 border-slate-800 pl-3 ml-1";
+            
+            const groupTitle = document.createElement('h3');
+            groupTitle.className = "text-[11px] font-black text-slate-400 uppercase tracking-wider mb-1 flex items-center justify-between";
+            let subTotalBucketCals = itemsInBucket.reduce((sum, current) => sum + current.item.calories, 0);
+            groupTitle.innerHTML = `<span>${bucketKey}</span> <span class="text-indigo-400 font-bold text-[10px]">${subTotalBucketCals} kcal</span>`;
+            categoryGroupBlock.appendChild(groupTitle);
+
+            itemsInBucket.forEach(({ item, index }) => {
+                const row = document.createElement('div');
+                row.className = "bg-slate-950/60 border border-slate-900 rounded-xl p-2.5 flex justify-between items-center text-xs";
+                row.innerHTML = `
+                    <div>
+                        <div class="font-bold text-slate-200">${item.name}</div>
+                        <div class="text-[10px] text-slate-400 mt-0.5">⏱️ ${item.time || 'N/A'} • P: ${item.protein}g • C: ${item.carbs}g • F: ${item.fats}g</div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="font-black text-indigo-400">${item.calories} kcal</span>
+                        <button onclick="deleteLogItem(${index})" class="text-slate-600 hover:text-rose-400 font-bold px-1 text-sm transition-colors cursor-pointer">✕</button>
+                    </div>
+                `;
+                categoryGroupBlock.appendChild(row);
+            });
+
+            groupsContainer.appendChild(categoryGroupBlock);
+        });
+    }
+
+    function runDualBackupEngine() {
+        const jsonStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+        const jsonAnchor = document.createElement('a');
+        jsonAnchor.setAttribute("href", jsonStr);
+        jsonAnchor.setAttribute("download", `nutra_pro_backup_${new Date().toISOString().split('T')[0]}.json`);
+        document.body.appendChild(jsonAnchor);
+        jsonAnchor.click();
+        jsonAnchor.remove();
+
+        if(state.calorieHistory.length === 0) return;
+        const excelRows = state.calorieHistory.map(h => ({
+            Date: h.date, Year: h.year, Month: h.monthName, EatenKcal: h.eaten, TargetKcal: h.target, TdeeKcal: h.tdee, Steps: h.steps, ProteinG: h.protein, CarbsG: h.carbs, FatsG: h.fats, FiberG: h.fiber
+        }));
+        const worksheet = XLSX.utils.json_to_sheet(excelRows);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Calorie Tracking Ledger");
+        XLSX.writeFile(workbook, `nutra_pro_ledger_sheet_${new Date().getFullYear()}.xlsx`);
+    }
+
+    function importStateData(e) {
+        const fileReader = new FileReader();
+        fileReader.onload = (event) => {
+            try {
+                const parsed = JSON.parse(event.target.result);
+                if(parsed.profile && parsed.targets) {
+                    state = parsed;
+                    state.profile.activity = 1.2; 
+                    saveAndRender();
+                    initInputs();
+                    alert("NutraAI core state payload injected and decoded successfully!");
+                }
+            } catch(err) {
+                alert("Invalid configuration state file type mapping structure detected.");
+            }
+        };
+        fileReader.readAsText(e.target.files[0]);
+    }
+
+    document.getElementById('tdee-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        state.profile = {
+            weight: parseFloat(document.getElementById('weight-input').value),
+            goalWeight: parseFloat(document.getElementById('goal-weight-input').value),
+            durationMonths: parseInt(document.getElementById('duration-input').value),
+            height: parseFloat(document.getElementById('height-input').value),
+            age: parseInt(document.getElementById('age-input').value),
+            activity: 1.2 
+        };
+        calculateTargets();
+    });
+
+    window.onload = () => {
+        initInputs();
+        calculateTargets();
+    };
+</script>
+</body>
+</html>
