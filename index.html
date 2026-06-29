@@ -504,16 +504,57 @@ async function parseMacrosFromClipboard() {
         const text = await navigator.clipboard.readText();
         if (!text) { alert("Clipboard is empty!"); return; }
 
-        const matchValue = (regex) => {
-            const m = text.match(regex);
-            return m ? parseFloat(m[1] || m[2]) || 0 : 0;
+        /**
+         * Multi-pattern matcher:
+         *   1. "Protein: 25g"      → label-first, with colon
+         *   2. "Protein 25g"       → label-first, no colon
+         *   3. "25g protein"       → number-first
+         *   4. "P: 25"  / "P 25g"  → short label
+         *
+         * Picks the FIRST successful match. Returns 0 if nothing found.
+         */
+        const matchMacro = (longLabel, shortLabel) => {
+            const patterns = [
+                // "Protein: 25g" or "Protein : 25" or "Protein - 25g"
+                new RegExp(`${longLabel}\\s*[:=\\-–]\\s*(\\d+(?:\\.\\d+)?)`, 'i'),
+                // "Protein 25g"
+                new RegExp(`${longLabel}\\s+(\\d+(?:\\.\\d+)?)`, 'i'),
+                // "25g protein" or "25 g of protein"
+                new RegExp(`(\\d+(?:\\.\\d+)?)\\s*g?\\s*(?:of\\s+)?${longLabel}\\b`, 'i'),
+                // Short label "P: 25" or "P 25g" (word boundary to avoid matching mid-word)
+                new RegExp(`\\b${shortLabel}\\s*[:=]?\\s*(\\d+(?:\\.\\d+)?)\\s*g?\\b`, 'i'),
+            ];
+            for (const re of patterns) {
+                const m = text.match(re);
+                if (m && m[1]) {
+                    const v = parseFloat(m[1]);
+                    if (!isNaN(v) && v >= 0) return v;
+                }
+            }
+            return 0;
         };
 
-        const cal = matchValue(/(?:calories|cals|cal|kcal)[:\s]*(\d+(?:\.\d+)?)|(\d+(?:\.\d+)?)\s*(?:kcal|cals|cal|calories)?\b/i);
-        const p   = matchValue(/(?:protein|prot)[:\s]*(\d+(?:\.\d+)?)/i);
-        const c   = matchValue(/(?:carbs|carb)[:\s]*(\d+(?:\.\d+)?)/i);
-        const f   = matchValue(/(?:fats|fat)[:\s]*(\d+(?:\.\d+)?)/i);
-        const fib = matchValue(/(?:fiber|fibre)[:\s]*(\d+(?:\.\d+)?)/i);
+        // Calories — special handling since it can appear as bare "kcal" suffix
+        const matchCalories = () => {
+            const patterns = [
+                /(?:calories|kcal|cals|energy)\s*[:=\-–]?\s*(\d+(?:\.\d+)?)/i,
+                /(\d+(?:\.\d+)?)\s*(?:kcal|calories|cals)\b/i,
+            ];
+            for (const re of patterns) {
+                const m = text.match(re);
+                if (m && m[1]) {
+                    const v = parseFloat(m[1]);
+                    if (!isNaN(v) && v >= 0) return v;
+                }
+            }
+            return 0;
+        };
+
+        const cal = matchCalories();
+        const p   = matchMacro('protein', 'p');
+        const c   = matchMacro('carb(?:s|ohydrates?)?', 'c');
+        const f   = matchMacro('fats?',  'f');
+        const fib = matchMacro('fib(?:re|er)', 'fib');
 
         let found = false;
         if (p > 0)   { document.getElementById('food-p').value     = p;   found = true; }
@@ -521,33 +562,14 @@ async function parseMacrosFromClipboard() {
         if (f > 0)   { document.getElementById('food-f').value     = f;   found = true; }
         if (fib > 0) { document.getElementById('food-fiber').value = fib; found = true; }
 
-        if (found) {
+        if (found || cal > 0) {
             if (cal > 0) { document.getElementById('food-cal').value = cal; checkCalorieDeviation(); }
             else { autoCalculateCalories(); }
-        } else { alert("Could not parse macros."); }
+        } else {
+            alert("Could not parse macros from clipboard text.");
+        }
     } catch(err) { alert("Clipboard access blocked."); console.error(err); }
-}
-
-// ═══════════════════════════════════════════════════════
-//  STEPS
-// ═══════════════════════════════════════════════════════
-function updateStepsBonusDisplay() {
-    const el = document.getElementById('active-steps-bonus');
-    if (!el) return;
-    const bonus = Math.round(state.steps * 0.04);
-    el.innerText = bonus > 0 ? `🔥 +${bonus} kcal activity boost!` : '';
-}
-
-function saveDailySteps(e) {
-    if (e) e.preventDefault();
-    const val = parseInt(document.getElementById('daily-steps-val').value) || 0;
-    state.steps = val;
-    document.getElementById('active-steps-display').innerText = val.toLocaleString();
-    document.getElementById('daily-steps-val').value = '';
-    calculateTargets();
-    updateStepsBonusDisplay();
-    safeSetItem('nutraProDeficitState', JSON.stringify(state));
-}
+                    }
 
 // ═══════════════════════════════════════════════════════
 //  CALORIE CALC
