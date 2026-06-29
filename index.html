@@ -496,7 +496,7 @@ function setDefaultTime() {
 async function parseMacrosFromClipboard() {
     try {
         let perm = { state: 'granted' };
-        if (navigator.permissions?.query) {
+        if (navigator.permissions && navigator.permissions.query) {
             try { perm = await navigator.permissions.query({ name: 'clipboard-read' }); } catch(_) {}
         }
         if (perm.state === 'denied') { alert("Clipboard permission denied."); return; }
@@ -504,28 +504,10 @@ async function parseMacrosFromClipboard() {
         const text = await navigator.clipboard.readText();
         if (!text) { alert("Clipboard is empty!"); return; }
 
-        /**
-         * Multi-pattern matcher:
-         *   1. "Protein: 25g"      → label-first, with colon
-         *   2. "Protein 25g"       → label-first, no colon
-         *   3. "25g protein"       → number-first
-         *   4. "P: 25"  / "P 25g"  → short label
-         *
-         * Picks the FIRST successful match. Returns 0 if nothing found.
-         */
-        const matchMacro = (longLabel, shortLabel) => {
-            const patterns = [
-                // "Protein: 25g" or "Protein : 25" or "Protein - 25g"
-                new RegExp(`${longLabel}\\s*[:=\\-–]\\s*(\\d+(?:\\.\\d+)?)`, 'i'),
-                // "Protein 25g"
-                new RegExp(`${longLabel}\\s+(\\d+(?:\\.\\d+)?)`, 'i'),
-                // "25g protein" or "25 g of protein"
-                new RegExp(`(\\d+(?:\\.\\d+)?)\\s*g?\\s*(?:of\\s+)?${longLabel}\\b`, 'i'),
-                // Short label "P: 25" or "P 25g" (word boundary to avoid matching mid-word)
-                new RegExp(`\\b${shortLabel}\\s*[:=]?\\s*(\\d+(?:\\.\\d+)?)\\s*g?\\b`, 'i'),
-            ];
-            for (const re of patterns) {
-                const m = text.match(re);
+        // Try a list of regex patterns, return first match value (or 0)
+        const tryPatterns = (patterns) => {
+            for (let i = 0; i < patterns.length; i++) {
+                const m = text.match(patterns[i]);
                 if (m && m[1]) {
                     const v = parseFloat(m[1]);
                     if (!isNaN(v) && v >= 0) return v;
@@ -534,27 +516,33 @@ async function parseMacrosFromClipboard() {
             return 0;
         };
 
-        // Calories — special handling since it can appear as bare "kcal" suffix
-        const matchCalories = () => {
-            const patterns = [
-                /(?:calories|kcal|cals|energy)\s*[:=\-–]?\s*(\d+(?:\.\d+)?)/i,
-                /(\d+(?:\.\d+)?)\s*(?:kcal|calories|cals)\b/i,
-            ];
-            for (const re of patterns) {
-                const m = text.match(re);
-                if (m && m[1]) {
-                    const v = parseFloat(m[1]);
-                    if (!isNaN(v) && v >= 0) return v;
-                }
-            }
-            return 0;
-        };
+        const cal = tryPatterns([
+            /(?:calories|kcal|cals|energy)\s*[:=\-]?\s*(\d+(?:\.\d+)?)/i,
+            /(\d+(?:\.\d+)?)\s*(?:kcal|calories|cals)\b/i
+        ]);
 
-        const cal = matchCalories();
-        const p   = matchMacro('protein', 'p');
-        const c   = matchMacro('carb(?:s|ohydrates?)?', 'c');
-        const f   = matchMacro('fats?',  'f');
-        const fib = matchMacro('fib(?:re|er)', 'fib');
+        const p = tryPatterns([
+            /protein\s*[:=\-]?\s*(\d+(?:\.\d+)?)/i,
+            /(\d+(?:\.\d+)?)\s*g?\s*protein\b/i,
+            /\bp\s*[:=]\s*(\d+(?:\.\d+)?)/i
+        ]);
+
+        const c = tryPatterns([
+            /carb(?:s|ohydrates?)?\s*[:=\-]?\s*(\d+(?:\.\d+)?)/i,
+            /(\d+(?:\.\d+)?)\s*g?\s*carb(?:s|ohydrates?)?\b/i,
+            /\bc\s*[:=]\s*(\d+(?:\.\d+)?)/i
+        ]);
+
+        const f = tryPatterns([
+            /fats?\s*[:=\-]?\s*(\d+(?:\.\d+)?)/i,
+            /(\d+(?:\.\d+)?)\s*g?\s*fats?\b/i,
+            /\bf\s*[:=]\s*(\d+(?:\.\d+)?)/i
+        ]);
+
+        const fib = tryPatterns([
+            /fib(?:re|er)\s*[:=\-]?\s*(\d+(?:\.\d+)?)/i,
+            /(\d+(?:\.\d+)?)\s*g?\s*fib(?:re|er)\b/i
+        ]);
 
         let found = false;
         if (p > 0)   { document.getElementById('food-p').value     = p;   found = true; }
@@ -568,8 +556,11 @@ async function parseMacrosFromClipboard() {
         } else {
             alert("Could not parse macros from clipboard text.");
         }
-    } catch(err) { alert("Clipboard access blocked."); console.error(err); }
-                    }
+    } catch(err) {
+        alert("Clipboard access blocked.");
+        console.error(err);
+    }
+}
 
 // ═══════════════════════════════════════════════════════
 //  CALORIE CALC
