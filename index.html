@@ -11,7 +11,6 @@
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 999px; }
-
         .week-row-deficit   { background: rgba(52,211,153,0.07); border-left: 3px solid #34d399; }
         .week-row-surplus   { background: rgba(248,113,113,0.07); border-left: 3px solid #f87171; }
         .month-row-deficit  { background: rgba(99,102,241,0.08); border-left: 3px solid #818cf8; }
@@ -22,7 +21,6 @@
 
 <div class="max-w-md mx-auto space-y-6">
 
-    <!-- HEADER -->
     <header class="text-center py-2 flex justify-between items-center">
         <div>
             <h1 class="text-2xl font-black tracking-tight" style="background:linear-gradient(90deg,#818cf8,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">NutraAI Pro</h1>
@@ -40,54 +38,45 @@
         </div>
     </header>
 
-    <!-- NAV -->
     <nav class="grid grid-cols-3 bg-[#111827] p-1.5 rounded-xl border border-slate-800/60 gap-1 shadow-inner">
         <button id="btn-tracker" onclick="switchTab('tracker')" class="py-2.5 text-xs font-bold rounded-lg bg-violet-600 text-white transition-all active:scale-95 shadow-sm">🍽️ Log</button>
         <button id="btn-trends"  onclick="switchTab('trends')"  class="py-2.5 text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-800 transition-all active:scale-95">📈 Trends</button>
         <button id="btn-weight"  onclick="switchTab('weight')"  class="py-2.5 text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-800 transition-all active:scale-95">⚖️ Weight</button>
     </nav>
 
-    <!-- TAB: TRACKER -->
     <div id="view-tracker" class="space-y-6">
 
-        <!-- Profile & Goals -->
         <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-4">
             <h2 class="text-sm font-bold text-slate-200 flex items-center gap-2">👤 Profile & Goals</h2>
             <form id="tdee-form" class="space-y-3">
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Base Weight (kg) <span class="text-violet-400">★</span></label>
-                        <input type="number" step="0.1" id="base-weight-input" placeholder="Start weight"
-                               class="w-full bg-[#0a0f1e] border border-violet-800/60 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-violet-500">
+                        <input type="number" step="0.1" id="base-weight-input" placeholder="Start weight" class="w-full bg-[#0a0f1e] border border-violet-800/60 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-violet-500">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Current (kg)</label>
-                        <input type="number" step="0.1" id="weight-input" value="88"
-                               class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-violet-500">
+                        <input type="number" step="0.1" id="weight-input" value="88" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-violet-500">
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Goal (kg)</label>
-                        <input type="number" step="0.1" id="goal-weight-input" value="75"
-                               class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-violet-500">
+                        <input type="number" step="0.1" id="goal-weight-input" value="75" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-violet-500">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Time (Months)</label>
-                        <input type="number" id="duration-input" value="6"
-                               class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-violet-500">
+                        <input type="number" id="duration-input" value="6" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-violet-500">
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Age</label>
-                        <input type="number" id="age-input" value="25"
-                               class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-violet-500">
+                        <input type="number" id="age-input" value="25" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-violet-500">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Height (cm)</label>
-                        <input type="number" id="height-input" value="169"
-                               class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-violet-500">
+                        <input type="number" id="height-input" value="169" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-violet-500">
                     </div>
                 </div>
                 <div id="dynamic-deficit-notice" class="text-[11px] text-violet-300 bg-violet-950/30 border border-violet-900/50 p-2.5 rounded-xl font-medium">
@@ -97,7 +86,6 @@
             </form>
         </div>
 
-        <!-- Daily Summary Cards -->
         <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-4">
             <h2 class="text-sm font-bold text-slate-200">Daily Intake Summary</h2>
             <div class="grid grid-cols-2 gap-3">
@@ -127,12 +115,10 @@
             </div>
         </div>
 
-        <!-- Steps -->
         <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-3">
             <h2 class="text-sm font-bold text-slate-200 flex items-center gap-2">🐾 Daily Steps</h2>
             <form id="steps-log-form" onsubmit="saveDailySteps(event)" class="flex gap-2">
-                <input type="number" id="daily-steps-val" placeholder="e.g., 10000"
-                       class="flex-1 bg-[#0a0f1e] border border-slate-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-violet-500" required>
+                <input type="number" id="daily-steps-val" placeholder="e.g., 10000" class="flex-1 bg-[#0a0f1e] border border-slate-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-violet-500" required>
                 <button type="submit" class="bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs px-5 rounded-xl transition-all active:scale-95 cursor-pointer">Save</button>
             </form>
             <div class="text-xs text-violet-300 font-bold bg-violet-950/30 p-2.5 rounded-xl border border-violet-900/40 text-center">
@@ -141,100 +127,79 @@
             </div>
         </div>
 
-        <!-- Manual Entry -->
         <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-4">
             <div class="flex justify-between items-center">
                 <h2 class="text-sm font-bold text-slate-200">Manual Entry Form</h2>
-                <button type="button" onclick="parseMacrosFromClipboard()"
-                        class="text-[10px] font-extrabold text-violet-400 bg-violet-950/50 border border-violet-900/60 px-2.5 py-1.5 rounded-lg active:scale-95 transition-all cursor-pointer">📋 Paste Macros</button>
+                <button type="button" onclick="parseMacrosFromClipboard()" class="text-[10px] font-extrabold text-violet-400 bg-violet-950/50 border border-violet-900/60 px-2.5 py-1.5 rounded-lg active:scale-95 transition-all cursor-pointer">📋 Paste Macros</button>
             </div>
             <form id="macro-log-form" onsubmit="handleFormSubmit(event)" class="space-y-3">
                 <div>
                     <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Item Name</label>
-                    <input type="text" id="food-name" placeholder="e.g., Chicken Shawarma"
-                           class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-violet-500" required>
+                    <input type="text" id="food-name" placeholder="e.g., Chicken Shawarma" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-violet-500" required>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Protein (g)</label>
-                        <input type="number" step="0.1" id="food-p" placeholder="0" value="0"
-                               oninput="autoCalculateCalories()"
-                               class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-violet-500">
+                        <input type="number" step="0.1" id="food-p" placeholder="0" value="0" oninput="autoCalculateCalories()" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-violet-500">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Carbs (g)</label>
-                        <input type="number" step="0.1" id="food-c" placeholder="0" value="0"
-                               oninput="autoCalculateCalories()"
-                               class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-violet-500">
+                        <input type="number" step="0.1" id="food-c" placeholder="0" value="0" oninput="autoCalculateCalories()" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-violet-500">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Fats (g)</label>
-                        <input type="number" step="0.1" id="food-f" placeholder="0" value="0"
-                               oninput="autoCalculateCalories()"
-                               class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-violet-500">
+                        <input type="number" step="0.1" id="food-f" placeholder="0" value="0" oninput="autoCalculateCalories()" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-violet-500">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Calories (kcal)</label>
-                        <input type="number" step="0.1" id="food-cal" placeholder="0"
-                               oninput="checkCalorieDeviation()"
-                               class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm font-bold text-violet-400 focus:outline-none focus:border-violet-500" required>
+                        <input type="number" step="0.1" id="food-cal" placeholder="0" oninput="checkCalorieDeviation()" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm font-bold text-violet-400 focus:outline-none focus:border-violet-500" required>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Dietary Fiber (g)</label>
-                        <input type="number" step="0.1" id="food-fiber" placeholder="0" value="0"
-                               class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-violet-500">
+                        <input type="number" step="0.1" id="food-fiber" placeholder="0" value="0" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-violet-500">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Time Eaten</label>
-                        <input type="time" id="food-time"
-                               class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-violet-500">
+                        <input type="time" id="food-time" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-violet-500">
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-2 pt-2">
-                    <button type="button" onclick="logFormItem(true)"
-                            class="bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold py-3 rounded-xl transition-all active:scale-95 cursor-pointer">⭐ Save to Favs</button>
-                    <button type="submit"
-                            class="bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold py-3 rounded-xl transition-all active:scale-95 cursor-pointer">Log Daily Entry</button>
+                    <button type="button" onclick="logFormItem(true)" class="bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold py-3 rounded-xl transition-all active:scale-95 cursor-pointer">⭐ Save to Favs</button>
+                    <button type="submit" class="bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold py-3 rounded-xl transition-all active:scale-95 cursor-pointer">Log Daily Entry</button>
                 </div>
             </form>
         </div>
 
-        <!-- Favorites -->
         <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-3">
             <h2 class="text-sm font-bold text-slate-200">⭐ Favorite Presets</h2>
             <div id="favs-container" class="flex flex-wrap gap-2"></div>
         </div>
 
-        <!-- Today's Timeline -->
         <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-4">
             <div class="flex justify-between items-center flex-wrap gap-3">
                 <h2 class="text-sm font-bold text-slate-200">Today's Timeline</h2>
                 <div class="bg-[#0a0f1e] border border-slate-800/60 rounded-xl p-3 grid grid-cols-2 gap-2 items-end w-full">
                     <div>
                         <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1">Archive Target Date</label>
-                        <input type="date" id="archive-date-picker"
-                               class="w-full bg-[#111827] border border-slate-800 rounded-lg px-2 py-1 text-xs text-white focus:outline-none">
+                        <input type="date" id="archive-date-picker" class="w-full bg-[#111827] border border-slate-800 rounded-lg px-2 py-1 text-xs text-white focus:outline-none">
                     </div>
-                    <button onclick="archiveAndResetDay()"
-                            class="text-xs font-bold text-amber-400 bg-amber-950/40 hover:bg-amber-950/70 border border-amber-900 px-3 py-1.5 rounded-lg transition-all active:scale-95 cursor-pointer">☀️ End & Archive Day</button>
+                    <button onclick="archiveAndResetDay()" class="text-xs font-bold text-amber-400 bg-amber-950/40 hover:bg-amber-950/70 border border-amber-900 px-3 py-1.5 rounded-lg transition-all active:scale-95 cursor-pointer">☀️ End & Archive Day</button>
                 </div>
             </div>
             <div id="food-timeline-groups" class="space-y-4 max-h-96 overflow-y-auto pr-1"></div>
         </div>
     </div>
 
-    <!-- TAB: TRENDS -->
     <div id="view-trends" class="space-y-6 hidden">
-
         <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-4">
             <div class="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
                 <h2 id="chart-title" class="text-sm font-bold text-slate-200">Calorie Target Baseline Trend</h2>
                 <div class="flex bg-[#0a0f1e] border border-slate-800/50 p-0.5 rounded-lg gap-0.5">
-                    <button id="btn-chart-cal"    onclick="changeChartMetric('calories')" class="px-2.5 py-1 text-[10px] font-bold rounded-md bg-violet-600 text-white transition-all cursor-pointer">Calories</button>
-                    <button id="btn-chart-macros" onclick="changeChartMetric('macros')"   class="px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer">Macros</button>
-                    <button id="btn-chart-fiber"  onclick="changeChartMetric('fiber')"    class="px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer">Fiber</button>
+                    <button id="btn-chart-cal" onclick="changeChartMetric('calories')" class="px-2.5 py-1 text-[10px] font-bold rounded-md bg-violet-600 text-white transition-all cursor-pointer">Calories</button>
+                    <button id="btn-chart-macros" onclick="changeChartMetric('macros')" class="px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer">Macros</button>
+                    <button id="btn-chart-fiber" onclick="changeChartMetric('fiber')" class="px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer">Fiber</button>
                 </div>
             </div>
             <div class="bg-[#0a0f1e] p-2 rounded-xl border border-slate-800/50">
@@ -245,8 +210,7 @@
         <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-5">
             <div class="flex justify-between items-center">
                 <h2 class="text-sm font-bold text-slate-200">📜 Historical Balance Ledgers</h2>
-                <button onclick="clearHistory('trends')"
-                        class="text-[10px] font-bold text-rose-400 bg-rose-950/40 border border-rose-900 px-2.5 py-1 rounded-lg active:scale-95 transition-all cursor-pointer">Reset Ledgers</button>
+                <button onclick="clearHistory('trends')" class="text-[10px] font-bold text-rose-400 bg-rose-950/40 border border-rose-900 px-2.5 py-1 rounded-lg active:scale-95 transition-all cursor-pointer">Reset Ledgers</button>
             </div>
             <div class="space-y-2">
                 <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">📅 Archived Daily Summaries</h3>
@@ -255,16 +219,12 @@
         </div>
     </div>
 
-    <!-- TAB: WEIGHT -->
     <div id="view-weight" class="space-y-6 hidden">
-
         <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-4">
             <h2 class="text-sm font-bold text-slate-200">Log Daily Weight</h2>
             <form id="weight-log-form" class="flex gap-2">
-                <input type="number" step="0.1" id="daily-weight-val" placeholder="e.g., 87.5"
-                       class="flex-1 bg-[#0a0f1e] border border-slate-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-violet-500" required>
-                <button type="submit"
-                        class="bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs px-5 rounded-xl transition-all active:scale-95 cursor-pointer">Save Log</button>
+                <input type="number" step="0.1" id="daily-weight-val" placeholder="e.g., 87.5" class="flex-1 bg-[#0a0f1e] border border-slate-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-violet-500" required>
+                <button type="submit" class="bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs px-5 rounded-xl transition-all active:scale-95 cursor-pointer">Save Log</button>
             </form>
             <div class="grid grid-cols-2 gap-3 pt-1">
                 <div id="weight-glow-total" class="bg-[#0a0f1e] p-3 rounded-xl border border-slate-800/50 transition-all duration-500">
@@ -285,15 +245,12 @@
                     <span id="weight-progress-percent" class="text-violet-400 font-black bg-violet-950 px-2 py-0.5 rounded-md border border-violet-900/60">0%</span>
                 </div>
                 <div class="w-full bg-[#0a0f1e] rounded-full h-4 border border-slate-800/50 p-0.5 overflow-hidden shadow-inner">
-                    <div id="weight-progress-bar"
-                         class="bg-gradient-to-r from-violet-500 via-sky-500 to-teal-500 h-full rounded-full transition-all duration-700 shadow-[0_0_10px_rgba(139,92,246,0.5)]"
-                         style="width:0%"></div>
+                    <div id="weight-progress-bar" class="bg-gradient-to-r from-violet-500 via-sky-500 to-teal-500 h-full rounded-full transition-all duration-700 shadow-[0_0_10px_rgba(139,92,246,0.5)]" style="width:0%"></div>
                 </div>
                 <div class="text-[10px] text-slate-500 font-medium text-center" id="weight-progress-label">
                     Set a Base Weight in your profile to begin tracking.
                 </div>
             </div>
-
             <div class="bg-[#0a0f1e] p-4 border border-slate-800/50 rounded-xl space-y-3">
                 <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider border-b border-slate-800/60 pb-1.5 flex justify-between items-center">
                     <span>🏆 Milestone Roadmap Checklist</span>
@@ -306,8 +263,7 @@
         <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-4">
             <div class="flex justify-between items-center">
                 <h2 class="text-sm font-bold text-slate-200">Weight Progression Graph</h2>
-                <button onclick="clearHistory('weight')"
-                        class="text-[10px] font-bold text-rose-400 bg-rose-950/40 border border-rose-900 px-2.5 py-1 rounded-lg active:scale-95 transition-all cursor-pointer">Clear History</button>
+                <button onclick="clearHistory('weight')" class="text-[10px] font-bold text-rose-400 bg-rose-950/40 border border-rose-900 px-2.5 py-1 rounded-lg active:scale-95 transition-all cursor-pointer">Clear History</button>
             </div>
             <div class="bg-[#0a0f1e] p-2 rounded-xl border border-slate-800/50">
                 <canvas id="weightChart" width="100" height="60"></canvas>
@@ -319,17 +275,11 @@
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════
-//  CONSTANTS
-// ═══════════════════════════════════════════════════════
 const STATE_VERSION = 4;
 
-// ═══════════════════════════════════════════════════════
-//  SAFE STORAGE
-// ═══════════════════════════════════════════════════════
 function safeGetItem(key) {
     try { return localStorage.getItem(key); }
-    catch(e) { return window.__fallbackRAMState?.[key] || null; }
+    catch(e) { return (window.__fallbackRAMState && window.__fallbackRAMState[key]) || null; }
 }
 function safeSetItem(key, value) {
     try { localStorage.setItem(key, value); }
@@ -349,68 +299,48 @@ function hardResetWholeAppStorage() {
 
 function sanitize(str) {
     const div = document.createElement('div');
-    div.appendChild(document.createTextNode(String(str || '')));
+    div.appendChild(document.createTextNode(String(str == null ? '' : str)));
     return div.innerHTML;
 }
 
-// ═══════════════════════════════════════════════════════
-//  DEFAULT STATE
-// ═══════════════════════════════════════════════════════
 function buildDefaultState() {
     return {
         version: STATE_VERSION,
-        profile: {
-            weight: 88,
-            baseWeight: null,
-            goalWeight: 75,
-            durationMonths: 6,
-            height: 169,
-            age: 25,
-            activity: 1.2
-        },
+        profile: { weight: 88, baseWeight: null, goalWeight: 75, durationMonths: 6, height: 169, age: 25, activity: 1.2 },
         targets: { calories: 2315, protein: 176, carbs: 230, fats: 64, tdee: 2815 },
-        logs: [],
-        favorites: [],
-        calorieHistory: [],
-        weightHistory: [],
-        steps: 0,
-        weeklyLedger: [],
-        monthlyLedger: [],
-        lastArchivedDate: ""
+        logs: [], favorites: [], calorieHistory: [], weightHistory: [],
+        steps: 0, weeklyLedger: [], monthlyLedger: [], lastArchivedDate: ""
     };
 }
 
 function migrateState(loaded) {
     if (!loaded.version || loaded.version < 4) {
-        loaded.steps         = loaded.steps         ?? 0;
-        loaded.weightHistory = loaded.weightHistory ?? [];
-        loaded.weeklyLedger  = loaded.weeklyLedger  ?? [];
-        loaded.monthlyLedger = loaded.monthlyLedger ?? [];
-        loaded.profile.baseWeight = loaded.profile.baseWeight ?? null;
+        loaded.steps = loaded.steps != null ? loaded.steps : 0;
+        loaded.weightHistory = loaded.weightHistory || [];
+        loaded.weeklyLedger = loaded.weeklyLedger || [];
+        loaded.monthlyLedger = loaded.monthlyLedger || [];
+        if (!loaded.profile) loaded.profile = {};
+        loaded.profile.baseWeight = loaded.profile.baseWeight != null ? loaded.profile.baseWeight : null;
         delete loaded.rollingWeeklyEaten;
         delete loaded.rollingWeeklyTdee;
         delete loaded.rollingMonthlyEaten;
         delete loaded.rollingMonthlyTdee;
     }
-
-    // Heal missing/broken isoDate fields in old archived entries
     if (Array.isArray(loaded.calorieHistory)) {
-        loaded.calorieHistory.forEach(day => {
-            // If isoDate missing or malformed, reconstruct from date + year
+        loaded.calorieHistory.forEach(function(day) {
             if (!day.isoDate || !/^\d{4}-\d{2}-\d{2}$/.test(day.isoDate)) {
                 if (day.date && day.year) {
-                    const parsed = new Date(`${day.date} ${day.year}`);
+                    const parsed = new Date(day.date + ' ' + day.year);
                     if (!isNaN(parsed)) {
                         const yyyy = parsed.getFullYear();
-                        const mm   = String(parsed.getMonth() + 1).padStart(2, '0');
-                        const dd   = String(parsed.getDate()).padStart(2, '0');
-                        day.isoDate = `${yyyy}-${mm}-${dd}`;
+                        const mm = String(parsed.getMonth() + 1).padStart(2, '0');
+                        const dd = String(parsed.getDate()).padStart(2, '0');
+                        day.isoDate = yyyy + '-' + mm + '-' + dd;
                     }
                 }
             }
         });
     }
-
     loaded.profile.activity = 1.2;
     loaded.version = STATE_VERSION;
     return loaded;
@@ -423,59 +353,48 @@ if (cachedState) {
     catch(e) { console.error("State parse error", e); }
 }
 
-let calChartInstance    = null;
+let calChartInstance = null;
 let weightChartInstance = null;
-let currentChartMetric  = "calories";
-let _calcDebounceTimer  = null;
+let currentChartMetric = "calories";
+let _calcDebounceTimer = null;
 
-// ═══════════════════════════════════════════════════════
-//  WEIGHT DIRECTION HELPER
-// ═══════════════════════════════════════════════════════
 function getWeightJourney() {
-    const base    = parseFloat(state.profile.baseWeight);
-    const goal    = parseFloat(state.profile.goalWeight) || 0;
-    const hist    = state.weightHistory;
-    const current = parseFloat(
-        hist.length > 0 ? hist[hist.length - 1].weight : state.profile.weight
-    );
+    const base = parseFloat(state.profile.baseWeight);
+    const goal = parseFloat(state.profile.goalWeight) || 0;
+    const hist = state.weightHistory;
+    const current = parseFloat(hist.length > 0 ? hist[hist.length - 1].weight : state.profile.weight);
 
-    if (isNaN(base) || base === null) {
-        return { direction: 'none', base: null, goal, current, totalNeeded: 0, totalAchieved: 0, isComplete: false };
+    if (isNaN(base) || state.profile.baseWeight == null) {
+        return { direction: 'none', base: null, goal: goal, current: current, totalNeeded: 0, totalAchieved: 0, isComplete: false };
     }
-
     const delta = base - goal;
     let direction = 'maintain';
     if (delta > 0) direction = 'lose';
     else if (delta < 0) direction = 'gain';
 
-    const totalNeeded   = Math.abs(delta);
-    let totalAchieved   = 0;
-    let isComplete      = false;
+    const totalNeeded = Math.abs(delta);
+    let totalAchieved = 0;
+    let isComplete = false;
 
     if (direction === 'lose') {
         totalAchieved = Math.max(0, base - current);
-        isComplete    = current <= goal;
+        isComplete = current <= goal;
     } else if (direction === 'gain') {
         totalAchieved = Math.max(0, current - base);
-        isComplete    = current >= goal;
+        isComplete = current >= goal;
     } else {
-        totalAchieved = 0;
-        isComplete    = true;
+        isComplete = true;
     }
-
-    return { direction, base, goal, current, totalNeeded, totalAchieved, isComplete };
+    return { direction: direction, base: base, goal: goal, current: current, totalNeeded: totalNeeded, totalAchieved: totalAchieved, isComplete: isComplete };
 }
 
-// ═══════════════════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════════════════
 function initInputs() {
-    document.getElementById('weight-input').value      = state.profile.weight;
-    document.getElementById('goal-weight-input').value = state.profile.goalWeight  || 75;
-    document.getElementById('duration-input').value    = state.profile.durationMonths || 6;
-    document.getElementById('height-input').value      = state.profile.height;
-    document.getElementById('age-input').value         = state.profile.age;
-    if (state.profile.baseWeight !== null && state.profile.baseWeight !== undefined) {
+    document.getElementById('weight-input').value = state.profile.weight;
+    document.getElementById('goal-weight-input').value = state.profile.goalWeight || 75;
+    document.getElementById('duration-input').value = state.profile.durationMonths || 6;
+    document.getElementById('height-input').value = state.profile.height;
+    document.getElementById('age-input').value = state.profile.age;
+    if (state.profile.baseWeight != null && !isNaN(state.profile.baseWeight)) {
         document.getElementById('base-weight-input').value = state.profile.baseWeight;
     }
     setDefaultTime();
@@ -486,26 +405,15 @@ function initInputs() {
 
 function setDefaultTime() {
     const now = new Date();
-    document.getElementById('food-time').value =
-        `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    document.getElementById('food-time').value = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
 }
 
-// ═══════════════════════════════════════════════════════
-//  CLIPBOARD PASTE
-// ═══════════════════════════════════════════════════════
 async function parseMacrosFromClipboard() {
     try {
-        let perm = { state: 'granted' };
-        if (navigator.permissions && navigator.permissions.query) {
-            try { perm = await navigator.permissions.query({ name: 'clipboard-read' }); } catch(_) {}
-        }
-        if (perm.state === 'denied') { alert("Clipboard permission denied."); return; }
-
         const text = await navigator.clipboard.readText();
         if (!text) { alert("Clipboard is empty!"); return; }
 
-        // Try a list of regex patterns, return first match value (or 0)
-        const tryPatterns = (patterns) => {
+        function tryPatterns(patterns) {
             for (let i = 0; i < patterns.length; i++) {
                 const m = text.match(patterns[i]);
                 if (m && m[1]) {
@@ -514,40 +422,33 @@ async function parseMacrosFromClipboard() {
                 }
             }
             return 0;
-        };
+        }
 
         const cal = tryPatterns([
             /(?:calories|kcal|cals|energy)\s*[:=\-]?\s*(\d+(?:\.\d+)?)/i,
             /(\d+(?:\.\d+)?)\s*(?:kcal|calories|cals)\b/i
         ]);
-
         const p = tryPatterns([
             /protein\s*[:=\-]?\s*(\d+(?:\.\d+)?)/i,
-            /(\d+(?:\.\d+)?)\s*g?\s*protein\b/i,
-            /\bp\s*[:=]\s*(\d+(?:\.\d+)?)/i
+            /(\d+(?:\.\d+)?)\s*g?\s*protein\b/i
         ]);
-
         const c = tryPatterns([
             /carb(?:s|ohydrates?)?\s*[:=\-]?\s*(\d+(?:\.\d+)?)/i,
-            /(\d+(?:\.\d+)?)\s*g?\s*carb(?:s|ohydrates?)?\b/i,
-            /\bc\s*[:=]\s*(\d+(?:\.\d+)?)/i
+            /(\d+(?:\.\d+)?)\s*g?\s*carb(?:s|ohydrates?)?\b/i
         ]);
-
         const f = tryPatterns([
             /fats?\s*[:=\-]?\s*(\d+(?:\.\d+)?)/i,
-            /(\d+(?:\.\d+)?)\s*g?\s*fats?\b/i,
-            /\bf\s*[:=]\s*(\d+(?:\.\d+)?)/i
+            /(\d+(?:\.\d+)?)\s*g?\s*fats?\b/i
         ]);
-
         const fib = tryPatterns([
             /fib(?:re|er)\s*[:=\-]?\s*(\d+(?:\.\d+)?)/i,
             /(\d+(?:\.\d+)?)\s*g?\s*fib(?:re|er)\b/i
         ]);
 
         let found = false;
-        if (p > 0)   { document.getElementById('food-p').value     = p;   found = true; }
-        if (c > 0)   { document.getElementById('food-c').value     = c;   found = true; }
-        if (f > 0)   { document.getElementById('food-f').value     = f;   found = true; }
+        if (p > 0)   { document.getElementById('food-p').value = p; found = true; }
+        if (c > 0)   { document.getElementById('food-c').value = c; found = true; }
+        if (f > 0)   { document.getElementById('food-f').value = f; found = true; }
         if (fib > 0) { document.getElementById('food-fiber').value = fib; found = true; }
 
         if (found || cal > 0) {
@@ -557,17 +458,31 @@ async function parseMacrosFromClipboard() {
             alert("Could not parse macros from clipboard text.");
         }
     } catch(err) {
-        alert("Clipboard access blocked.");
+        alert("Clipboard access blocked or unsupported.");
         console.error(err);
     }
 }
 
-// ═══════════════════════════════════════════════════════
-//  CALORIE CALC
-// ═══════════════════════════════════════════════════════
+function updateStepsBonusDisplay() {
+    const el = document.getElementById('active-steps-bonus');
+    if (!el) return;
+    const bonus = Math.round((state.steps || 0) * 0.04);
+    el.innerText = bonus > 0 ? '🔥 +' + bonus + ' kcal activity boost!' : '';
+}
+
+function saveDailySteps(e) {
+    if (e) e.preventDefault();
+    const val = parseInt(document.getElementById('daily-steps-val').value) || 0;
+    state.steps = val;
+    document.getElementById('active-steps-display').innerText = val.toLocaleString();
+    document.getElementById('daily-steps-val').value = '';
+    calculateTargets();
+    updateStepsBonusDisplay();
+}
+
 function autoCalculateCalories() {
     clearTimeout(_calcDebounceTimer);
-    _calcDebounceTimer = setTimeout(() => {
+    _calcDebounceTimer = setTimeout(function() {
         const p = parseFloat(document.getElementById('food-p').value) || 0;
         const c = parseFloat(document.getElementById('food-c').value) || 0;
         const f = parseFloat(document.getElementById('food-f').value) || 0;
@@ -579,12 +494,12 @@ function autoCalculateCalories() {
 }
 
 function checkCalorieDeviation() {
-    const p   = parseFloat(document.getElementById('food-p').value)   || 0;
-    const c   = parseFloat(document.getElementById('food-c').value)   || 0;
-    const f   = parseFloat(document.getElementById('food-f').value)   || 0;
+    const p = parseFloat(document.getElementById('food-p').value) || 0;
+    const c = parseFloat(document.getElementById('food-c').value) || 0;
+    const f = parseFloat(document.getElementById('food-f').value) || 0;
     const ent = parseFloat(document.getElementById('food-cal').value) || 0;
     const sum = (p * 4) + (c * 4) + (f * 9);
-    const el  = document.getElementById('food-cal');
+    const el = document.getElementById('food-cal');
     if (sum > 0 && Math.abs(ent - sum) > sum * 0.15) {
         el.className = "w-full bg-[#0a0f1e] border border-amber-500 rounded-xl p-2.5 text-sm font-bold text-amber-400 focus:outline-none";
     } else {
@@ -594,26 +509,20 @@ function checkCalorieDeviation() {
 
 function categorizeMealType(t) {
     if (!t) return "🍿 Snacks";
-    const [h] = t.split(':').map(Number);
-    if (h >= 5  && h < 11) return "🌅 Breakfast";
+    const h = parseInt(t.split(':')[0]);
+    if (h >= 5 && h < 11) return "🌅 Breakfast";
     if (h >= 11 && h < 16) return "☀️ Lunch";
     if (h >= 16 && h < 23) return "🌙 Dinner";
     return "🍿 Snacks";
 }
 
-// ═══════════════════════════════════════════════════════
-//  TABS
-// ═══════════════════════════════════════════════════════
 function switchTab(tab) {
-    ['tracker','trends','weight'].forEach(t => {
-        document.getElementById(`view-${t}`).classList.add('hidden');
-        document.getElementById(`btn-${t}`).className =
-            "py-2.5 text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-800 transition-all active:scale-95";
+    ['tracker','trends','weight'].forEach(function(t) {
+        document.getElementById('view-' + t).classList.add('hidden');
+        document.getElementById('btn-' + t).className = "py-2.5 text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-800 transition-all active:scale-95";
     });
-    document.getElementById(`view-${tab}`).classList.remove('hidden');
-    document.getElementById(`btn-${tab}`).className =
-        "py-2.5 text-xs font-bold rounded-lg bg-violet-600 text-white transition-all active:scale-95 shadow-sm";
-
+    document.getElementById('view-' + tab).classList.remove('hidden');
+    document.getElementById('btn-' + tab).className = "py-2.5 text-xs font-bold rounded-lg bg-violet-600 text-white transition-all active:scale-95 shadow-sm";
     if (tab === 'trends') { renderCalorieChart(); renderLedgersUI(); }
     if (tab === 'weight') { renderWeightChart(); }
 }
@@ -623,8 +532,8 @@ function changeChartMetric(metric) {
     const titles = { calories:'Calorie Target Baseline Trend', macros:'Macronutrient Balance Overview (g)', fiber:'Historical Fiber Intake Trends' };
     document.getElementById('chart-title').innerText = titles[metric];
     const btnMap = { calories:'cal', macros:'macros', fiber:'fiber' };
-    Object.keys(btnMap).forEach(m => {
-        const btn = document.getElementById(`btn-chart-${btnMap[m]}`);
+    Object.keys(btnMap).forEach(function(m) {
+        const btn = document.getElementById('btn-chart-' + btnMap[m]);
         btn.className = (m === metric)
             ? "px-2.5 py-1 text-[10px] font-bold rounded-md bg-violet-600 text-white transition-all cursor-pointer"
             : "px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer";
@@ -632,83 +541,68 @@ function changeChartMetric(metric) {
     renderCalorieChart();
 }
 
-// ═══════════════════════════════════════════════════════
-//  TARGETS — uses CURRENT weight for deficit math (reality-based)
-// ═══════════════════════════════════════════════════════
 function calculateTargets() {
-    const p   = state.profile;
+    const p = state.profile;
     const bmr = (10 * p.weight) + (6.25 * p.height) - (5 * p.age) + 5;
-    const baseTdee   = Math.round(bmr * 1.2);
+    const baseTdee = Math.round(bmr * 1.2);
     const stepsBonus = Math.round((state.steps || 0) * 0.04);
-    const totalTdee  = baseTdee + stepsBonus;
+    const totalTdee = baseTdee + stepsBonus;
     state.targets.tdee = totalTdee;
 
-    // ── Calorie math always uses CURRENT weight → goal (reality-based remaining journey)
-    // Base weight is used only for progress/milestones tracking, NOT for kcal deficit math
-    const currentWeight  = p.weight;
-    const goalWeight     = p.goalWeight || 75;
-    const remainingDelta = currentWeight - goalWeight;  // +ve = need to lose, -ve = need to gain
+    const currentWeight = p.weight;
+    const goalWeight = p.goalWeight || 75;
+    const remainingDelta = currentWeight - goalWeight;
 
     let calorieAdjustment = 0;
     let mode = 'maintain';
 
     if (remainingDelta > 0.5 && p.durationMonths > 0) {
-        // Still need to lose
         mode = 'lose';
         calorieAdjustment = -Math.round((remainingDelta * 7700) / (p.durationMonths * 30.4));
         calorieAdjustment = Math.max(-1000, Math.min(-300, calorieAdjustment));
     } else if (remainingDelta < -0.5 && p.durationMonths > 0) {
-        // Still need to gain
         mode = 'gain';
         calorieAdjustment = Math.round((Math.abs(remainingDelta) * 7700) / (p.durationMonths * 30.4));
         calorieAdjustment = Math.min(700, Math.max(250, calorieAdjustment));
     }
 
     state.targets.calories = Math.max(1200, totalTdee + calorieAdjustment);
-    state.targets.protein  = Math.round(p.weight * 2);
-    state.targets.fats     = Math.round((state.targets.calories * 0.25) / 9);
-    const remaining        = state.targets.calories - ((state.targets.protein * 4) + (state.targets.fats * 9));
-    state.targets.carbs    = Math.max(0, Math.round(remaining / 4));
+    state.targets.protein = Math.round(p.weight * 2);
+    state.targets.fats = Math.round((state.targets.calories * 0.25) / 9);
+    const remaining = state.targets.calories - ((state.targets.protein * 4) + (state.targets.fats * 9));
+    state.targets.carbs = Math.max(0, Math.round(remaining / 4));
 
     const noticeEl = document.getElementById('dynamic-deficit-notice');
     if (noticeEl) {
         const kgRemaining = Math.abs(remainingDelta).toFixed(1);
         if (mode === 'lose') {
-            let txt = `🎯 Cutting Phase: -${Math.abs(calorieAdjustment)} kcal/day to lose ${kgRemaining}kg remaining in ${p.durationMonths} months.`;
-            if (stepsBonus > 0) txt += ` (+${stepsBonus} kcal step boost).`;
+            let txt = '🎯 Cutting Phase: -' + Math.abs(calorieAdjustment) + ' kcal/day to lose ' + kgRemaining + 'kg remaining in ' + p.durationMonths + ' months.';
+            if (stepsBonus > 0) txt += ' (+' + stepsBonus + ' kcal step boost).';
             noticeEl.innerText = txt;
             noticeEl.className = "text-[11px] text-violet-300 bg-violet-950/30 border border-violet-900/50 p-2.5 rounded-xl font-medium";
         } else if (mode === 'gain') {
-            let txt = `💪 Bulking Phase: +${calorieAdjustment} kcal/day surplus to gain ${kgRemaining}kg remaining in ${p.durationMonths} months.`;
-            if (stepsBonus > 0) txt += ` (+${stepsBonus} kcal step boost).`;
+            let txt = '💪 Bulking Phase: +' + calorieAdjustment + ' kcal/day surplus to gain ' + kgRemaining + 'kg remaining in ' + p.durationMonths + ' months.';
+            if (stepsBonus > 0) txt += ' (+' + stepsBonus + ' kcal step boost).';
             noticeEl.innerText = txt;
             noticeEl.className = "text-[11px] text-emerald-300 bg-emerald-950/30 border border-emerald-900/50 p-2.5 rounded-xl font-medium";
         } else {
-            noticeEl.innerText = `⚖️ Maintenance mode: you're at goal weight. Baseline calories.`;
+            noticeEl.innerText = "⚖️ Maintenance mode: you're at goal weight. Baseline calories.";
             noticeEl.className = "text-[11px] text-sky-300 bg-sky-950/30 border border-sky-900/50 p-2.5 rounded-xl font-medium";
         }
     }
     saveAndRender();
 }
 
-// ═══════════════════════════════════════════════════════
-//  DATE UTILS
-// ═══════════════════════════════════════════════════════
 const DateUtils = {
-    toShortLabel: (d) => d.toLocaleDateString(undefined, { month:'short', day:'numeric' }),
-    toISODate:    (d) => d.toISOString().split('T')[0],
-    fromISODate:  (s) => new Date(s + 'T12:00:00'),
-    getWeekOfMonth: (d) => {
-        // Sunday-based week of month (calendar week containing the date)
-        const firstDay   = new Date(d.getFullYear(), d.getMonth(), 1).getDay(); // 0=Sun..6=Sat
-        const dayOfMonth = d.getDate();
-        return Math.ceil((dayOfMonth + firstDay) / 7);
+    toShortLabel: function(d) { return d.toLocaleDateString(undefined, { month:'short', day:'numeric' }); },
+    toISODate: function(d) { return d.toISOString().split('T')[0]; },
+    fromISODate: function(s) { return new Date(s + 'T12:00:00'); },
+    getWeekOfMonth: function(d) {
+        const firstDay = new Date(d.getFullYear(), d.getMonth(), 1).getDay();
+        return Math.ceil((d.getDate() + firstDay) / 7);
     }
 };
 
-// ═══════════════════════════════════════════════════════
-//  ARCHIVE DAY
-// ═══════════════════════════════════════════════════════
 function archiveAndResetDay() {
     if (state.logs.length === 0 && state.steps === 0) {
         alert("Log items or steps first!"); return;
@@ -716,148 +610,119 @@ function archiveAndResetDay() {
     const selectedVal = document.getElementById('archive-date-picker').value;
     if (!selectedVal) { alert("Pick a date!"); return; }
 
-    const dateObj  = DateUtils.fromISODate(selectedVal);
+    const dateObj = DateUtils.fromISODate(selectedVal);
     const shortLbl = DateUtils.toShortLabel(dateObj);
-    const fullLbl  = dateObj.toLocaleDateString(undefined, { month:'short', day:'numeric', year:'numeric' });
-    const monthNm  = dateObj.toLocaleDateString(undefined, { month:'long' });
-    const year     = dateObj.getFullYear();
-    const weekNum  = DateUtils.getWeekOfMonth(dateObj);
+    const fullLbl = dateObj.toLocaleDateString(undefined, { month:'short', day:'numeric', year:'numeric' });
+    const monthNm = dateObj.toLocaleDateString(undefined, { month:'long' });
+    const year = dateObj.getFullYear();
+    const weekNum = DateUtils.getWeekOfMonth(dateObj);
 
-    if (!confirm(`Archive totals to ${fullLbl}?`)) return;
+    if (!confirm('Archive totals to ' + fullLbl + '?')) return;
 
     let totCal=0, totP=0, totC=0, totF=0, totFib=0;
-    state.logs.forEach(i => { totCal+=i.calories; totP+=i.protein||0; totC+=i.carbs||0; totF+=i.fats||0; totFib+=i.fiber||0; });
+    state.logs.forEach(function(i) {
+        totCal += i.calories;
+        totP += i.protein||0;
+        totC += i.carbs||0;
+        totF += i.fats||0;
+        totFib += i.fiber||0;
+    });
 
     const payload = {
-        isoDate: selectedVal, date: shortLbl, year, monthName: monthNm, weekOfMonth: weekNum,
+        isoDate: selectedVal, date: shortLbl, year: year, monthName: monthNm, weekOfMonth: weekNum,
         eaten: totCal, target: state.targets.calories, tdee: state.targets.tdee, steps: state.steps || 0,
         protein: totP, carbs: totC, fats: totF, fiber: totFib
     };
 
-    const idx = state.calorieHistory.findIndex(h => h.isoDate === selectedVal);
+    const idx = state.calorieHistory.findIndex(function(h) { return h.isoDate === selectedVal; });
     if (idx > -1) state.calorieHistory[idx] = payload;
     else state.calorieHistory.push(payload);
 
-    state.calorieHistory.sort((a,b) => (a.isoDate||'').localeCompare(b.isoDate||''));
+    state.calorieHistory.sort(function(a,b) { return (a.isoDate||'').localeCompare(b.isoDate||''); });
     state.lastArchivedDate = dateObj.toISOString();
-    state.logs  = [];
+    state.logs = [];
     state.steps = 0;
     saveAndRender();
     initInputs();
-    alert(`Archived to ${fullLbl}!`);
+    alert('Archived to ' + fullLbl + '!');
 }
 
 function formatDeficit(val) {
-    if (val >= 0) return `<span class="text-teal-400 font-bold">+${val.toFixed(1)} kcal deficit</span>`;
-    return `<span class="text-rose-400 font-extrabold">⚠️ ${Math.abs(val).toFixed(1)} kcal surplus</span>`;
+    if (val >= 0) return '<span class="text-teal-400 font-bold">+' + val.toFixed(1) + ' kcal deficit</span>';
+    return '<span class="text-rose-400 font-extrabold">⚠️ ' + Math.abs(val).toFixed(1) + ' kcal surplus</span>';
 }
 
-// ═══════════════════════════════════════════════════════
-//  LEDGER UI — recomputes week from isoDate (ignores stale stored values)
-// ═══════════════════════════════════════════════════════
 function renderLedgersUI() {
     const container = document.getElementById('ledger-daily-accordion');
     container.innerHTML = '';
-
     if (state.calorieHistory.length === 0) {
-        container.innerHTML = `<div class="text-center text-xs text-slate-500 py-4 font-semibold">No archived data yet.</div>`;
+        container.innerHTML = '<div class="text-center text-xs text-slate-500 py-4 font-semibold">No archived data yet.</div>';
         return;
     }
 
     const monthMap = new Map();
-    state.calorieHistory.forEach(day => {
-        // Always recompute week from isoDate to fix any stale/incorrect stored values
-        let wKey;
-        let monthName = day.monthName;
-        let year      = day.year;
-
+    state.calorieHistory.forEach(function(day) {
+        let wKey, monthName = day.monthName, year = day.year;
         if (day.isoDate) {
             const dObj = DateUtils.fromISODate(day.isoDate);
-            wKey      = DateUtils.getWeekOfMonth(dObj);
+            wKey = DateUtils.getWeekOfMonth(dObj);
             monthName = dObj.toLocaleDateString(undefined, { month: 'long' });
-            year      = dObj.getFullYear();
+            year = dObj.getFullYear();
         } else {
-            // Legacy fallback for super old data without isoDate
             wKey = day.weekOfMonth || 1;
         }
-
-        const mKey = `${year}-${monthName}`;
-        if (!monthMap.has(mKey)) monthMap.set(mKey, { monthName, year, weeks: new Map() });
+        const mKey = year + '-' + monthName;
+        if (!monthMap.has(mKey)) monthMap.set(mKey, { monthName: monthName, year: year, weeks: new Map() });
         const mData = monthMap.get(mKey);
         if (!mData.weeks.has(wKey)) mData.weeks.set(wKey, []);
         mData.weeks.get(wKey).push(day);
     });
 
-    monthMap.forEach((mData) => {
+    monthMap.forEach(function(mData) {
         const monthBlock = document.createElement('div');
         monthBlock.className = "bg-[#0a0f1e]/70 border border-slate-800/60 rounded-xl overflow-hidden mb-3";
-
         let mEaten=0, mTarget=0;
-        mData.weeks.forEach(days => days.forEach(d => { mEaten += d.eaten; mTarget += d.target; }));
+        mData.weeks.forEach(function(days) { days.forEach(function(d) { mEaten += d.eaten; mTarget += d.target; }); });
         const mDeficit = mTarget - mEaten;
 
         const monthHeader = document.createElement('button');
         monthHeader.className = "w-full text-left px-4 py-2.5 flex justify-between items-center cursor-pointer hover:bg-[#111827]/60 transition-colors";
-        monthHeader.innerHTML = `
-            <span class="text-xs font-black text-violet-400">📅 ${sanitize(mData.monthName)} ${mData.year}</span>
-            <span class="text-[10px] font-bold ${mDeficit >= 0 ? 'text-teal-400' : 'text-rose-400'}">
-                ${mDeficit >= 0 ? '▼' : '▲'} ${Math.abs(mDeficit).toFixed(0)} kcal ${mDeficit >= 0 ? 'deficit' : 'surplus'}
-            </span>`;
+        monthHeader.innerHTML = '<span class="text-xs font-black text-violet-400">📅 ' + sanitize(mData.monthName) + ' ' + mData.year + '</span><span class="text-[10px] font-bold ' + (mDeficit >= 0 ? 'text-teal-400' : 'text-rose-400') + '">' + (mDeficit >= 0 ? '▼' : '▲') + ' ' + Math.abs(mDeficit).toFixed(0) + ' kcal ' + (mDeficit >= 0 ? 'deficit' : 'surplus') + '</span>';
 
         const monthBody = document.createElement('div');
         monthBody.className = "hidden divide-y divide-slate-800/30";
-        monthHeader.onclick = () => monthBody.classList.toggle('hidden');
+        monthHeader.onclick = function() { monthBody.classList.toggle('hidden'); };
 
-        const sortedWeeks = Array.from(mData.weeks.keys()).sort((a,b) => a - b);
-        sortedWeeks.forEach(wKey => {
+        const sortedWeeks = Array.from(mData.weeks.keys()).sort(function(a,b) { return a - b; });
+        sortedWeeks.forEach(function(wKey) {
             const days = mData.weeks.get(wKey);
             let wEaten=0, wTarget=0;
-            days.forEach(d => { wEaten += d.eaten; wTarget += d.target; });
+            days.forEach(function(d) { wEaten += d.eaten; wTarget += d.target; });
             const wDeficit = wTarget - wEaten;
 
             const weekWrapper = document.createElement('div');
             weekWrapper.className = "border-t border-slate-800/40";
 
             const weekHeader = document.createElement('button');
-            weekHeader.className = `w-full text-left px-5 py-2 flex justify-between items-center cursor-pointer hover:bg-slate-900/40 transition-colors ${wDeficit >= 0 ? 'week-row-deficit' : 'week-row-surplus'}`;
-            weekHeader.innerHTML = `
-                <span class="text-[11px] font-bold text-slate-300">Week ${wKey}</span>
-                <span class="text-[10px] font-bold ${wDeficit >= 0 ? 'text-teal-400' : 'text-rose-400'}">
-                    ${wDeficit >= 0 ? '+' : ''}${wDeficit.toFixed(0)} kcal ${wDeficit >= 0 ? 'deficit' : 'surplus'}
-                </span>`;
+            weekHeader.className = "w-full text-left px-5 py-2 flex justify-between items-center cursor-pointer hover:bg-slate-900/40 transition-colors " + (wDeficit >= 0 ? 'week-row-deficit' : 'week-row-surplus');
+            weekHeader.innerHTML = '<span class="text-[11px] font-bold text-slate-300">Week ' + wKey + '</span><span class="text-[10px] font-bold ' + (wDeficit >= 0 ? 'text-teal-400' : 'text-rose-400') + '">' + (wDeficit >= 0 ? '+' : '') + wDeficit.toFixed(0) + ' kcal ' + (wDeficit >= 0 ? 'deficit' : 'surplus') + '</span>';
 
             const weekBody = document.createElement('div');
             weekBody.className = "hidden bg-[#0a0f1e]/60";
-            weekHeader.onclick = () => weekBody.classList.toggle('hidden');
+            weekHeader.onclick = function() { weekBody.classList.toggle('hidden'); };
 
-            days.forEach(day => {
+            days.forEach(function(day) {
                 const tg = Number(day.target || state.targets.calories);
                 const dd = tg - day.eaten;
                 const row = document.createElement('div');
-                row.className = `px-6 py-2.5 border-t border-slate-900/40 ${dd >= 0 ? '' : 'bg-rose-950/10'}`;
-                row.innerHTML = `
-                    <div class="flex justify-between items-start">
-                        <div class="space-y-0.5">
-                            <span class="font-extrabold text-slate-300 text-[11px] block">${sanitize(day.date)}</span>
-                            <span class="text-[9px] text-slate-500 block">🐾 ${day.steps.toLocaleString()} steps</span>
-                            <span class="text-[10px] text-slate-400 flex items-center gap-2 mt-0.5 bg-slate-900/40 px-1.5 py-0.5 rounded border border-slate-800/40">
-                                <span>🧪 ${Math.round(day.carbs||0)}g</span>
-                                <span>🥩 ${Math.round(day.protein||0)}g</span>
-                                <span>🥑 ${Math.round(day.fats||0)}g</span>
-                                <span>🌾 ${(day.fiber||0).toFixed(1)}g</span>
-                            </span>
-                        </div>
-                        <div class="text-right space-y-0.5 self-start pt-0.5">
-                            <span class="block text-[11px] text-slate-400">${day.eaten.toFixed(0)} / <span class="text-violet-400 font-bold">${tg}</span> kcal</span>
-                            <span class="block text-[11px]">${formatDeficit(dd)}</span>
-                        </div>
-                    </div>`;
+                row.className = "px-6 py-2.5 border-t border-slate-900/40 " + (dd >= 0 ? '' : 'bg-rose-950/10');
+                row.innerHTML = '<div class="flex justify-between items-start"><div class="space-y-0.5"><span class="font-extrabold text-slate-300 text-[11px] block">' + sanitize(day.date) + '</span><span class="text-[9px] text-slate-500 block">🐾 ' + day.steps.toLocaleString() + ' steps</span><span class="text-[10px] text-slate-400 flex items-center gap-2 mt-0.5 bg-slate-900/40 px-1.5 py-0.5 rounded border border-slate-800/40"><span>🧪 ' + Math.round(day.carbs||0) + 'g</span><span>🥩 ' + Math.round(day.protein||0) + 'g</span><span>🥑 ' + Math.round(day.fats||0) + 'g</span><span>🌾 ' + (day.fiber||0).toFixed(1) + 'g</span></span></div><div class="text-right space-y-0.5 self-start pt-0.5"><span class="block text-[11px] text-slate-400">' + day.eaten.toFixed(0) + ' / <span class="text-violet-400 font-bold">' + tg + '</span> kcal</span><span class="block text-[11px]">' + formatDeficit(dd) + '</span></div></div>';
                 weekBody.appendChild(row);
             });
 
             const weekFooter = document.createElement('div');
-            weekFooter.className = `px-6 py-2 border-t border-slate-800/50 flex justify-between items-center text-[10px] font-bold ${wDeficit >= 0 ? 'text-teal-400 bg-teal-950/20' : 'text-rose-400 bg-rose-950/20'}`;
-            weekFooter.innerHTML = `<span>Week ${wKey} Total</span><span>${wEaten.toFixed(0)} / ${wTarget} → ${formatDeficit(wDeficit)}</span>`;
+            weekFooter.className = "px-6 py-2 border-t border-slate-800/50 flex justify-between items-center text-[10px] font-bold " + (wDeficit >= 0 ? 'text-teal-400 bg-teal-950/20' : 'text-rose-400 bg-rose-950/20');
+            weekFooter.innerHTML = '<span>Week ' + wKey + ' Total</span><span>' + wEaten.toFixed(0) + ' / ' + wTarget + ' → ' + formatDeficit(wDeficit) + '</span>';
             weekBody.appendChild(weekFooter);
 
             weekWrapper.appendChild(weekHeader);
@@ -866,8 +731,8 @@ function renderLedgersUI() {
         });
 
         const monthFooter = document.createElement('div');
-        monthFooter.className = `px-4 py-2 flex justify-between items-center text-[10px] font-bold ${mDeficit >= 0 ? 'text-violet-400 bg-violet-950/20 month-row-deficit' : 'text-amber-400 bg-amber-950/20 month-row-surplus'} border-t border-slate-800/50`;
-        monthFooter.innerHTML = `<span>${sanitize(mData.monthName)} Total</span><span>${mEaten.toFixed(0)} / ${mTarget} → ${formatDeficit(mDeficit)}</span>`;
+        monthFooter.className = "px-4 py-2 flex justify-between items-center text-[10px] font-bold " + (mDeficit >= 0 ? 'text-violet-400 bg-violet-950/20 month-row-deficit' : 'text-amber-400 bg-amber-950/20 month-row-surplus') + " border-t border-slate-800/50";
+        monthFooter.innerHTML = '<span>' + sanitize(mData.monthName) + ' Total</span><span>' + mEaten.toFixed(0) + ' / ' + mTarget + ' → ' + formatDeficit(mDeficit) + '</span>';
         monthBody.appendChild(monthFooter);
 
         monthBlock.appendChild(monthHeader);
@@ -876,15 +741,12 @@ function renderLedgersUI() {
     });
 }
 
-// ═══════════════════════════════════════════════════════
-//  CALORIE CHART
-// ═══════════════════════════════════════════════════════
 function renderCalorieChart() {
     const ctx = document.getElementById('calorieChart').getContext('2d');
     if (calChartInstance) { calChartInstance.destroy(); calChartInstance = null; }
     if (state.calorieHistory.length === 0) { ctx.clearRect(0,0,1000,600); return; }
 
-    const labels = state.calorieHistory.map(h => h.date);
+    const labels = state.calorieHistory.map(function(h) { return h.date; });
     let datasets = [];
     let scalesCfg = {
         x: { grid:{ color:'#1e293b' }, ticks:{ color:'#94a3b8', font:{ size:9 } } },
@@ -893,32 +755,29 @@ function renderCalorieChart() {
 
     if (currentChartMetric === 'calories') {
         datasets = [
-            { label:'Calories Eaten', data: state.calorieHistory.map(h=>h.eaten),  borderColor:'#818cf8', backgroundColor:'rgba(129,140,248,0.08)', borderWidth:2, fill:true, tension:0.1, yAxisID:'y' },
-            { label:'Target',         data: state.calorieHistory.map(h=>h.target), borderColor:'#34d399', borderWidth:1.5, borderDash:[4,4], fill:false, tension:0, yAxisID:'y' },
-            { label:'Steps',          data: state.calorieHistory.map(h=>h.steps),  type:'bar', backgroundColor:'rgba(56,189,248,0.12)', yAxisID:'ySteps', barThickness:10 }
+            { label:'Calories Eaten', data: state.calorieHistory.map(function(h){return h.eaten;}), borderColor:'#818cf8', backgroundColor:'rgba(129,140,248,0.08)', borderWidth:2, fill:true, tension:0.1, yAxisID:'y' },
+            { label:'Target', data: state.calorieHistory.map(function(h){return h.target;}), borderColor:'#34d399', borderWidth:1.5, borderDash:[4,4], fill:false, tension:0, yAxisID:'y' },
+            { label:'Steps', data: state.calorieHistory.map(function(h){return h.steps;}), type:'bar', backgroundColor:'rgba(56,189,248,0.12)', yAxisID:'ySteps', barThickness:10 }
         ];
         scalesCfg.ySteps = { type:'linear', position:'right', grid:{ drawOnChartArea:false }, ticks:{ color:'#38bdf8', font:{ size:8 } } };
     } else if (currentChartMetric === 'macros') {
         datasets = [
-            { label:'Protein', data: state.calorieHistory.map(h=>h.protein||0), borderColor:'#34d399', borderWidth:2, fill:false, tension:0.2 },
-            { label:'Carbs',   data: state.calorieHistory.map(h=>h.carbs||0),   borderColor:'#38bdf8', borderWidth:2, fill:false, tension:0.2 },
-            { label:'Fats',    data: state.calorieHistory.map(h=>h.fats||0),    borderColor:'#f87171', borderWidth:2, fill:false, tension:0.2 }
+            { label:'Protein', data: state.calorieHistory.map(function(h){return h.protein||0;}), borderColor:'#34d399', borderWidth:2, fill:false, tension:0.2 },
+            { label:'Carbs', data: state.calorieHistory.map(function(h){return h.carbs||0;}), borderColor:'#38bdf8', borderWidth:2, fill:false, tension:0.2 },
+            { label:'Fats', data: state.calorieHistory.map(function(h){return h.fats||0;}), borderColor:'#f87171', borderWidth:2, fill:false, tension:0.2 }
         ];
     } else {
         datasets = [
-            { label:'Fiber', data: state.calorieHistory.map(h=>h.fiber||0), borderColor:'#a78bfa', backgroundColor:'rgba(167,139,250,0.08)', borderWidth:2, fill:true, tension:0.1 }
+            { label:'Fiber', data: state.calorieHistory.map(function(h){return h.fiber||0;}), borderColor:'#a78bfa', backgroundColor:'rgba(167,139,250,0.08)', borderWidth:2, fill:true, tension:0.1 }
         ];
     }
 
     calChartInstance = new Chart(ctx, {
-        type:'line', data:{ labels, datasets },
+        type:'line', data:{ labels: labels, datasets: datasets },
         options:{ responsive:true, scales: scalesCfg, plugins:{ legend:{ labels:{ color:'#f8fafc', font:{ size:10 } } } } }
     });
 }
 
-// ═══════════════════════════════════════════════════════
-//  CLEAR HISTORY
-// ═══════════════════════════════════════════════════════
 function clearHistory(type) {
     if (!confirm("Permanently delete this dataset?")) return;
     if (type === 'trends') {
@@ -932,11 +791,8 @@ function clearHistory(type) {
     }
 }
 
-// ═══════════════════════════════════════════════════════
-//  WEIGHT MILESTONES (DIRECTION-AWARE)
-// ═══════════════════════════════════════════════════════
 function calculateWeightMilestonesUI() {
-    const grid  = document.getElementById('milestones-checkbox-grid');
+    const grid = document.getElementById('milestones-checkbox-grid');
     const badge = document.getElementById('next-objective-badge');
     const label = document.getElementById('weight-progress-label');
     const journeyLabel = document.getElementById('journey-label');
@@ -946,15 +802,15 @@ function calculateWeightMilestonesUI() {
     const j = getWeightJourney();
 
     if (j.direction === 'none') {
-        document.getElementById('weight-progress-percent').innerText = `0%`;
-        document.getElementById('weight-progress-bar').style.width   = `0%`;
-        document.getElementById('weight-stat-total').innerText        = `Set Base ⚠️`;
-        document.getElementById('weight-stat-total').className        = `text-base font-black text-amber-400 mt-0.5`;
-        document.getElementById('weight-stat-velocity').innerText     = `—`;
-        if (label) label.innerText = `Set a Base Weight in profile to start tracking.`;
+        document.getElementById('weight-progress-percent').innerText = '0%';
+        document.getElementById('weight-progress-bar').style.width = '0%';
+        document.getElementById('weight-stat-total').innerText = 'Set Base ⚠️';
+        document.getElementById('weight-stat-total').className = 'text-base font-black text-amber-400 mt-0.5';
+        document.getElementById('weight-stat-velocity').innerText = '—';
+        if (label) label.innerText = 'Set a Base Weight in profile to start tracking.';
         if (journeyLabel) journeyLabel.innerText = 'Journey Progress';
         badge.innerText = 'Setup needed';
-        grid.innerHTML = `<div class="col-span-2 text-center text-[11px] text-slate-500 py-3">Add Base Weight in your profile to unlock milestones.</div>`;
+        grid.innerHTML = '<div class="col-span-2 text-center text-[11px] text-slate-500 py-3">Add Base Weight in your profile to unlock milestones.</div>';
         return;
     }
 
@@ -965,50 +821,45 @@ function calculateWeightMilestonesUI() {
         pct = 100;
     }
 
-    document.getElementById('weight-progress-percent').innerText = `${pct}%`;
-    document.getElementById('weight-progress-bar').style.width   = `${pct}%`;
+    document.getElementById('weight-progress-percent').innerText = pct + '%';
+    document.getElementById('weight-progress-bar').style.width = pct + '%';
 
     const totalEl = document.getElementById('weight-stat-total');
     if (j.direction === 'lose') {
         if (journeyLabel) journeyLabel.innerText = 'Total Weight Lost';
-        totalEl.innerText = `${j.totalAchieved.toFixed(1)} kg dropped`;
-        totalEl.className = `text-base font-black text-teal-400 mt-0.5`;
+        totalEl.innerText = j.totalAchieved.toFixed(1) + ' kg dropped';
+        totalEl.className = 'text-base font-black text-teal-400 mt-0.5';
     } else if (j.direction === 'gain') {
         if (journeyLabel) journeyLabel.innerText = 'Total Weight Gained';
-        totalEl.innerText = `+${j.totalAchieved.toFixed(1)} kg gained`;
-        totalEl.className = `text-base font-black text-emerald-400 mt-0.5`;
+        totalEl.innerText = '+' + j.totalAchieved.toFixed(1) + ' kg gained';
+        totalEl.className = 'text-base font-black text-emerald-400 mt-0.5';
     } else {
         if (journeyLabel) journeyLabel.innerText = 'Maintenance';
-        totalEl.innerText = `Maintaining`;
-        totalEl.className = `text-base font-black text-sky-400 mt-0.5`;
+        totalEl.innerText = 'Maintaining';
+        totalEl.className = 'text-base font-black text-sky-400 mt-0.5';
     }
 
     if (label) {
         const arrow = j.direction === 'gain' ? '↑' : (j.direction === 'lose' ? '↓' : '→');
-        label.innerText = `Base: ${j.base}kg ${arrow} Goal: ${j.goal}kg (${j.totalNeeded.toFixed(1)}kg journey)`;
+        label.innerText = 'Base: ' + j.base + 'kg ' + arrow + ' Goal: ' + j.goal + 'kg (' + j.totalNeeded.toFixed(1) + 'kg journey)';
     }
 
     const velEl = document.getElementById('weight-stat-velocity');
     if (state.weightHistory.length >= 7) {
         const last7 = state.weightHistory.slice(-7);
-        const diff  = parseFloat(last7[last7.length-1].weight) - parseFloat(last7[0].weight);
+        const diff = parseFloat(last7[last7.length-1].weight) - parseFloat(last7[0].weight);
         const sign = diff >= 0 ? '+' : '-';
-        velEl.innerText = `${sign}${Math.abs(diff).toFixed(1)} kg/wk`;
-
+        velEl.innerText = sign + Math.abs(diff).toFixed(1) + ' kg/wk';
         if (j.direction === 'lose') {
-            velEl.className = diff <= 0
-                ? `text-base font-black text-teal-400 mt-0.5`
-                : `text-base font-black text-rose-400 mt-0.5`;
+            velEl.className = diff <= 0 ? 'text-base font-black text-teal-400 mt-0.5' : 'text-base font-black text-rose-400 mt-0.5';
         } else if (j.direction === 'gain') {
-            velEl.className = diff >= 0
-                ? `text-base font-black text-emerald-400 mt-0.5`
-                : `text-base font-black text-rose-400 mt-0.5`;
+            velEl.className = diff >= 0 ? 'text-base font-black text-emerald-400 mt-0.5' : 'text-base font-black text-rose-400 mt-0.5';
         } else {
-            velEl.className = `text-base font-black text-sky-400 mt-0.5`;
+            velEl.className = 'text-base font-black text-sky-400 mt-0.5';
         }
     } else {
         velEl.innerText = 'Needs 7 Days';
-        velEl.className = `text-base font-black text-violet-400 mt-0.5`;
+        velEl.className = 'text-base font-black text-violet-400 mt-0.5';
     }
 
     const segments = 4;
@@ -1019,66 +870,45 @@ function calculateWeightMilestonesUI() {
 
     if (j.totalNeeded > 0) {
         for (let i = 1; i <= segments; i++) {
-            let mw;
-            if (j.direction === 'lose') {
-                mw = j.base - ((j.totalNeeded / segments) * i);
-            } else {
-                mw = j.base + ((j.totalNeeded / segments) * i);
-            }
-            milestones.push({
-                label: `Reach ${mw.toFixed(1)}kg`,
-                target: parseFloat(mw.toFixed(1)),
-                symbol: symbols[i-1],
-                type: 'weight'
-            });
+            const mw = j.direction === 'lose' ? j.base - ((j.totalNeeded / segments) * i) : j.base + ((j.totalNeeded / segments) * i);
+            milestones.push({ label: 'Reach ' + mw.toFixed(1) + 'kg', target: parseFloat(mw.toFixed(1)), symbol: symbols[i-1], type: 'weight' });
         }
     } else {
-        milestones.push({ label:`Goal: ${j.goal}kg`, target: j.goal, symbol:'👑', type:'weight' });
+        milestones.push({ label: 'Goal: ' + j.goal + 'kg', target: j.goal, symbol: '👑', type: 'weight' });
     }
 
     let streak = 0;
-    state.calorieHistory.forEach(day => {
+    state.calorieHistory.forEach(function(day) {
         if (day.steps >= 10000) streak++; else streak = 0;
     });
-    milestones.push({ label:`7-Day 10k Steps Streak`, currentStreak: streak, targetStreak: 7, symbol:'🐾', type:'streak' });
+    milestones.push({ label: '7-Day 10k Steps Streak', currentStreak: streak, targetStreak: 7, symbol: '🐾', type: 'streak' });
 
     let nextSet = false;
-    milestones.forEach(m => {
+    milestones.forEach(function(m) {
         let isDone;
         if (m.type === 'streak') {
             isDone = m.currentStreak >= m.targetStreak;
         } else {
             isDone = j.direction === 'lose' ? j.current <= m.target : j.current >= m.target;
         }
-
         if (!isDone && !nextSet) {
-            badge.innerText = m.type === 'weight' ? `Next: ${m.target.toFixed(1)}kg` : `Next: 10k Streak`;
+            badge.innerText = m.type === 'weight' ? 'Next: ' + m.target.toFixed(1) + 'kg' : 'Next: 10k Streak';
             nextSet = true;
         }
         const item = document.createElement('div');
         item.className = "flex items-center gap-2 bg-[#0a0f1e]/40 p-2 rounded-lg border border-slate-800/40";
-        item.innerHTML = `
-            <input type="checkbox" ${isDone ? 'checked' : ''} disabled class="accent-teal-500 rounded w-3.5 h-3.5 pointer-events-none">
-            <span class="${isDone ? 'line-through text-slate-500 font-normal' : 'text-slate-300 font-semibold'} text-[11px] flex items-center gap-1">
-                <span>${m.symbol}</span>
-                <span>${sanitize(m.label)} ${m.type === 'streak' ? `(${m.currentStreak}/${m.targetStreak}d)` : ''}</span>
-            </span>`;
+        item.innerHTML = '<input type="checkbox" ' + (isDone ? 'checked' : '') + ' disabled class="accent-teal-500 rounded w-3.5 h-3.5 pointer-events-none"><span class="' + (isDone ? 'line-through text-slate-500 font-normal' : 'text-slate-300 font-semibold') + ' text-[11px] flex items-center gap-1"><span>' + m.symbol + '</span><span>' + sanitize(m.label) + ' ' + (m.type === 'streak' ? '(' + m.currentStreak + '/' + m.targetStreak + 'd)' : '') + '</span></span>';
         grid.appendChild(item);
     });
 
     if (!nextSet) badge.innerText = "🎉 All Clear!";
 }
 
-// ═══════════════════════════════════════════════════════
-//  WEIGHT CHART
-// ═══════════════════════════════════════════════════════
 function renderWeightChart() {
     const canvas = document.getElementById('weightChart');
     const emptyMsg = document.getElementById('weight-empty-msg');
     const ctx = canvas.getContext('2d');
-
     if (weightChartInstance) { weightChartInstance.destroy(); weightChartInstance = null; }
-
     calculateWeightMilestonesUI();
 
     if (state.weightHistory.length === 0) {
@@ -1091,45 +921,24 @@ function renderWeightChart() {
     emptyMsg.classList.add('hidden');
 
     const j = getWeightJourney();
-    const labels = state.weightHistory.map(w => w.date);
-    const data   = state.weightHistory.map(w => parseFloat(w.weight));
+    const labels = state.weightHistory.map(function(w) { return w.date; });
+    const data = state.weightHistory.map(function(w) { return parseFloat(w.weight); });
 
     const datasets = [{
-        label:'Body Mass (kg)',
-        data,
-        borderColor:'#818cf8',
-        backgroundColor:'rgba(129,140,248,0.08)',
-        borderWidth:2, tension:0.15, fill:true,
-        pointRadius: 3, pointBackgroundColor:'#a78bfa'
+        label:'Body Mass (kg)', data: data,
+        borderColor:'#818cf8', backgroundColor:'rgba(129,140,248,0.08)',
+        borderWidth:2, tension:0.15, fill:true, pointRadius: 3, pointBackgroundColor:'#a78bfa'
     }];
 
     if (j.goal > 0) {
-        datasets.push({
-            label: `Goal (${j.goal}kg)`,
-            data: labels.map(() => j.goal),
-            borderColor:'#34d399',
-            borderWidth:1.5,
-            borderDash:[5,5],
-            pointRadius: 0,
-            fill: false
-        });
+        datasets.push({ label: 'Goal (' + j.goal + 'kg)', data: labels.map(function(){return j.goal;}), borderColor:'#34d399', borderWidth:1.5, borderDash:[5,5], pointRadius: 0, fill: false });
     }
-
     if (j.base !== null && !isNaN(j.base)) {
-        datasets.push({
-            label: `Base (${j.base}kg)`,
-            data: labels.map(() => j.base),
-            borderColor:'#fb923c',
-            borderWidth:1.5,
-            borderDash:[3,3],
-            pointRadius: 0,
-            fill: false
-        });
+        datasets.push({ label: 'Base (' + j.base + 'kg)', data: labels.map(function(){return j.base;}), borderColor:'#fb923c', borderWidth:1.5, borderDash:[3,3], pointRadius: 0, fill: false });
     }
 
     weightChartInstance = new Chart(ctx, {
-        type:'line',
-        data: { labels, datasets },
+        type:'line', data: { labels: labels, datasets: datasets },
         options:{
             responsive:true,
             scales:{
@@ -1141,19 +950,16 @@ function renderWeightChart() {
     });
 }
 
-// ═══════════════════════════════════════════════════════
-//  FORM HANDLERS
-// ═══════════════════════════════════════════════════════
 function handleFormSubmit(e) {
     e.preventDefault();
     const item = {
-        name:    document.getElementById('food-name').value,
-        protein: parseFloat(document.getElementById('food-p').value)     || 0,
-        carbs:   parseFloat(document.getElementById('food-c').value)     || 0,
-        fats:    parseFloat(document.getElementById('food-f').value)     || 0,
-        fiber:   parseFloat(document.getElementById('food-fiber').value) || 0,
-        calories:parseFloat(document.getElementById('food-cal').value)   || 0,
-        time:    document.getElementById('food-time').value
+        name: document.getElementById('food-name').value,
+        protein: parseFloat(document.getElementById('food-p').value) || 0,
+        carbs: parseFloat(document.getElementById('food-c').value) || 0,
+        fats: parseFloat(document.getElementById('food-f').value) || 0,
+        fiber: parseFloat(document.getElementById('food-fiber').value) || 0,
+        calories: parseFloat(document.getElementById('food-cal').value) || 0,
+        time: document.getElementById('food-time').value
     };
     state.logs.push(item);
     document.getElementById('macro-log-form').reset();
@@ -1163,12 +969,12 @@ function handleFormSubmit(e) {
 
 function logFormItem() {
     const item = {
-        name:    document.getElementById('food-name').value || "Unnamed Preset",
-        protein: parseFloat(document.getElementById('food-p').value)     || 0,
-        carbs:   parseFloat(document.getElementById('food-c').value)     || 0,
-        fats:    parseFloat(document.getElementById('food-f').value)     || 0,
-        fiber:   parseFloat(document.getElementById('food-fiber').value) || 0,
-        calories:parseFloat(document.getElementById('food-cal').value)   || 0
+        name: document.getElementById('food-name').value || "Unnamed Preset",
+        protein: parseFloat(document.getElementById('food-p').value) || 0,
+        carbs: parseFloat(document.getElementById('food-c').value) || 0,
+        fats: parseFloat(document.getElementById('food-f').value) || 0,
+        fiber: parseFloat(document.getElementById('food-fiber').value) || 0,
+        calories: parseFloat(document.getElementById('food-cal').value) || 0
     };
     if (!item.calories) { alert("Enter calories first!"); return; }
     state.favorites.push(item);
@@ -1183,12 +989,12 @@ function deleteFavItem(idx, e) {
 }
 
 function selectFavItem(item) {
-    document.getElementById('food-name').value  = item.name;
-    document.getElementById('food-p').value     = item.protein;
-    document.getElementById('food-c').value     = item.carbs;
-    document.getElementById('food-f').value     = item.fats;
+    document.getElementById('food-name').value = item.name;
+    document.getElementById('food-p').value = item.protein;
+    document.getElementById('food-c').value = item.carbs;
+    document.getElementById('food-f').value = item.fats;
     document.getElementById('food-fiber').value = item.fiber;
-    document.getElementById('food-cal').value   = item.calories;
+    document.getElementById('food-cal').value = item.calories;
     checkCalorieDeviation();
 }
 
@@ -1197,58 +1003,6 @@ function deleteLogItem(idx) {
     saveAndRender();
 }
 
-// ═══════════════════════════════════════════════════════
-//  WEIGHT LOG
-// ═══════════════════════════════════════════════════════
-document.getElementById('weight-log-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const val = parseFloat(document.getElementById('daily-weight-val').value);
-    if (!val) return;
-
-    const shortLbl = DateUtils.toShortLabel(new Date());
-    const idx      = state.weightHistory.findIndex(en => en.date === shortLbl);
-    if (idx > -1) state.weightHistory[idx].weight = val;
-    else state.weightHistory.push({ date: shortLbl, weight: val });
-
-    state.profile.weight = val;
-    document.getElementById('weight-input').value = val;
-
-    if (state.profile.baseWeight === null || state.profile.baseWeight === undefined || isNaN(state.profile.baseWeight)) {
-        state.profile.baseWeight = val;
-        document.getElementById('base-weight-input').value = val;
-        alert(`Base Weight auto-set to ${val}kg. Update in Profile if needed.`);
-    }
-
-    document.getElementById('daily-weight-val').value = '';
-    calculateTargets();
-    renderWeightChart();
-});
-
-// ═══════════════════════════════════════════════════════
-//  PROFILE FORM
-// ═══════════════════════════════════════════════════════
-document.getElementById('tdee-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const bwRaw = parseFloat(document.getElementById('base-weight-input').value);
-    state.profile = {
-        weight:        parseFloat(document.getElementById('weight-input').value),
-        baseWeight:    isNaN(bwRaw) ? state.profile.baseWeight : bwRaw,
-        goalWeight:    parseFloat(document.getElementById('goal-weight-input').value),
-        durationMonths:parseInt(document.getElementById('duration-input').value),
-        height:        parseFloat(document.getElementById('height-input').value),
-        age:           parseInt(document.getElementById('age-input').value),
-        activity:      1.2
-    };
-    calculateTargets();
-    if (!document.getElementById('view-weight').classList.contains('hidden')) {
-        renderWeightChart();
-    }
-    alert("Profile updated!");
-});
-
-// ═══════════════════════════════════════════════════════
-//  SAVE & RENDER
-// ═══════════════════════════════════════════════════════
 function saveAndRender() {
     safeSetItem('nutraProDeficitState', JSON.stringify(state));
     renderDashboardTotals();
@@ -1256,95 +1010,83 @@ function saveAndRender() {
 
 function renderDashboardTotals() {
     let totCal=0, totP=0, totC=0, totF=0, totFib=0;
-    state.logs.forEach(l => { totCal+=l.calories; totP+=l.protein; totC+=l.carbs; totF+=l.fats; totFib+=l.fiber; });
+    state.logs.forEach(function(l) { totCal+=l.calories; totP+=l.protein; totC+=l.carbs; totF+=l.fats; totFib+=l.fiber; });
 
-    document.getElementById('tot-cal').innerText   = `${Math.round(totCal)} / ${state.targets.calories} kcal`;
-    document.getElementById('tot-p').innerText     = `${Math.round(totP)}g / ${state.targets.protein}g`;
-    document.getElementById('tot-c').innerText     = `${Math.round(totC)}g / ${state.targets.carbs}g`;
-    document.getElementById('tot-f').innerText     = `${Math.round(totF)}g / ${state.targets.fats}g`;
-    document.getElementById('tot-fiber').innerText = `${Math.round(totFib)}g`;
+    document.getElementById('tot-cal').innerText = Math.round(totCal) + ' / ' + state.targets.calories + ' kcal';
+    document.getElementById('tot-p').innerText = Math.round(totP) + 'g / ' + state.targets.protein + 'g';
+    document.getElementById('tot-c').innerText = Math.round(totC) + 'g / ' + state.targets.carbs + 'g';
+    document.getElementById('tot-f').innerText = Math.round(totF) + 'g / ' + state.targets.fats + 'g';
+    document.getElementById('tot-fiber').innerText = Math.round(totFib) + 'g';
 
-    const pct = (c, t) => t > 0 ? Math.min(100,(c/t)*100) : 0;
-    document.getElementById('fill-cal').style.width = `${pct(totCal, state.targets.calories)}%`;
-    document.getElementById('fill-p').style.width   = `${pct(totP,   state.targets.protein)}%`;
-    document.getElementById('fill-c').style.width   = `${pct(totC,   state.targets.carbs)}%`;
-    document.getElementById('fill-f').style.width   = `${pct(totF,   state.targets.fats)}%`;
+    function pct(c, t) { return t > 0 ? Math.min(100,(c/t)*100) : 0; }
+    document.getElementById('fill-cal').style.width = pct(totCal, state.targets.calories) + '%';
+    document.getElementById('fill-p').style.width = pct(totP, state.targets.protein) + '%';
+    document.getElementById('fill-c').style.width = pct(totC, state.targets.carbs) + '%';
+    document.getElementById('fill-f').style.width = pct(totF, state.targets.fats) + '%';
 
     const favsEl = document.getElementById('favs-container');
     favsEl.innerHTML = '';
-    state.favorites.forEach((item, idx) => {
+    state.favorites.forEach(function(item, idx) {
         const pill = document.createElement('button');
         pill.className = "bg-[#0a0f1e] hover:bg-slate-900 border border-slate-800 text-left text-xs px-3 py-1.5 rounded-xl flex items-center gap-2 text-slate-300 font-medium transition-all active:scale-95";
-        pill.onclick = () => selectFavItem(item);
-        pill.innerHTML = `<span>${sanitize(item.name)} <span class="text-violet-400 font-bold text-[10px]">${item.calories}</span></span>
-            <span onclick="deleteFavItem(${idx}, event)" class="text-[10px] text-slate-600 hover:text-rose-400 font-black pl-1">✕</span>`;
+        pill.onclick = function() { selectFavItem(item); };
+        pill.innerHTML = '<span>' + sanitize(item.name) + ' <span class="text-violet-400 font-bold text-[10px]">' + item.calories + '</span></span><span onclick="deleteFavItem(' + idx + ', event)" class="text-[10px] text-slate-600 hover:text-rose-400 font-black pl-1">✕</span>';
         favsEl.appendChild(pill);
     });
 
     const groupsEl = document.getElementById('food-timeline-groups');
     groupsEl.innerHTML = '';
     if (state.logs.length === 0) {
-        groupsEl.innerHTML = `<div class="text-center text-xs text-slate-500 font-medium py-4">No items logged today.</div>`;
+        groupsEl.innerHTML = '<div class="text-center text-xs text-slate-500 font-medium py-4">No items logged today.</div>';
         return;
     }
 
     const buckets = { "🌅 Breakfast":[], "☀️ Lunch":[], "🌙 Dinner":[], "🍿 Snacks":[] };
-    state.logs.forEach((item, index) => { buckets[categorizeMealType(item.time)].push({ item, index }); });
+    state.logs.forEach(function(item, index) { buckets[categorizeMealType(item.time)].push({ item: item, index: index }); });
 
-    Object.keys(buckets).forEach(key => {
+    Object.keys(buckets).forEach(function(key) {
         const entries = buckets[key];
         if (entries.length === 0) return;
         const block = document.createElement('div');
         block.className = "space-y-1.5 border-l-2 border-violet-900/50 pl-3 ml-1";
-        const subTotal = entries.reduce((s,e) => s + e.item.calories, 0);
+        const subTotal = entries.reduce(function(s,e) { return s + e.item.calories; }, 0);
         const title = document.createElement('h3');
         title.className = "text-[11px] font-black text-slate-400 uppercase tracking-wider mb-1 flex items-center justify-between";
-        title.innerHTML = `<span>${key}</span><span class="text-violet-400 font-bold text-[10px]">${subTotal} kcal</span>`;
+        title.innerHTML = '<span>' + key + '</span><span class="text-violet-400 font-bold text-[10px]">' + subTotal + ' kcal</span>';
         block.appendChild(title);
 
-        entries.forEach(({ item, index }) => {
+        entries.forEach(function(entry) {
+            const item = entry.item;
+            const index = entry.index;
             const row = document.createElement('div');
             row.className = "bg-[#0a0f1e]/60 border border-slate-800/40 rounded-xl p-2.5 flex justify-between items-center text-xs";
-            row.innerHTML = `
-                <div>
-                    <div class="font-bold text-slate-200">${sanitize(item.name)}</div>
-                    <div class="text-[10px] text-slate-400 mt-0.5">⏱️ ${item.time || 'N/A'} • P: ${item.protein}g • C: ${item.carbs}g • F: ${item.fats}g</div>
-                </div>
-                <div class="flex items-center gap-3">
-                    <span class="font-black text-violet-400">${item.calories} kcal</span>
-                    <button onclick="deleteLogItem(${index})" class="text-slate-600 hover:text-rose-400 font-bold px-1 text-sm">✕</button>
-                </div>`;
+            row.innerHTML = '<div><div class="font-bold text-slate-200">' + sanitize(item.name) + '</div><div class="text-[10px] text-slate-400 mt-0.5">⏱️ ' + (item.time || 'N/A') + ' • P: ' + item.protein + 'g • C: ' + item.carbs + 'g • F: ' + item.fats + 'g</div></div><div class="flex items-center gap-3"><span class="font-black text-violet-400">' + item.calories + ' kcal</span><button onclick="deleteLogItem(' + index + ')" class="text-slate-600 hover:text-rose-400 font-bold px-1 text-sm">✕</button></div>';
             block.appendChild(row);
         });
         groupsEl.appendChild(block);
     });
 }
 
-// ═══════════════════════════════════════════════════════
-//  BACKUP / IMPORT
-// ═══════════════════════════════════════════════════════
 function runDualBackupEngine() {
     const jsonStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
     const a = document.createElement('a');
     a.setAttribute("href", jsonStr);
-    a.setAttribute("download", `nutra_pro_backup_${new Date().toISOString().split('T')[0]}.json`);
+    a.setAttribute("download", "nutra_pro_backup_" + new Date().toISOString().split('T')[0] + ".json");
     document.body.appendChild(a); a.click(); a.remove();
 
     if (state.calorieHistory.length === 0) return;
-    const rows = state.calorieHistory.map(h => ({
-        Date:h.date, ISODate:h.isoDate, Year:h.year, Month:h.monthName, Week:h.weekOfMonth,
-        EatenKcal:h.eaten, TargetKcal:h.target, TdeeKcal:h.tdee, Steps:h.steps,
-        ProteinG:h.protein, CarbsG:h.carbs, FatsG:h.fats, FiberG:h.fiber
-    }));
+    const rows = state.calorieHistory.map(function(h) {
+        return { Date:h.date, ISODate:h.isoDate, Year:h.year, Month:h.monthName, Week:h.weekOfMonth, EatenKcal:h.eaten, TargetKcal:h.target, TdeeKcal:h.tdee, Steps:h.steps, ProteinG:h.protein, CarbsG:h.carbs, FatsG:h.fats, FiberG:h.fiber };
+    });
     const ws = XLSX.utils.json_to_sheet(rows);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Calorie Ledger");
-    XLSX.writeFile(wb, `nutra_pro_ledger_${new Date().getFullYear()}.xlsx`);
+    XLSX.writeFile(wb, "nutra_pro_ledger_" + new Date().getFullYear() + ".xlsx");
 }
 
 function importStateData(e) {
     const fr = new FileReader();
-    fr.onload = (ev) => {
+    fr.onload = function(ev) {
         try {
             const parsed = JSON.parse(ev.target.result);
             if (parsed.profile && parsed.targets) {
@@ -1357,10 +1099,48 @@ function importStateData(e) {
     fr.readAsText(e.target.files[0]);
 }
 
-// ═══════════════════════════════════════════════════════
-//  BOOT
-// ═══════════════════════════════════════════════════════
-window.onload = () => {
+document.getElementById('weight-log-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const val = parseFloat(document.getElementById('daily-weight-val').value);
+    if (!val) return;
+    const shortLbl = DateUtils.toShortLabel(new Date());
+    const idx = state.weightHistory.findIndex(function(en) { return en.date === shortLbl; });
+    if (idx > -1) state.weightHistory[idx].weight = val;
+    else state.weightHistory.push({ date: shortLbl, weight: val });
+
+    state.profile.weight = val;
+    document.getElementById('weight-input').value = val;
+
+    if (state.profile.baseWeight == null || isNaN(state.profile.baseWeight)) {
+        state.profile.baseWeight = val;
+        document.getElementById('base-weight-input').value = val;
+        alert('Base Weight auto-set to ' + val + 'kg. Update in Profile if needed.');
+    }
+    document.getElementById('daily-weight-val').value = '';
+    calculateTargets();
+    renderWeightChart();
+});
+
+document.getElementById('tdee-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const bwRaw = parseFloat(document.getElementById('base-weight-input').value);
+    state.profile = {
+        weight: parseFloat(document.getElementById('weight-input').value),
+        baseWeight: isNaN(bwRaw) ? state.profile.baseWeight : bwRaw,
+        goalWeight: parseFloat(document.getElementById('goal-weight-input').value),
+        durationMonths: parseInt(document.getElementById('duration-input').value),
+        height: parseFloat(document.getElementById('height-input').value),
+        age: parseInt(document.getElementById('age-input').value),
+        activity: 1.2
+    };
+    calculateTargets();
+    if (!document.getElementById('view-weight').classList.contains('hidden')) {
+        renderWeightChart();
+    }
+    alert("Profile updated!");
+});
+
+window.onload = function() {
     initInputs();
     calculateTargets();
 };
