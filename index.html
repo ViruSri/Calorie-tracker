@@ -79,6 +79,11 @@
                         <input type="number" id="height-input" value="169" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-violet-500">
                     </div>
                 </div>
+                <div id="tdee-display-card" class="bg-gradient-to-r from-sky-950/40 to-cyan-950/40 border border-sky-800/50 rounded-xl p-3 text-center">
+                    <div class="text-[9px] font-bold text-sky-400 uppercase tracking-wider mb-1">🔥 Total Daily Burn (TDEE)</div>
+                    <div class="text-lg font-black text-sky-300" id="tdee-display-value">0 kcal</div>
+                    <div class="text-[9px] text-slate-400 mt-1" id="tdee-display-breakdown">BMR + step activity</div>
+                </div>
                 <div id="dynamic-deficit-notice" class="text-[11px] text-violet-300 bg-violet-950/30 border border-violet-900/50 p-2.5 rounded-xl font-medium">
                     Calculating trajectory...
                 </div>
@@ -549,6 +554,14 @@ function calculateTargets() {
     const totalTdee = baseTdee + stepsBonus;
     state.targets.tdee = totalTdee;
 
+    // Live TDEE display card
+    const tdeeValEl = document.getElementById('tdee-display-value');
+    const tdeeBreakEl = document.getElementById('tdee-display-breakdown');
+    if (tdeeValEl) tdeeValEl.innerText = totalTdee + ' kcal';
+    if (tdeeBreakEl) {
+        tdeeBreakEl.innerText = 'BMR ' + baseTdee + ' kcal' + (stepsBonus > 0 ? ' + Steps ' + stepsBonus + ' kcal' : ' (log steps for boost)');
+    }
+
     const currentWeight = p.weight;
     const goalWeight = p.goalWeight || 75;
     const remainingDelta = currentWeight - goalWeight;
@@ -681,9 +694,14 @@ function renderLedgersUI() {
     monthMap.forEach(function(mData) {
         const monthBlock = document.createElement('div');
         monthBlock.className = "bg-[#0a0f1e]/70 border border-slate-800/60 rounded-xl overflow-hidden mb-3";
-        let mEaten=0, mTarget=0;
-        mData.weeks.forEach(function(days) { days.forEach(function(d) { mEaten += d.eaten; mTarget += d.target; }); });
-        const mDeficit = mTarget - mEaten;
+        let mEaten=0, mBurn=0;
+        mData.weeks.forEach(function(days) {
+            days.forEach(function(d) {
+                mEaten += d.eaten;
+                mBurn += Number(d.tdee || d.target || 0);
+            });
+        });
+        const mDeficit = mBurn - mEaten;
 
         const monthHeader = document.createElement('button');
         monthHeader.className = "w-full text-left px-4 py-2.5 flex justify-between items-center cursor-pointer hover:bg-[#111827]/60 transition-colors";
@@ -696,9 +714,12 @@ function renderLedgersUI() {
         const sortedWeeks = Array.from(mData.weeks.keys()).sort(function(a,b) { return a - b; });
         sortedWeeks.forEach(function(wKey) {
             const days = mData.weeks.get(wKey);
-            let wEaten=0, wTarget=0;
-            days.forEach(function(d) { wEaten += d.eaten; wTarget += d.target; });
-            const wDeficit = wTarget - wEaten;
+            let wEaten=0, wBurn=0;
+            days.forEach(function(d) {
+                wEaten += d.eaten;
+                wBurn += Number(d.tdee || d.target || 0);
+            });
+            const wDeficit = wBurn - wEaten;
 
             const weekWrapper = document.createElement('div');
             weekWrapper.className = "border-t border-slate-800/40";
@@ -713,16 +734,18 @@ function renderLedgersUI() {
 
             days.forEach(function(day) {
                 const tg = Number(day.target || state.targets.calories);
-                const dd = tg - day.eaten;
+                // Use actual TDEE (real body burn) for deficit — not the cutting target
+                const actualBurn = Number(day.tdee || tg);
+                const dd = actualBurn - day.eaten;
                 const row = document.createElement('div');
                 row.className = "px-6 py-2.5 border-t border-slate-900/40 " + (dd >= 0 ? '' : 'bg-rose-950/10');
-                row.innerHTML = '<div class="flex justify-between items-start"><div class="space-y-0.5"><span class="font-extrabold text-slate-300 text-[11px] block">' + sanitize(day.date) + '</span><span class="text-[9px] text-slate-500 block">🐾 ' + day.steps.toLocaleString() + ' steps</span><span class="text-[10px] text-slate-400 flex items-center gap-2 mt-0.5 bg-slate-900/40 px-1.5 py-0.5 rounded border border-slate-800/40"><span>🧪 ' + Math.round(day.carbs||0) + 'g</span><span>🥩 ' + Math.round(day.protein||0) + 'g</span><span>🥑 ' + Math.round(day.fats||0) + 'g</span><span>🌾 ' + (day.fiber||0).toFixed(1) + 'g</span></span></div><div class="text-right space-y-0.5 self-start pt-0.5"><span class="block text-[11px] text-slate-400">' + day.eaten.toFixed(0) + ' / <span class="text-violet-400 font-bold">' + tg + '</span> kcal</span><span class="block text-[11px]">' + formatDeficit(dd) + '</span></div></div>';
+                row.innerHTML = '<div class="flex justify-between items-start"><div class="space-y-0.5"><span class="font-extrabold text-slate-300 text-[11px] block">' + sanitize(day.date) + '</span><span class="text-[9px] text-slate-500 block">🐾 ' + day.steps.toLocaleString() + ' steps • 🔥 ' + actualBurn + ' burn</span><span class="text-[10px] text-slate-400 flex items-center gap-2 mt-0.5 bg-slate-900/40 px-1.5 py-0.5 rounded border border-slate-800/40"><span>🧪 ' + Math.round(day.carbs||0) + 'g</span><span>🥩 ' + Math.round(day.protein||0) + 'g</span><span>🥑 ' + Math.round(day.fats||0) + 'g</span><span>🌾 ' + (day.fiber||0).toFixed(1) + 'g</span></span></div><div class="text-right space-y-0.5 self-start pt-0.5"><span class="block text-[11px] text-slate-400">Ate ' + day.eaten.toFixed(0) + ' / Burn <span class="text-sky-400 font-bold">' + actualBurn + '</span></span><span class="block text-[11px]">' + formatDeficit(dd) + '</span></div></div>';
                 weekBody.appendChild(row);
             });
 
             const weekFooter = document.createElement('div');
             weekFooter.className = "px-6 py-2 border-t border-slate-800/50 flex justify-between items-center text-[10px] font-bold " + (wDeficit >= 0 ? 'text-teal-400 bg-teal-950/20' : 'text-rose-400 bg-rose-950/20');
-            weekFooter.innerHTML = '<span>Week ' + wKey + ' Total</span><span>' + wEaten.toFixed(0) + ' / ' + wTarget + ' → ' + formatDeficit(wDeficit) + '</span>';
+            weekFooter.innerHTML = '<span>Week ' + wKey + ' Total</span><span>Ate ' + wEaten.toFixed(0) + ' / Burn ' + wBurn.toFixed(0) + ' → ' + formatDeficit(wDeficit) + '</span>';
             weekBody.appendChild(weekFooter);
 
             weekWrapper.appendChild(weekHeader);
@@ -732,7 +755,7 @@ function renderLedgersUI() {
 
         const monthFooter = document.createElement('div');
         monthFooter.className = "px-4 py-2 flex justify-between items-center text-[10px] font-bold " + (mDeficit >= 0 ? 'text-violet-400 bg-violet-950/20 month-row-deficit' : 'text-amber-400 bg-amber-950/20 month-row-surplus') + " border-t border-slate-800/50";
-        monthFooter.innerHTML = '<span>' + sanitize(mData.monthName) + ' Total</span><span>' + mEaten.toFixed(0) + ' / ' + mTarget + ' → ' + formatDeficit(mDeficit) + '</span>';
+        monthFooter.innerHTML = '<span>' + sanitize(mData.monthName) + ' Total</span><span>Ate ' + mEaten.toFixed(0) + ' / Burn ' + mBurn.toFixed(0) + ' → ' + formatDeficit(mDeficit) + '</span>';
         monthBody.appendChild(monthFooter);
 
         monthBlock.appendChild(monthHeader);
@@ -757,6 +780,7 @@ function renderCalorieChart() {
         datasets = [
             { label:'Calories Eaten', data: state.calorieHistory.map(function(h){return h.eaten;}), borderColor:'#818cf8', backgroundColor:'rgba(129,140,248,0.08)', borderWidth:2, fill:true, tension:0.1, yAxisID:'y' },
             { label:'Target', data: state.calorieHistory.map(function(h){return h.target;}), borderColor:'#34d399', borderWidth:1.5, borderDash:[4,4], fill:false, tension:0, yAxisID:'y' },
+            { label:'TDEE Burn', data: state.calorieHistory.map(function(h){return h.tdee||h.target;}), borderColor:'#38bdf8', borderWidth:1.5, borderDash:[2,2], fill:false, tension:0, yAxisID:'y' },
             { label:'Steps', data: state.calorieHistory.map(function(h){return h.steps;}), type:'bar', backgroundColor:'rgba(56,189,248,0.12)', yAxisID:'ySteps', barThickness:10 }
         ];
         scalesCfg.ySteps = { type:'linear', position:'right', grid:{ drawOnChartArea:false }, ticks:{ color:'#38bdf8', font:{ size:8 } } };
