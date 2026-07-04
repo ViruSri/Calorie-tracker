@@ -10,26 +10,26 @@
     <style>
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 999px; }
-        .week-row-deficit   { background: rgba(52,211,153,0.07); border-left: 3px solid #34d399; }
-        .week-row-surplus   { background: rgba(248,113,113,0.07); border-left: 3px solid #f87171; }
-        .month-row-deficit  { background: rgba(99,102,241,0.08); border-left: 3px solid #818cf8; }
+        ::-webkit-scrollbar-thumb { background: #1e3a52; border-radius: 999px; }
+        .week-row-deficit   { background: rgba(45,212,191,0.08); border-left: 3px solid #2dd4bf; }
+        .week-row-surplus   { background: rgba(251,146,60,0.08); border-left: 3px solid #fb923c; }
+        .month-row-deficit  { background: rgba(6,182,212,0.08); border-left: 3px solid #06b6d4; }
         .month-row-surplus  { background: rgba(251,146,60,0.08); border-left: 3px solid #fb923c; }
     </style>
 </head>
-<body class="bg-[#0a0f1e] text-slate-100 font-sans antialiased min-h-screen p-4 md:p-6 select-none">
+<body class="bg-[#0a1620] text-slate-100 font-sans antialiased min-h-screen p-4 md:p-6 select-none">
 
 <div class="max-w-md mx-auto space-y-6">
 
     <header class="text-center py-2 flex justify-between items-center">
         <div>
-            <h1 class="text-2xl font-black tracking-tight" style="background:linear-gradient(90deg,#818cf8,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">NutraAI Pro</h1>
-            <p class="text-[10px] text-slate-500 font-semibold tracking-widest uppercase mt-0.5">Precision Nutrition Engine</p>
+            <h1 class="text-2xl font-black tracking-tight" style="background:linear-gradient(90deg,#22d3ee,#5eead4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">NutraAI Pro</h1>
+            <p class="text-[10px] text-cyan-600/70 font-semibold tracking-widest uppercase mt-0.5">Precision Nutrition Engine</p>
         </div>
         <div class="flex flex-col items-end gap-1.5">
             <div class="flex gap-2">
-                <button onclick="runDualBackupEngine()" class="text-[10px] font-bold text-violet-300 bg-violet-950/40 border border-violet-900 px-2 py-1.5 rounded-lg active:scale-95 transition-all cursor-pointer">📥 Backup</button>
-                <label class="text-[10px] font-bold text-teal-300 bg-teal-950/40 border border-teal-900 px-2 py-1.5 rounded-lg active:scale-95 transition-all cursor-pointer inline-block">
+                <button onclick="runDualBackupEngine()" class="text-[10px] font-bold text-cyan-300 bg-cyan-950/40 border border-cyan-800/60 px-2 py-1.5 rounded-lg active:scale-95 transition-all cursor-pointer">📥 Backup</button>
+                <label class="text-[10px] font-bold text-teal-300 bg-teal-950/40 border border-teal-800/60 px-2 py-1.5 rounded-lg active:scale-95 transition-all cursor-pointer inline-block">
                     📤 Import
                     <input type="file" id="import-file" onchange="importStateData(event)" class="hidden">
                 </label>
@@ -38,157 +38,157 @@
         </div>
     </header>
 
-    <nav class="grid grid-cols-3 bg-[#111827] p-1.5 rounded-xl border border-slate-800/60 gap-1 shadow-inner">
-        <button id="btn-tracker" onclick="switchTab('tracker')" class="py-2.5 text-xs font-bold rounded-lg bg-violet-600 text-white transition-all active:scale-95 shadow-sm">🍽️ Log</button>
+    <nav class="grid grid-cols-3 bg-[#132030] p-1.5 rounded-xl border border-cyan-900/30 gap-1 shadow-inner">
+        <button id="btn-tracker" onclick="switchTab('tracker')" class="py-2.5 text-xs font-bold rounded-lg bg-cyan-600 text-white transition-all active:scale-95 shadow-sm">🍽️ Log</button>
         <button id="btn-trends"  onclick="switchTab('trends')"  class="py-2.5 text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-800 transition-all active:scale-95">📈 Trends</button>
         <button id="btn-weight"  onclick="switchTab('weight')"  class="py-2.5 text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-800 transition-all active:scale-95">⚖️ Weight</button>
     </nav>
 
     <div id="view-tracker" class="space-y-6">
 
-        <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-4">
-            <h2 class="text-sm font-bold text-slate-200 flex items-center gap-2">👤 Profile & Goals</h2>
+        <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-4">
+            <h2 class="text-sm font-bold text-cyan-100 flex items-center gap-2">👤 Profile & Goals</h2>
             <form id="tdee-form" class="space-y-3">
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Base Weight (kg) <span class="text-violet-400">★</span></label>
-                        <input type="number" step="0.1" id="base-weight-input" placeholder="Start weight" class="w-full bg-[#0a0f1e] border border-violet-800/60 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-violet-500">
+                        <label class="block text-[10px] font-bold text-cyan-400/80 uppercase mb-1">Base Weight (kg) <span class="text-teal-400">★</span></label>
+                        <input type="number" step="0.1" id="base-weight-input" placeholder="Start weight" class="w-full bg-[#0a1620] border border-teal-800/50 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-teal-500">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Current (kg)</label>
-                        <input type="number" step="0.1" id="weight-input" value="88" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-violet-500">
+                        <label class="block text-[10px] font-bold text-cyan-400/80 uppercase mb-1">Current (kg)</label>
+                        <input type="number" step="0.1" id="weight-input" value="88" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-cyan-500">
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Goal (kg)</label>
-                        <input type="number" step="0.1" id="goal-weight-input" value="75" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-violet-500">
+                        <label class="block text-[10px] font-bold text-cyan-400/80 uppercase mb-1">Goal (kg)</label>
+                        <input type="number" step="0.1" id="goal-weight-input" value="75" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-cyan-500">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Time (Months)</label>
-                        <input type="number" id="duration-input" value="6" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-violet-500">
+                        <label class="block text-[10px] font-bold text-cyan-400/80 uppercase mb-1">Time (Months)</label>
+                        <input type="number" id="duration-input" value="6" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-cyan-500">
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Age</label>
-                        <input type="number" id="age-input" value="25" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-violet-500">
+                        <label class="block text-[10px] font-bold text-cyan-400/80 uppercase mb-1">Age</label>
+                        <input type="number" id="age-input" value="25" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-cyan-500">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Height (cm)</label>
-                        <input type="number" id="height-input" value="169" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-violet-500">
+                        <label class="block text-[10px] font-bold text-cyan-400/80 uppercase mb-1">Height (cm)</label>
+                        <input type="number" id="height-input" value="169" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2 text-sm text-center text-white focus:outline-none focus:border-cyan-500">
                     </div>
                 </div>
-                <div id="tdee-display-card" class="bg-gradient-to-r from-sky-950/40 to-cyan-950/40 border border-sky-800/50 rounded-xl p-3 text-center">
-                    <div class="text-[9px] font-bold text-sky-400 uppercase tracking-wider mb-1">🔥 Total Daily Burn (TDEE)</div>
-                    <div class="text-lg font-black text-sky-300" id="tdee-display-value">0 kcal</div>
+                <div id="tdee-display-card" class="bg-gradient-to-r from-teal-950/50 to-cyan-950/50 border border-teal-700/40 rounded-xl p-3 text-center">
+                    <div class="text-[9px] font-bold text-teal-300 uppercase tracking-wider mb-1">🔥 Total Daily Burn (TDEE)</div>
+                    <div class="text-lg font-black text-teal-200" id="tdee-display-value">0 kcal</div>
                     <div class="text-[9px] text-slate-400 mt-1" id="tdee-display-breakdown">BMR + step activity</div>
                 </div>
-                <div id="dynamic-deficit-notice" class="text-[11px] text-violet-300 bg-violet-950/30 border border-violet-900/50 p-2.5 rounded-xl font-medium">
+                <div id="dynamic-deficit-notice" class="text-[11px] text-cyan-200 bg-cyan-950/40 border border-cyan-800/40 p-2.5 rounded-xl font-medium">
                     Calculating trajectory...
                 </div>
-                <button type="submit" class="w-full bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold py-2.5 rounded-xl transition-all active:scale-95 cursor-pointer">Update Targets</button>
+                <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold py-2.5 rounded-xl transition-all active:scale-95 cursor-pointer">Update Targets</button>
             </form>
         </div>
 
-        <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-4">
-            <h2 class="text-sm font-bold text-slate-200">Daily Intake Summary</h2>
+        <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-4">
+            <h2 class="text-sm font-bold text-cyan-100">Daily Intake Summary</h2>
             <div class="grid grid-cols-2 gap-3">
-                <div id="card-cal" class="relative overflow-hidden bg-[#0a0f1e] p-3 rounded-xl border border-slate-800/50 transition-all duration-500">
-                    <div id="fill-cal" class="absolute top-0 left-0 bottom-0 bg-violet-500/10 transition-all duration-500 pointer-events-none" style="width:0%"></div>
-                    <div class="relative z-10 text-[10px] font-bold text-slate-400 uppercase">Calories</div>
-                    <div class="relative z-10 text-base font-black text-violet-400 my-0.5" id="tot-cal">0 / 0 kcal</div>
+                <div id="card-cal" class="relative overflow-hidden bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30 transition-all duration-500">
+                    <div id="fill-cal" class="absolute top-0 left-0 bottom-0 bg-cyan-500/10 transition-all duration-500 pointer-events-none" style="width:0%"></div>
+                    <div class="relative z-10 text-[10px] font-bold text-cyan-500/80 uppercase">Calories</div>
+                    <div class="relative z-10 text-base font-black text-cyan-300 my-0.5" id="tot-cal">0 / 0 kcal</div>
                 </div>
-                <div id="card-p" class="relative overflow-hidden bg-[#0a0f1e] p-3 rounded-xl border border-slate-800/50 transition-all duration-500">
+                <div id="card-p" class="relative overflow-hidden bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30 transition-all duration-500">
                     <div id="fill-p" class="absolute top-0 left-0 bottom-0 bg-teal-500/10 transition-all duration-500 pointer-events-none" style="width:0%"></div>
-                    <div class="relative z-10 text-[10px] font-bold text-slate-400 uppercase">Protein</div>
-                    <div class="relative z-10 text-base font-black text-teal-400 my-0.5" id="tot-p">0g / 0g</div>
+                    <div class="relative z-10 text-[10px] font-bold text-cyan-500/80 uppercase">Protein</div>
+                    <div class="relative z-10 text-base font-black text-teal-300 my-0.5" id="tot-p">0g / 0g</div>
                 </div>
-                <div id="card-c" class="relative overflow-hidden bg-[#0a0f1e] p-3 rounded-xl border border-slate-800/50 transition-all duration-500">
+                <div id="card-c" class="relative overflow-hidden bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30 transition-all duration-500">
                     <div id="fill-c" class="absolute top-0 left-0 bottom-0 bg-sky-500/10 transition-all duration-500 pointer-events-none" style="width:0%"></div>
-                    <div class="relative z-10 text-[10px] font-bold text-slate-400 uppercase">Carbs</div>
-                    <div class="relative z-10 text-base font-black text-sky-400 my-0.5" id="tot-c">0g / 0g</div>
+                    <div class="relative z-10 text-[10px] font-bold text-cyan-500/80 uppercase">Carbs</div>
+                    <div class="relative z-10 text-base font-black text-sky-300 my-0.5" id="tot-c">0g / 0g</div>
                 </div>
-                <div id="card-f" class="relative overflow-hidden bg-[#0a0f1e] p-3 rounded-xl border border-slate-800/50 transition-all duration-500">
+                <div id="card-f" class="relative overflow-hidden bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30 transition-all duration-500">
                     <div id="fill-f" class="absolute top-0 left-0 bottom-0 bg-rose-500/10 transition-all duration-500 pointer-events-none" style="width:0%"></div>
-                    <div class="relative z-10 text-[10px] font-bold text-slate-400 uppercase">Fats</div>
-                    <div class="relative z-10 text-base font-black text-rose-400 my-0.5" id="tot-f">0g / 0g</div>
+                    <div class="relative z-10 text-[10px] font-bold text-cyan-500/80 uppercase">Fats</div>
+                    <div class="relative z-10 text-base font-black text-rose-300 my-0.5" id="tot-f">0g / 0g</div>
                 </div>
             </div>
-            <div class="bg-[#0a0f1e] p-3 rounded-xl border border-slate-800/50 text-center text-xs font-bold text-violet-300">
+            <div class="bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30 text-center text-xs font-bold text-teal-300">
                 🌾 Fiber Intake: <span id="tot-fiber" class="text-white font-black">0g</span> / 35g
             </div>
         </div>
 
-        <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-3">
-            <h2 class="text-sm font-bold text-slate-200 flex items-center gap-2">🐾 Daily Steps</h2>
+        <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-3">
+            <h2 class="text-sm font-bold text-cyan-100 flex items-center gap-2">🐾 Daily Steps</h2>
             <form id="steps-log-form" onsubmit="saveDailySteps(event)" class="flex gap-2">
-                <input type="number" id="daily-steps-val" placeholder="e.g., 10000" class="flex-1 bg-[#0a0f1e] border border-slate-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-violet-500" required>
-                <button type="submit" class="bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs px-5 rounded-xl transition-all active:scale-95 cursor-pointer">Save</button>
+                <input type="number" id="daily-steps-val" placeholder="e.g., 10000" class="flex-1 bg-[#0a1620] border border-cyan-900/40 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-cyan-500" required>
+                <button type="submit" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs px-5 rounded-xl transition-all active:scale-95 cursor-pointer">Save</button>
             </form>
-            <div class="text-xs text-violet-300 font-bold bg-violet-950/30 p-2.5 rounded-xl border border-violet-900/40 text-center">
+            <div class="text-xs text-cyan-200 font-bold bg-cyan-950/40 p-2.5 rounded-xl border border-cyan-800/40 text-center">
                 Logged Today: <span id="active-steps-display" class="text-white font-black">0</span> steps
                 <span id="active-steps-bonus" class="text-teal-400 block mt-1 font-semibold"></span>
             </div>
         </div>
 
-        <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-4">
+        <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-4">
             <div class="flex justify-between items-center">
-                <h2 class="text-sm font-bold text-slate-200">Manual Entry Form</h2>
-                <button type="button" onclick="parseMacrosFromClipboard()" class="text-[10px] font-extrabold text-violet-400 bg-violet-950/50 border border-violet-900/60 px-2.5 py-1.5 rounded-lg active:scale-95 transition-all cursor-pointer">📋 Paste Macros</button>
+                <h2 class="text-sm font-bold text-cyan-100">Manual Entry Form</h2>
+                <button type="button" onclick="parseMacrosFromClipboard()" class="text-[10px] font-extrabold text-cyan-300 bg-cyan-950/50 border border-cyan-800/50 px-2.5 py-1.5 rounded-lg active:scale-95 transition-all cursor-pointer">📋 Paste Macros</button>
             </div>
             <form id="macro-log-form" onsubmit="handleFormSubmit(event)" class="space-y-3">
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Item Name</label>
-                    <input type="text" id="food-name" placeholder="e.g., Chicken Shawarma" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-violet-500" required>
+                    <label class="block text-[10px] font-bold text-cyan-400/80 uppercase mb-1">Item Name</label>
+                    <input type="text" id="food-name" placeholder="e.g., Chicken Shawarma" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500" required>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Protein (g)</label>
-                        <input type="number" step="0.1" id="food-p" placeholder="0" value="0" oninput="autoCalculateCalories()" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-violet-500">
+                        <label class="block text-[10px] font-bold text-cyan-400/80 uppercase mb-1">Protein (g)</label>
+                        <input type="number" step="0.1" id="food-p" placeholder="0" value="0" oninput="autoCalculateCalories()" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Carbs (g)</label>
-                        <input type="number" step="0.1" id="food-c" placeholder="0" value="0" oninput="autoCalculateCalories()" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-violet-500">
+                        <label class="block text-[10px] font-bold text-cyan-400/80 uppercase mb-1">Carbs (g)</label>
+                        <input type="number" step="0.1" id="food-c" placeholder="0" value="0" oninput="autoCalculateCalories()" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Fats (g)</label>
-                        <input type="number" step="0.1" id="food-f" placeholder="0" value="0" oninput="autoCalculateCalories()" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-violet-500">
+                        <label class="block text-[10px] font-bold text-cyan-400/80 uppercase mb-1">Fats (g)</label>
+                        <input type="number" step="0.1" id="food-f" placeholder="0" value="0" oninput="autoCalculateCalories()" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Calories (kcal)</label>
-                        <input type="number" step="0.1" id="food-cal" placeholder="0" oninput="checkCalorieDeviation()" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm font-bold text-violet-400 focus:outline-none focus:border-violet-500" required>
+                        <label class="block text-[10px] font-bold text-cyan-400/80 uppercase mb-1">Calories (kcal)</label>
+                        <input type="number" step="0.1" id="food-cal" placeholder="0" oninput="checkCalorieDeviation()" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm font-bold text-cyan-300 focus:outline-none focus:border-cyan-500" required>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Dietary Fiber (g)</label>
-                        <input type="number" step="0.1" id="food-fiber" placeholder="0" value="0" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-violet-500">
+                        <label class="block text-[10px] font-bold text-cyan-400/80 uppercase mb-1">Dietary Fiber (g)</label>
+                        <input type="number" step="0.1" id="food-fiber" placeholder="0" value="0" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Time Eaten</label>
-                        <input type="time" id="food-time" class="w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-violet-500">
+                        <label class="block text-[10px] font-bold text-cyan-400/80 uppercase mb-1">Time Eaten</label>
+                        <input type="time" id="food-time" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-2 pt-2">
                     <button type="button" onclick="logFormItem(true)" class="bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold py-3 rounded-xl transition-all active:scale-95 cursor-pointer">⭐ Save to Favs</button>
-                    <button type="submit" class="bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold py-3 rounded-xl transition-all active:scale-95 cursor-pointer">Log Daily Entry</button>
+                    <button type="submit" class="bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold py-3 rounded-xl transition-all active:scale-95 cursor-pointer">Log Daily Entry</button>
                 </div>
             </form>
         </div>
 
-        <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-3">
-            <h2 class="text-sm font-bold text-slate-200">⭐ Favorite Presets</h2>
+        <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-3">
+            <h2 class="text-sm font-bold text-cyan-100">⭐ Favorite Presets</h2>
             <div id="favs-container" class="flex flex-wrap gap-2"></div>
         </div>
 
-        <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-4">
+        <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-4">
             <div class="flex justify-between items-center flex-wrap gap-3">
-                <h2 class="text-sm font-bold text-slate-200">Today's Timeline</h2>
-                <div class="bg-[#0a0f1e] border border-slate-800/60 rounded-xl p-3 grid grid-cols-2 gap-2 items-end w-full">
+                <h2 class="text-sm font-bold text-cyan-100">Today's Timeline</h2>
+                <div class="bg-[#0a1620] border border-cyan-900/30 rounded-xl p-3 grid grid-cols-2 gap-2 items-end w-full">
                     <div>
-                        <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1">Archive Target Date</label>
-                        <input type="date" id="archive-date-picker" class="w-full bg-[#111827] border border-slate-800 rounded-lg px-2 py-1 text-xs text-white focus:outline-none">
+                        <label class="block text-[9px] font-bold text-cyan-400/80 uppercase mb-1">Archive Target Date</label>
+                        <input type="date" id="archive-date-picker" class="w-full bg-[#132030] border border-cyan-900/40 rounded-lg px-2 py-1 text-xs text-white focus:outline-none">
                     </div>
                     <button onclick="archiveAndResetDay()" class="text-xs font-bold text-amber-400 bg-amber-950/40 hover:bg-amber-950/70 border border-amber-900 px-3 py-1.5 rounded-lg transition-all active:scale-95 cursor-pointer">☀️ End & Archive Day</button>
                 </div>
@@ -198,66 +198,66 @@
     </div>
 
     <div id="view-trends" class="space-y-6 hidden">
-        <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-4">
+        <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-4">
             <div class="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
-                <h2 id="chart-title" class="text-sm font-bold text-slate-200">Calorie Target Baseline Trend</h2>
-                <div class="flex bg-[#0a0f1e] border border-slate-800/50 p-0.5 rounded-lg gap-0.5">
-                    <button id="btn-chart-cal" onclick="changeChartMetric('calories')" class="px-2.5 py-1 text-[10px] font-bold rounded-md bg-violet-600 text-white transition-all cursor-pointer">Calories</button>
+                <h2 id="chart-title" class="text-sm font-bold text-cyan-100">Calorie Target Baseline Trend</h2>
+                <div class="flex bg-[#0a1620] border border-cyan-900/30 p-0.5 rounded-lg gap-0.5">
+                    <button id="btn-chart-cal" onclick="changeChartMetric('calories')" class="px-2.5 py-1 text-[10px] font-bold rounded-md bg-cyan-600 text-white transition-all cursor-pointer">Calories</button>
                     <button id="btn-chart-macros" onclick="changeChartMetric('macros')" class="px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer">Macros</button>
                     <button id="btn-chart-fiber" onclick="changeChartMetric('fiber')" class="px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer">Fiber</button>
                 </div>
             </div>
-            <div class="bg-[#0a0f1e] p-2 rounded-xl border border-slate-800/50">
+            <div class="bg-[#0a1620] p-2 rounded-xl border border-cyan-900/30">
                 <canvas id="calorieChart" width="100" height="60"></canvas>
             </div>
         </div>
 
-        <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-5">
+        <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-5">
             <div class="flex justify-between items-center">
-                <h2 class="text-sm font-bold text-slate-200">📜 Historical Balance Ledgers</h2>
+                <h2 class="text-sm font-bold text-cyan-100">📜 Historical Balance Ledgers</h2>
                 <button onclick="clearHistory('trends')" class="text-[10px] font-bold text-rose-400 bg-rose-950/40 border border-rose-900 px-2.5 py-1 rounded-lg active:scale-95 transition-all cursor-pointer">Reset Ledgers</button>
             </div>
             <div class="space-y-2">
-                <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">📅 Archived Daily Summaries</h3>
+                <h3 class="text-[11px] font-bold text-cyan-400/80 uppercase tracking-wider">📅 Archived Daily Summaries</h3>
                 <div id="ledger-daily-accordion" class="space-y-2 max-h-[520px] overflow-y-auto pr-1"></div>
             </div>
         </div>
     </div>
 
     <div id="view-weight" class="space-y-6 hidden">
-        <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-4">
-            <h2 class="text-sm font-bold text-slate-200">Log Daily Weight</h2>
+        <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-4">
+            <h2 class="text-sm font-bold text-cyan-100">Log Daily Weight</h2>
             <form id="weight-log-form" class="flex gap-2">
-                <input type="number" step="0.1" id="daily-weight-val" placeholder="e.g., 87.5" class="flex-1 bg-[#0a0f1e] border border-slate-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-violet-500" required>
-                <button type="submit" class="bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs px-5 rounded-xl transition-all active:scale-95 cursor-pointer">Save Log</button>
+                <input type="number" step="0.1" id="daily-weight-val" placeholder="e.g., 87.5" class="flex-1 bg-[#0a1620] border border-cyan-900/40 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-cyan-500" required>
+                <button type="submit" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs px-5 rounded-xl transition-all active:scale-95 cursor-pointer">Save Log</button>
             </form>
             <div class="grid grid-cols-2 gap-3 pt-1">
-                <div id="weight-glow-total" class="bg-[#0a0f1e] p-3 rounded-xl border border-slate-800/50 transition-all duration-500">
-                    <div class="text-[9px] font-bold text-slate-400 uppercase tracking-wide" id="journey-label">Total Journey Progress</div>
-                    <div id="weight-stat-total" class="text-base font-black text-teal-400 mt-0.5">0.0 kg</div>
+                <div id="weight-glow-total" class="bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30 transition-all duration-500">
+                    <div class="text-[9px] font-bold text-cyan-400/80 uppercase tracking-wide" id="journey-label">Total Journey Progress</div>
+                    <div id="weight-stat-total" class="text-base font-black text-teal-300 mt-0.5">0.0 kg</div>
                 </div>
-                <div id="weight-glow-velocity" class="bg-[#0a0f1e] p-3 rounded-xl border border-slate-800/50 transition-all duration-500">
-                    <div class="text-[9px] font-bold text-slate-400 uppercase tracking-wide">7-Day Trailing Speed</div>
-                    <div id="weight-stat-velocity" class="text-base font-black text-violet-400 mt-0.5">0.0 kg</div>
+                <div id="weight-glow-velocity" class="bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30 transition-all duration-500">
+                    <div class="text-[9px] font-bold text-cyan-400/80 uppercase tracking-wide">📊 Average Weight</div>
+                    <div id="weight-stat-velocity" class="text-base font-black text-cyan-300 mt-0.5">— kg</div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-4">
+        <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-4">
             <div class="space-y-2">
-                <div class="flex justify-between items-center text-xs font-bold text-slate-300">
+                <div class="flex justify-between items-center text-xs font-bold text-cyan-100">
                     <span class="flex items-center gap-1.5">🏁 Goal Target Trajectory</span>
-                    <span id="weight-progress-percent" class="text-violet-400 font-black bg-violet-950 px-2 py-0.5 rounded-md border border-violet-900/60">0%</span>
+                    <span id="weight-progress-percent" class="text-teal-300 font-black bg-teal-950/50 px-2 py-0.5 rounded-md border border-teal-800/50">0%</span>
                 </div>
-                <div class="w-full bg-[#0a0f1e] rounded-full h-4 border border-slate-800/50 p-0.5 overflow-hidden shadow-inner">
-                    <div id="weight-progress-bar" class="bg-gradient-to-r from-violet-500 via-sky-500 to-teal-500 h-full rounded-full transition-all duration-700 shadow-[0_0_10px_rgba(139,92,246,0.5)]" style="width:0%"></div>
+                <div class="w-full bg-[#0a1620] rounded-full h-4 border border-cyan-900/30 p-0.5 overflow-hidden shadow-inner">
+                    <div id="weight-progress-bar" class="bg-gradient-to-r from-cyan-500 via-teal-400 to-emerald-400 h-full rounded-full transition-all duration-700 shadow-[0_0_10px_rgba(34,211,238,0.4)]" style="width:0%"></div>
                 </div>
-                <div class="text-[10px] text-slate-500 font-medium text-center" id="weight-progress-label">
+                <div class="text-[10px] text-cyan-500/70 font-medium text-center" id="weight-progress-label">
                     Set a Base Weight in your profile to begin tracking.
                 </div>
             </div>
-            <div class="bg-[#0a0f1e] p-4 border border-slate-800/50 rounded-xl space-y-3">
-                <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider border-b border-slate-800/60 pb-1.5 flex justify-between items-center">
+            <div class="bg-[#0a1620] p-4 border border-cyan-900/30 rounded-xl space-y-3">
+                <div class="text-[10px] font-extrabold text-cyan-400/80 uppercase tracking-wider border-b border-cyan-900/40 pb-1.5 flex justify-between items-center">
                     <span>🏆 Milestone Roadmap Checklist</span>
                     <span id="next-objective-badge" class="text-[9px] text-amber-400 font-bold bg-amber-950/40 border border-amber-900 px-2 py-0.5 rounded">Calculating...</span>
                 </div>
@@ -265,12 +265,12 @@
             </div>
         </div>
 
-        <div class="bg-[#111827] p-5 rounded-2xl border border-slate-800/60 shadow-xl space-y-4">
+        <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-4">
             <div class="flex justify-between items-center">
-                <h2 class="text-sm font-bold text-slate-200">Weight Progression Graph</h2>
+                <h2 class="text-sm font-bold text-cyan-100">Weight Progression Graph</h2>
                 <button onclick="clearHistory('weight')" class="text-[10px] font-bold text-rose-400 bg-rose-950/40 border border-rose-900 px-2.5 py-1 rounded-lg active:scale-95 transition-all cursor-pointer">Clear History</button>
             </div>
-            <div class="bg-[#0a0f1e] p-2 rounded-xl border border-slate-800/50">
+            <div class="bg-[#0a1620] p-2 rounded-xl border border-cyan-900/30">
                 <canvas id="weightChart" width="100" height="60"></canvas>
             </div>
             <div id="weight-empty-msg" class="text-center text-xs text-slate-500 py-4 hidden">No weight logs yet. Add one above!</div>
@@ -494,7 +494,7 @@ function autoCalculateCalories() {
         const cal = (p * 4) + (c * 4) + (f * 9);
         const el = document.getElementById('food-cal');
         el.value = cal > 0 ? cal.toFixed(1) : '';
-        el.className = "w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm font-bold text-violet-400 focus:outline-none focus:border-violet-500";
+        el.className = "w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm font-bold text-cyan-300 focus:outline-none focus:border-cyan-500";
     }, 150);
 }
 
@@ -506,9 +506,9 @@ function checkCalorieDeviation() {
     const sum = (p * 4) + (c * 4) + (f * 9);
     const el = document.getElementById('food-cal');
     if (sum > 0 && Math.abs(ent - sum) > sum * 0.15) {
-        el.className = "w-full bg-[#0a0f1e] border border-amber-500 rounded-xl p-2.5 text-sm font-bold text-amber-400 focus:outline-none";
+        el.className = "w-full bg-[#0a1620] border border-amber-500 rounded-xl p-2.5 text-sm font-bold text-amber-400 focus:outline-none";
     } else {
-        el.className = "w-full bg-[#0a0f1e] border border-slate-800 rounded-xl p-2.5 text-sm font-bold text-violet-400 focus:outline-none focus:border-violet-500";
+        el.className = "w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm font-bold text-cyan-300 focus:outline-none focus:border-cyan-500";
     }
 }
 
@@ -527,7 +527,7 @@ function switchTab(tab) {
         document.getElementById('btn-' + t).className = "py-2.5 text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-800 transition-all active:scale-95";
     });
     document.getElementById('view-' + tab).classList.remove('hidden');
-    document.getElementById('btn-' + tab).className = "py-2.5 text-xs font-bold rounded-lg bg-violet-600 text-white transition-all active:scale-95 shadow-sm";
+    document.getElementById('btn-' + tab).className = "py-2.5 text-xs font-bold rounded-lg bg-cyan-600 text-white transition-all active:scale-95 shadow-sm";
     if (tab === 'trends') { renderCalorieChart(); renderLedgersUI(); }
     if (tab === 'weight') { renderWeightChart(); }
 }
@@ -540,7 +540,7 @@ function changeChartMetric(metric) {
     Object.keys(btnMap).forEach(function(m) {
         const btn = document.getElementById('btn-chart-' + btnMap[m]);
         btn.className = (m === metric)
-            ? "px-2.5 py-1 text-[10px] font-bold rounded-md bg-violet-600 text-white transition-all cursor-pointer"
+            ? "px-2.5 py-1 text-[10px] font-bold rounded-md bg-cyan-600 text-white transition-all cursor-pointer"
             : "px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer";
     });
     renderCalorieChart();
@@ -554,7 +554,6 @@ function calculateTargets() {
     const totalTdee = baseTdee + stepsBonus;
     state.targets.tdee = totalTdee;
 
-    // Live TDEE display card
     const tdeeValEl = document.getElementById('tdee-display-value');
     const tdeeBreakEl = document.getElementById('tdee-display-breakdown');
     if (tdeeValEl) tdeeValEl.innerText = totalTdee + ' kcal';
@@ -592,7 +591,7 @@ function calculateTargets() {
             let txt = '🎯 Cutting Phase: -' + Math.abs(calorieAdjustment) + ' kcal/day to lose ' + kgRemaining + 'kg remaining in ' + p.durationMonths + ' months.';
             if (stepsBonus > 0) txt += ' (+' + stepsBonus + ' kcal step boost).';
             noticeEl.innerText = txt;
-            noticeEl.className = "text-[11px] text-violet-300 bg-violet-950/30 border border-violet-900/50 p-2.5 rounded-xl font-medium";
+            noticeEl.className = "text-[11px] text-cyan-200 bg-cyan-950/40 border border-cyan-800/40 p-2.5 rounded-xl font-medium";
         } else if (mode === 'gain') {
             let txt = '💪 Bulking Phase: +' + calorieAdjustment + ' kcal/day surplus to gain ' + kgRemaining + 'kg remaining in ' + p.durationMonths + ' months.';
             if (stepsBonus > 0) txt += ' (+' + stepsBonus + ' kcal step boost).';
@@ -693,7 +692,7 @@ function renderLedgersUI() {
 
     monthMap.forEach(function(mData) {
         const monthBlock = document.createElement('div');
-        monthBlock.className = "bg-[#0a0f1e]/70 border border-slate-800/60 rounded-xl overflow-hidden mb-3";
+        monthBlock.className = "bg-[#0a1620]/70 border border-cyan-900/30 rounded-xl overflow-hidden mb-3";
         let mEaten=0, mBurn=0;
         mData.weeks.forEach(function(days) {
             days.forEach(function(d) {
@@ -704,11 +703,11 @@ function renderLedgersUI() {
         const mDeficit = mBurn - mEaten;
 
         const monthHeader = document.createElement('button');
-        monthHeader.className = "w-full text-left px-4 py-2.5 flex justify-between items-center cursor-pointer hover:bg-[#111827]/60 transition-colors";
-        monthHeader.innerHTML = '<span class="text-xs font-black text-violet-400">📅 ' + sanitize(mData.monthName) + ' ' + mData.year + '</span><span class="text-[10px] font-bold ' + (mDeficit >= 0 ? 'text-teal-400' : 'text-rose-400') + '">' + (mDeficit >= 0 ? '▼' : '▲') + ' ' + Math.abs(mDeficit).toFixed(0) + ' kcal ' + (mDeficit >= 0 ? 'deficit' : 'surplus') + '</span>';
+        monthHeader.className = "w-full text-left px-4 py-2.5 flex justify-between items-center cursor-pointer hover:bg-[#132030]/60 transition-colors";
+        monthHeader.innerHTML = '<span class="text-xs font-black text-cyan-300">📅 ' + sanitize(mData.monthName) + ' ' + mData.year + '</span><span class="text-[10px] font-bold ' + (mDeficit >= 0 ? 'text-teal-400' : 'text-rose-400') + '">' + (mDeficit >= 0 ? '▼' : '▲') + ' ' + Math.abs(mDeficit).toFixed(0) + ' kcal ' + (mDeficit >= 0 ? 'deficit' : 'surplus') + '</span>';
 
         const monthBody = document.createElement('div');
-        monthBody.className = "hidden divide-y divide-slate-800/30";
+        monthBody.className = "hidden divide-y divide-cyan-900/20";
         monthHeader.onclick = function() { monthBody.classList.toggle('hidden'); };
 
         const sortedWeeks = Array.from(mData.weeks.keys()).sort(function(a,b) { return a - b; });
@@ -722,29 +721,28 @@ function renderLedgersUI() {
             const wDeficit = wBurn - wEaten;
 
             const weekWrapper = document.createElement('div');
-            weekWrapper.className = "border-t border-slate-800/40";
+            weekWrapper.className = "border-t border-cyan-900/20";
 
             const weekHeader = document.createElement('button');
             weekHeader.className = "w-full text-left px-5 py-2 flex justify-between items-center cursor-pointer hover:bg-slate-900/40 transition-colors " + (wDeficit >= 0 ? 'week-row-deficit' : 'week-row-surplus');
-            weekHeader.innerHTML = '<span class="text-[11px] font-bold text-slate-300">Week ' + wKey + '</span><span class="text-[10px] font-bold ' + (wDeficit >= 0 ? 'text-teal-400' : 'text-rose-400') + '">' + (wDeficit >= 0 ? '+' : '') + wDeficit.toFixed(0) + ' kcal ' + (wDeficit >= 0 ? 'deficit' : 'surplus') + '</span>';
+            weekHeader.innerHTML = '<span class="text-[11px] font-bold text-cyan-100">Week ' + wKey + '</span><span class="text-[10px] font-bold ' + (wDeficit >= 0 ? 'text-teal-400' : 'text-rose-400') + '">' + (wDeficit >= 0 ? '+' : '') + wDeficit.toFixed(0) + ' kcal ' + (wDeficit >= 0 ? 'deficit' : 'surplus') + '</span>';
 
             const weekBody = document.createElement('div');
-            weekBody.className = "hidden bg-[#0a0f1e]/60";
+            weekBody.className = "hidden bg-[#0a1620]/60";
             weekHeader.onclick = function() { weekBody.classList.toggle('hidden'); };
 
             days.forEach(function(day) {
                 const tg = Number(day.target || state.targets.calories);
-                // Use actual TDEE (real body burn) for deficit — not the cutting target
                 const actualBurn = Number(day.tdee || tg);
                 const dd = actualBurn - day.eaten;
                 const row = document.createElement('div');
-                row.className = "px-6 py-2.5 border-t border-slate-900/40 " + (dd >= 0 ? '' : 'bg-rose-950/10');
-                row.innerHTML = '<div class="flex justify-between items-start"><div class="space-y-0.5"><span class="font-extrabold text-slate-300 text-[11px] block">' + sanitize(day.date) + '</span><span class="text-[9px] text-slate-500 block">🐾 ' + day.steps.toLocaleString() + ' steps • 🔥 ' + actualBurn + ' burn</span><span class="text-[10px] text-slate-400 flex items-center gap-2 mt-0.5 bg-slate-900/40 px-1.5 py-0.5 rounded border border-slate-800/40"><span>🧪 ' + Math.round(day.carbs||0) + 'g</span><span>🥩 ' + Math.round(day.protein||0) + 'g</span><span>🥑 ' + Math.round(day.fats||0) + 'g</span><span>🌾 ' + (day.fiber||0).toFixed(1) + 'g</span></span></div><div class="text-right space-y-0.5 self-start pt-0.5"><span class="block text-[11px] text-slate-400">Ate ' + day.eaten.toFixed(0) + ' / Burn <span class="text-sky-400 font-bold">' + actualBurn + '</span></span><span class="block text-[11px]">' + formatDeficit(dd) + '</span></div></div>';
+                row.className = "px-6 py-2.5 border-t border-cyan-900/20 " + (dd >= 0 ? '' : 'bg-rose-950/10');
+                row.innerHTML = '<div class="flex justify-between items-start"><div class="space-y-0.5"><span class="font-extrabold text-cyan-100 text-[11px] block">' + sanitize(day.date) + '</span><span class="text-[9px] text-cyan-600/70 block">🐾 ' + day.steps.toLocaleString() + ' steps • 🔥 ' + actualBurn + ' burn</span><span class="text-[10px] text-cyan-400/70 flex items-center gap-2 mt-0.5 bg-[#132030]/40 px-1.5 py-0.5 rounded border border-cyan-900/20"><span>🧪 ' + Math.round(day.carbs||0) + 'g</span><span>🥩 ' + Math.round(day.protein||0) + 'g</span><span>🥑 ' + Math.round(day.fats||0) + 'g</span><span>🌾 ' + (day.fiber||0).toFixed(1) + 'g</span></span></div><div class="text-right space-y-0.5 self-start pt-0.5"><span class="block text-[11px] text-cyan-300/70">Ate ' + day.eaten.toFixed(0) + ' / Burn <span class="text-teal-300 font-bold">' + actualBurn + '</span></span><span class="block text-[11px]">' + formatDeficit(dd) + '</span></div></div>';
                 weekBody.appendChild(row);
             });
 
             const weekFooter = document.createElement('div');
-            weekFooter.className = "px-6 py-2 border-t border-slate-800/50 flex justify-between items-center text-[10px] font-bold " + (wDeficit >= 0 ? 'text-teal-400 bg-teal-950/20' : 'text-rose-400 bg-rose-950/20');
+            weekFooter.className = "px-6 py-2 border-t border-cyan-900/30 flex justify-between items-center text-[10px] font-bold " + (wDeficit >= 0 ? 'text-teal-400 bg-teal-950/20' : 'text-rose-400 bg-rose-950/20');
             weekFooter.innerHTML = '<span>Week ' + wKey + ' Total</span><span>Ate ' + wEaten.toFixed(0) + ' / Burn ' + wBurn.toFixed(0) + ' → ' + formatDeficit(wDeficit) + '</span>';
             weekBody.appendChild(weekFooter);
 
@@ -754,7 +752,7 @@ function renderLedgersUI() {
         });
 
         const monthFooter = document.createElement('div');
-        monthFooter.className = "px-4 py-2 flex justify-between items-center text-[10px] font-bold " + (mDeficit >= 0 ? 'text-violet-400 bg-violet-950/20 month-row-deficit' : 'text-amber-400 bg-amber-950/20 month-row-surplus') + " border-t border-slate-800/50";
+        monthFooter.className = "px-4 py-2 flex justify-between items-center text-[10px] font-bold " + (mDeficit >= 0 ? 'text-cyan-300 bg-cyan-950/20 month-row-deficit' : 'text-amber-400 bg-amber-950/20 month-row-surplus') + " border-t border-cyan-900/30";
         monthFooter.innerHTML = '<span>' + sanitize(mData.monthName) + ' Total</span><span>Ate ' + mEaten.toFixed(0) + ' / Burn ' + mBurn.toFixed(0) + ' → ' + formatDeficit(mDeficit) + '</span>';
         monthBody.appendChild(monthFooter);
 
@@ -762,6 +760,26 @@ function renderLedgersUI() {
         monthBlock.appendChild(monthBody);
         container.appendChild(monthBlock);
     });
+
+    // Grand total across all months
+    let grandEaten = 0, grandBurn = 0;
+    state.calorieHistory.forEach(function(d) {
+        grandEaten += d.eaten;
+        grandBurn += Number(d.tdee || d.target || 0);
+    });
+    const grandDeficit = grandBurn - grandEaten;
+
+    const grandTotalBlock = document.createElement('div');
+    grandTotalBlock.className = "mt-4 rounded-xl overflow-hidden border-2 " + (grandDeficit >= 0 ? 'border-teal-500/50 bg-gradient-to-r from-teal-950/50 to-cyan-950/50' : 'border-rose-500/50 bg-gradient-to-r from-rose-950/50 to-amber-950/50');
+    grandTotalBlock.innerHTML =
+        '<div class="px-4 py-3">' +
+            '<div class="flex justify-between items-center mb-1.5">' +
+                '<span class="text-[10px] font-black uppercase tracking-widest ' + (grandDeficit >= 0 ? 'text-teal-300' : 'text-rose-300') + '">🏆 Grand Total (All Time)</span>' +
+                '<span class="text-[11px] font-black ' + (grandDeficit >= 0 ? 'text-teal-400' : 'text-rose-400') + '">' + (grandDeficit >= 0 ? '▼' : '▲') + ' ' + Math.abs(grandDeficit).toFixed(0) + ' kcal ' + (grandDeficit >= 0 ? 'deficit' : 'surplus') + '</span>' +
+            '</div>' +
+            '<div class="text-[10px] text-cyan-400/80 font-medium">Ate ' + grandEaten.toFixed(0) + ' kcal / Burn ' + grandBurn.toFixed(0) + ' kcal across ' + state.calorieHistory.length + ' logged days</div>' +
+        '</div>';
+    container.appendChild(grandTotalBlock);
 }
 
 function renderCalorieChart() {
@@ -772,33 +790,33 @@ function renderCalorieChart() {
     const labels = state.calorieHistory.map(function(h) { return h.date; });
     let datasets = [];
     let scalesCfg = {
-        x: { grid:{ color:'#1e293b' }, ticks:{ color:'#94a3b8', font:{ size:9 } } },
-        y: { grid:{ color:'#1e293b' }, ticks:{ color:'#94a3b8', font:{ size:9 } } }
+        x: { grid:{ color:'#0f2438' }, ticks:{ color:'#67e8f9', font:{ size:9 } } },
+        y: { grid:{ color:'#0f2438' }, ticks:{ color:'#67e8f9', font:{ size:9 } } }
     };
 
     if (currentChartMetric === 'calories') {
         datasets = [
-            { label:'Calories Eaten', data: state.calorieHistory.map(function(h){return h.eaten;}), borderColor:'#818cf8', backgroundColor:'rgba(129,140,248,0.08)', borderWidth:2, fill:true, tension:0.1, yAxisID:'y' },
-            { label:'Target', data: state.calorieHistory.map(function(h){return h.target;}), borderColor:'#34d399', borderWidth:1.5, borderDash:[4,4], fill:false, tension:0, yAxisID:'y' },
-            { label:'TDEE Burn', data: state.calorieHistory.map(function(h){return h.tdee||h.target;}), borderColor:'#38bdf8', borderWidth:1.5, borderDash:[2,2], fill:false, tension:0, yAxisID:'y' },
-            { label:'Steps', data: state.calorieHistory.map(function(h){return h.steps;}), type:'bar', backgroundColor:'rgba(56,189,248,0.12)', yAxisID:'ySteps', barThickness:10 }
+            { label:'Calories Eaten', data: state.calorieHistory.map(function(h){return h.eaten;}), borderColor:'#22d3ee', backgroundColor:'rgba(34,211,238,0.1)', borderWidth:2, fill:true, tension:0.1, yAxisID:'y' },
+            { label:'Target', data: state.calorieHistory.map(function(h){return h.target;}), borderColor:'#2dd4bf', borderWidth:1.5, borderDash:[4,4], fill:false, tension:0, yAxisID:'y' },
+            { label:'TDEE Burn', data: state.calorieHistory.map(function(h){return h.tdee||h.target;}), borderColor:'#5eead4', borderWidth:1.5, borderDash:[2,2], fill:false, tension:0, yAxisID:'y' },
+            { label:'Steps', data: state.calorieHistory.map(function(h){return h.steps;}), type:'bar', backgroundColor:'rgba(6,182,212,0.15)', yAxisID:'ySteps', barThickness:10 }
         ];
-        scalesCfg.ySteps = { type:'linear', position:'right', grid:{ drawOnChartArea:false }, ticks:{ color:'#38bdf8', font:{ size:8 } } };
+        scalesCfg.ySteps = { type:'linear', position:'right', grid:{ drawOnChartArea:false }, ticks:{ color:'#0891b2', font:{ size:8 } } };
     } else if (currentChartMetric === 'macros') {
         datasets = [
-            { label:'Protein', data: state.calorieHistory.map(function(h){return h.protein||0;}), borderColor:'#34d399', borderWidth:2, fill:false, tension:0.2 },
+            { label:'Protein', data: state.calorieHistory.map(function(h){return h.protein||0;}), borderColor:'#2dd4bf', borderWidth:2, fill:false, tension:0.2 },
             { label:'Carbs', data: state.calorieHistory.map(function(h){return h.carbs||0;}), borderColor:'#38bdf8', borderWidth:2, fill:false, tension:0.2 },
-            { label:'Fats', data: state.calorieHistory.map(function(h){return h.fats||0;}), borderColor:'#f87171', borderWidth:2, fill:false, tension:0.2 }
+            { label:'Fats', data: state.calorieHistory.map(function(h){return h.fats||0;}), borderColor:'#fb7185', borderWidth:2, fill:false, tension:0.2 }
         ];
     } else {
         datasets = [
-            { label:'Fiber', data: state.calorieHistory.map(function(h){return h.fiber||0;}), borderColor:'#a78bfa', backgroundColor:'rgba(167,139,250,0.08)', borderWidth:2, fill:true, tension:0.1 }
+            { label:'Fiber', data: state.calorieHistory.map(function(h){return h.fiber||0;}), borderColor:'#5eead4', backgroundColor:'rgba(94,234,212,0.1)', borderWidth:2, fill:true, tension:0.1 }
         ];
     }
 
     calChartInstance = new Chart(ctx, {
         type:'line', data:{ labels: labels, datasets: datasets },
-        options:{ responsive:true, scales: scalesCfg, plugins:{ legend:{ labels:{ color:'#f8fafc', font:{ size:10 } } } } }
+        options:{ responsive:true, scales: scalesCfg, plugins:{ legend:{ labels:{ color:'#e0f2fe', font:{ size:10 } } } } }
     });
 }
 
@@ -830,7 +848,7 @@ function calculateWeightMilestonesUI() {
         document.getElementById('weight-progress-bar').style.width = '0%';
         document.getElementById('weight-stat-total').innerText = 'Set Base ⚠️';
         document.getElementById('weight-stat-total').className = 'text-base font-black text-amber-400 mt-0.5';
-        document.getElementById('weight-stat-velocity').innerText = '—';
+        document.getElementById('weight-stat-velocity').innerText = '— kg';
         if (label) label.innerText = 'Set a Base Weight in profile to start tracking.';
         if (journeyLabel) journeyLabel.innerText = 'Journey Progress';
         badge.innerText = 'Setup needed';
@@ -852,15 +870,15 @@ function calculateWeightMilestonesUI() {
     if (j.direction === 'lose') {
         if (journeyLabel) journeyLabel.innerText = 'Total Weight Lost';
         totalEl.innerText = j.totalAchieved.toFixed(1) + ' kg dropped';
-        totalEl.className = 'text-base font-black text-teal-400 mt-0.5';
+        totalEl.className = 'text-base font-black text-teal-300 mt-0.5';
     } else if (j.direction === 'gain') {
         if (journeyLabel) journeyLabel.innerText = 'Total Weight Gained';
         totalEl.innerText = '+' + j.totalAchieved.toFixed(1) + ' kg gained';
-        totalEl.className = 'text-base font-black text-emerald-400 mt-0.5';
+        totalEl.className = 'text-base font-black text-emerald-300 mt-0.5';
     } else {
         if (journeyLabel) journeyLabel.innerText = 'Maintenance';
         totalEl.innerText = 'Maintaining';
-        totalEl.className = 'text-base font-black text-sky-400 mt-0.5';
+        totalEl.className = 'text-base font-black text-sky-300 mt-0.5';
     }
 
     if (label) {
@@ -868,22 +886,17 @@ function calculateWeightMilestonesUI() {
         label.innerText = 'Base: ' + j.base + 'kg ' + arrow + ' Goal: ' + j.goal + 'kg (' + j.totalNeeded.toFixed(1) + 'kg journey)';
     }
 
+    // Average weight (replaces 7-day trailing speed)
     const velEl = document.getElementById('weight-stat-velocity');
-    if (state.weightHistory.length >= 7) {
-        const last7 = state.weightHistory.slice(-7);
-        const diff = parseFloat(last7[last7.length-1].weight) - parseFloat(last7[0].weight);
-        const sign = diff >= 0 ? '+' : '-';
-        velEl.innerText = sign + Math.abs(diff).toFixed(1) + ' kg/wk';
-        if (j.direction === 'lose') {
-            velEl.className = diff <= 0 ? 'text-base font-black text-teal-400 mt-0.5' : 'text-base font-black text-rose-400 mt-0.5';
-        } else if (j.direction === 'gain') {
-            velEl.className = diff >= 0 ? 'text-base font-black text-emerald-400 mt-0.5' : 'text-base font-black text-rose-400 mt-0.5';
-        } else {
-            velEl.className = 'text-base font-black text-sky-400 mt-0.5';
-        }
+    if (state.weightHistory.length > 0) {
+        let sum = 0;
+        state.weightHistory.forEach(function(w) { sum += parseFloat(w.weight) || 0; });
+        const avg = sum / state.weightHistory.length;
+        velEl.innerText = avg.toFixed(1) + ' kg';
+        velEl.className = 'text-base font-black text-cyan-300 mt-0.5';
     } else {
-        velEl.innerText = 'Needs 7 Days';
-        velEl.className = 'text-base font-black text-violet-400 mt-0.5';
+        velEl.innerText = '— kg';
+        velEl.className = 'text-base font-black text-cyan-300 mt-0.5';
     }
 
     const segments = 4;
@@ -920,8 +933,8 @@ function calculateWeightMilestonesUI() {
             nextSet = true;
         }
         const item = document.createElement('div');
-        item.className = "flex items-center gap-2 bg-[#0a0f1e]/40 p-2 rounded-lg border border-slate-800/40";
-        item.innerHTML = '<input type="checkbox" ' + (isDone ? 'checked' : '') + ' disabled class="accent-teal-500 rounded w-3.5 h-3.5 pointer-events-none"><span class="' + (isDone ? 'line-through text-slate-500 font-normal' : 'text-slate-300 font-semibold') + ' text-[11px] flex items-center gap-1"><span>' + m.symbol + '</span><span>' + sanitize(m.label) + ' ' + (m.type === 'streak' ? '(' + m.currentStreak + '/' + m.targetStreak + 'd)' : '') + '</span></span>';
+        item.className = "flex items-center gap-2 bg-[#0a1620]/40 p-2 rounded-lg border border-cyan-900/30";
+        item.innerHTML = '<input type="checkbox" ' + (isDone ? 'checked' : '') + ' disabled class="accent-teal-500 rounded w-3.5 h-3.5 pointer-events-none"><span class="' + (isDone ? 'line-through text-slate-500 font-normal' : 'text-cyan-100 font-semibold') + ' text-[11px] flex items-center gap-1"><span>' + m.symbol + '</span><span>' + sanitize(m.label) + ' ' + (m.type === 'streak' ? '(' + m.currentStreak + '/' + m.targetStreak + 'd)' : '') + '</span></span>';
         grid.appendChild(item);
     });
 
@@ -950,12 +963,12 @@ function renderWeightChart() {
 
     const datasets = [{
         label:'Body Mass (kg)', data: data,
-        borderColor:'#818cf8', backgroundColor:'rgba(129,140,248,0.08)',
-        borderWidth:2, tension:0.15, fill:true, pointRadius: 3, pointBackgroundColor:'#a78bfa'
+        borderColor:'#22d3ee', backgroundColor:'rgba(34,211,238,0.08)',
+        borderWidth:2, tension:0.15, fill:true, pointRadius: 3, pointBackgroundColor:'#5eead4'
     }];
 
     if (j.goal > 0) {
-        datasets.push({ label: 'Goal (' + j.goal + 'kg)', data: labels.map(function(){return j.goal;}), borderColor:'#34d399', borderWidth:1.5, borderDash:[5,5], pointRadius: 0, fill: false });
+        datasets.push({ label: 'Goal (' + j.goal + 'kg)', data: labels.map(function(){return j.goal;}), borderColor:'#2dd4bf', borderWidth:1.5, borderDash:[5,5], pointRadius: 0, fill: false });
     }
     if (j.base !== null && !isNaN(j.base)) {
         datasets.push({ label: 'Base (' + j.base + 'kg)', data: labels.map(function(){return j.base;}), borderColor:'#fb923c', borderWidth:1.5, borderDash:[3,3], pointRadius: 0, fill: false });
@@ -966,10 +979,10 @@ function renderWeightChart() {
         options:{
             responsive:true,
             scales:{
-                x:{ grid:{ color:'#1e293b' }, ticks:{ color:'#94a3b8', font:{ size:9 } } },
-                y:{ grid:{ color:'#1e293b' }, ticks:{ color:'#94a3b8', font:{ size:9 } } }
+                x:{ grid:{ color:'#0f2438' }, ticks:{ color:'#67e8f9', font:{ size:9 } } },
+                y:{ grid:{ color:'#0f2438' }, ticks:{ color:'#67e8f9', font:{ size:9 } } }
             },
-            plugins:{ legend:{ labels:{ color:'#cbd5e1', font:{ size:9 } } } }
+            plugins:{ legend:{ labels:{ color:'#e0f2fe', font:{ size:9 } } } }
         }
     });
 }
@@ -1052,9 +1065,9 @@ function renderDashboardTotals() {
     favsEl.innerHTML = '';
     state.favorites.forEach(function(item, idx) {
         const pill = document.createElement('button');
-        pill.className = "bg-[#0a0f1e] hover:bg-slate-900 border border-slate-800 text-left text-xs px-3 py-1.5 rounded-xl flex items-center gap-2 text-slate-300 font-medium transition-all active:scale-95";
+        pill.className = "bg-[#0a1620] hover:bg-cyan-950/40 border border-cyan-900/40 text-left text-xs px-3 py-1.5 rounded-xl flex items-center gap-2 text-cyan-100 font-medium transition-all active:scale-95";
         pill.onclick = function() { selectFavItem(item); };
-        pill.innerHTML = '<span>' + sanitize(item.name) + ' <span class="text-violet-400 font-bold text-[10px]">' + item.calories + '</span></span><span onclick="deleteFavItem(' + idx + ', event)" class="text-[10px] text-slate-600 hover:text-rose-400 font-black pl-1">✕</span>';
+        pill.innerHTML = '<span>' + sanitize(item.name) + ' <span class="text-teal-300 font-bold text-[10px]">' + item.calories + '</span></span><span onclick="deleteFavItem(' + idx + ', event)" class="text-[10px] text-slate-600 hover:text-rose-400 font-black pl-1">✕</span>';
         favsEl.appendChild(pill);
     });
 
@@ -1072,19 +1085,19 @@ function renderDashboardTotals() {
         const entries = buckets[key];
         if (entries.length === 0) return;
         const block = document.createElement('div');
-        block.className = "space-y-1.5 border-l-2 border-violet-900/50 pl-3 ml-1";
+        block.className = "space-y-1.5 border-l-2 border-teal-800/40 pl-3 ml-1";
         const subTotal = entries.reduce(function(s,e) { return s + e.item.calories; }, 0);
         const title = document.createElement('h3');
-        title.className = "text-[11px] font-black text-slate-400 uppercase tracking-wider mb-1 flex items-center justify-between";
-        title.innerHTML = '<span>' + key + '</span><span class="text-violet-400 font-bold text-[10px]">' + subTotal + ' kcal</span>';
+        title.className = "text-[11px] font-black text-cyan-400/80 uppercase tracking-wider mb-1 flex items-center justify-between";
+        title.innerHTML = '<span>' + key + '</span><span class="text-teal-300 font-bold text-[10px]">' + subTotal + ' kcal</span>';
         block.appendChild(title);
 
         entries.forEach(function(entry) {
             const item = entry.item;
             const index = entry.index;
             const row = document.createElement('div');
-            row.className = "bg-[#0a0f1e]/60 border border-slate-800/40 rounded-xl p-2.5 flex justify-between items-center text-xs";
-            row.innerHTML = '<div><div class="font-bold text-slate-200">' + sanitize(item.name) + '</div><div class="text-[10px] text-slate-400 mt-0.5">⏱️ ' + (item.time || 'N/A') + ' • P: ' + item.protein + 'g • C: ' + item.carbs + 'g • F: ' + item.fats + 'g</div></div><div class="flex items-center gap-3"><span class="font-black text-violet-400">' + item.calories + ' kcal</span><button onclick="deleteLogItem(' + index + ')" class="text-slate-600 hover:text-rose-400 font-bold px-1 text-sm">✕</button></div>';
+            row.className = "bg-[#0a1620]/60 border border-cyan-900/30 rounded-xl p-2.5 flex justify-between items-center text-xs";
+            row.innerHTML = '<div><div class="font-bold text-cyan-100">' + sanitize(item.name) + '</div><div class="text-[10px] text-cyan-500/70 mt-0.5">⏱️ ' + (item.time || 'N/A') + ' • P: ' + item.protein + 'g • C: ' + item.carbs + 'g • F: ' + item.fats + 'g</div></div><div class="flex items-center gap-3"><span class="font-black text-teal-300">' + item.calories + ' kcal</span><button onclick="deleteLogItem(' + index + ')" class="text-slate-600 hover:text-rose-400 font-bold px-1 text-sm">✕</button></div>';
             block.appendChild(row);
         });
         groupsEl.appendChild(block);
