@@ -237,7 +237,7 @@
                     <div id="weight-stat-total" class="text-base font-black text-teal-300 mt-0.5">0.0 kg</div>
                 </div>
                 <div id="weight-glow-velocity" class="bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30 transition-all duration-500">
-                    <div class="text-[9px] font-bold text-cyan-400/80 uppercase tracking-wide">📊 Average Weight</div>
+                    <div class="text-[9px] font-bold text-cyan-400/80 uppercase tracking-wide">📊 Average Weight(Last 7 days)</div>
                     <div id="weight-stat-velocity" class="text-base font-black text-cyan-300 mt-0.5">— kg</div>
                 </div>
             </div>
@@ -886,12 +886,13 @@ function calculateWeightMilestonesUI() {
         label.innerText = 'Base: ' + j.base + 'kg ' + arrow + ' Goal: ' + j.goal + 'kg (' + j.totalNeeded.toFixed(1) + 'kg journey)';
     }
 
-    // Average weight (replaces 7-day trailing speed)
+    // 7-day rolling average weight (last 7 weigh-ins only)
     const velEl = document.getElementById('weight-stat-velocity');
     if (state.weightHistory.length > 0) {
+        const last7 = state.weightHistory.slice(-7);
         let sum = 0;
-        state.weightHistory.forEach(function(w) { sum += parseFloat(w.weight) || 0; });
-        const avg = sum / state.weightHistory.length;
+        last7.forEach(function(w) { sum += parseFloat(w.weight) || 0; });
+        const avg = sum / last7.length;
         velEl.innerText = avg.toFixed(1) + ' kg';
         velEl.className = 'text-base font-black text-cyan-300 mt-0.5';
     } else {
