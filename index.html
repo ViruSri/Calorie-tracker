@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NutraAI Pro Ultimate</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         ::-webkit-scrollbar { width: 4px; }
@@ -44,6 +43,7 @@
         <button id="btn-weight"  onclick="switchTab('weight')"  class="py-2.5 text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-800 transition-all active:scale-95">⚖️ Weight</button>
     </nav>
 
+    <!-- ===================== TRACKER TAB ===================== -->
     <div id="view-tracker" class="space-y-6">
 
         <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-4">
@@ -208,27 +208,60 @@
         </div>
     </div>
 
+    <!-- ===================== TRENDS TAB ===================== -->
     <div id="view-trends" class="space-y-6 hidden">
+
+        <!-- Nutrition Averages Summary -->
         <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-4">
-            <div class="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
-                <h2 id="chart-title" class="text-sm font-bold text-cyan-100">Calorie Target Baseline Trend</h2>
-                <div class="flex bg-[#0a1620] border border-cyan-900/30 p-0.5 rounded-lg gap-0.5">
-                    <button id="btn-chart-cal" onclick="changeChartMetric('calories')" class="px-2.5 py-1 text-[10px] font-bold rounded-md bg-cyan-600 text-white transition-all cursor-pointer">Calories</button>
-                    <button id="btn-chart-macros" onclick="changeChartMetric('macros')" class="px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer">Macros</button>
-                    <button id="btn-chart-fiber" onclick="changeChartMetric('fiber')" class="px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer">Fiber</button>
+            <div class="flex items-center justify-between">
+                <h2 class="text-sm font-bold text-cyan-100">📊 Nutrition Averages</h2>
+                <span class="text-[9px] font-bold text-cyan-500/60 uppercase tracking-wider bg-cyan-950/30 px-2 py-1 rounded border border-cyan-900/30">Read Only</span>
+            </div>
+
+            <!-- Column headers -->
+            <div class="grid grid-cols-5 gap-1.5 text-center mb-1">
+                <div class="text-[9px] font-black text-cyan-400/70 uppercase tracking-wide">🔥 Cal</div>
+                <div class="text-[9px] font-black text-teal-400/70 uppercase tracking-wide">🥩 Pro</div>
+                <div class="text-[9px] font-black text-sky-400/70 uppercase tracking-wide">🧪 Carb</div>
+                <div class="text-[9px] font-black text-rose-400/70 uppercase tracking-wide">🥑 Fat</div>
+                <div class="text-[9px] font-black text-emerald-400/70 uppercase tracking-wide">🌾 Fiber</div>
+            </div>
+
+            <!-- This Week -->
+            <div class="bg-[#0a1620] border border-cyan-800/30 rounded-2xl overflow-hidden">
+                <div class="px-4 py-2 bg-gradient-to-r from-cyan-950/60 to-teal-950/60 border-b border-cyan-900/30 flex items-center justify-between">
+                    <span class="text-[11px] font-black text-cyan-300 uppercase tracking-wider">📅 This Week</span>
+                    <span class="text-[9px] text-cyan-600/60 font-semibold" id="avg-week-range">—</span>
+                </div>
+                <div class="grid grid-cols-5 gap-1.5 p-3" id="avg-week-row">
+                    <!-- filled by JS -->
                 </div>
             </div>
-            <div class="flex bg-[#0a1620] border border-teal-800/40 p-0.5 rounded-lg gap-0.5 self-start">
-                <button id="btn-range-cal-7"   onclick="changeCalorieRange('7')"  class="px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer">7D</button>
-                <button id="btn-range-cal-30"  onclick="changeCalorieRange('30')" class="px-2.5 py-1 text-[10px] font-bold rounded-md bg-teal-600 text-white transition-all cursor-pointer">30D</button>
-                <button id="btn-range-cal-90"  onclick="changeCalorieRange('90')" class="px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer">90D</button>
-                <button id="btn-range-cal-all" onclick="changeCalorieRange('all')" class="px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer">All</button>
+
+            <!-- This Month -->
+            <div class="bg-[#0a1620] border border-teal-800/30 rounded-2xl overflow-hidden">
+                <div class="px-4 py-2 bg-gradient-to-r from-teal-950/60 to-cyan-950/60 border-b border-teal-900/30 flex items-center justify-between">
+                    <span class="text-[11px] font-black text-teal-300 uppercase tracking-wider">🗓️ This Month</span>
+                    <span class="text-[9px] text-teal-600/60 font-semibold" id="avg-month-range">—</span>
+                </div>
+                <div class="grid grid-cols-5 gap-1.5 p-3" id="avg-month-row">
+                    <!-- filled by JS -->
+                </div>
             </div>
-            <div class="bg-[#0a1620] p-2 rounded-xl border border-cyan-900/30">
-                <canvas id="calorieChart" width="100" height="60"></canvas>
+
+            <!-- All Time -->
+            <div class="bg-[#0a1620] border border-slate-700/30 rounded-2xl overflow-hidden">
+                <div class="px-4 py-2 bg-gradient-to-r from-slate-900/80 to-slate-800/40 border-b border-slate-700/30 flex items-center justify-between">
+                    <span class="text-[11px] font-black text-slate-300 uppercase tracking-wider">🏆 All Time</span>
+                    <span class="text-[9px] text-slate-500/70 font-semibold" id="avg-alltime-range">—</span>
+                </div>
+                <div class="grid grid-cols-5 gap-1.5 p-3" id="avg-alltime-row">
+                    <!-- filled by JS -->
+                </div>
             </div>
         </div>
 
+        <!-- Ledger -->
         <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-5">
             <div class="flex justify-between items-center">
                 <h2 class="text-sm font-bold text-cyan-100">📜 Historical Balance Ledgers</h2>
@@ -241,6 +274,7 @@
         </div>
     </div>
 
+    <!-- ===================== WEIGHT TAB ===================== -->
     <div id="view-weight" class="space-y-6 hidden">
         <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-4">
             <h2 class="text-sm font-bold text-cyan-100">Log Daily Weight</h2>
@@ -248,14 +282,21 @@
                 <input type="number" step="0.1" id="daily-weight-val" placeholder="e.g., 87.5" class="flex-1 bg-[#0a1620] border border-cyan-900/40 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-cyan-500" required>
                 <button type="submit" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs px-5 rounded-xl transition-all active:scale-95 cursor-pointer">Save Log</button>
             </form>
-            <div class="grid grid-cols-2 gap-3 pt-1">
+
+            <!-- Stats grid: 3 cards -->
+            <div class="grid grid-cols-3 gap-3 pt-1">
                 <div id="weight-glow-total" class="bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30 transition-all duration-500">
-                    <div class="text-[9px] font-bold text-cyan-400/80 uppercase tracking-wide" id="journey-label">Total Journey Progress</div>
-                    <div id="weight-stat-total" class="text-base font-black text-teal-300 mt-0.5">0.0 kg</div>
+                    <div class="text-[9px] font-bold text-cyan-400/80 uppercase tracking-wide leading-tight" id="journey-label">Journey Progress</div>
+                    <div id="weight-stat-total" class="text-sm font-black text-teal-300 mt-0.5">0.0 kg</div>
                 </div>
                 <div id="weight-glow-velocity" class="bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30 transition-all duration-500">
-                    <div class="text-[9px] font-bold text-cyan-400/80 uppercase tracking-wide">📊 Avg Weight (Last 7)</div>
-                    <div id="weight-stat-velocity" class="text-base font-black text-cyan-300 mt-0.5">— kg</div>
+                    <div class="text-[9px] font-bold text-cyan-400/80 uppercase tracking-wide leading-tight">Last 7 Avg</div>
+                    <div id="weight-stat-velocity" class="text-sm font-black text-cyan-300 mt-0.5">— kg</div>
+                </div>
+                <!-- NEW: This Month Avg -->
+                <div class="bg-[#0a1620] p-3 rounded-xl border border-teal-800/40 transition-all duration-500">
+                    <div class="text-[9px] font-bold text-teal-400/80 uppercase tracking-wide leading-tight">This Month</div>
+                    <div id="weight-stat-month-avg" class="text-sm font-black text-teal-300 mt-0.5">— kg</div>
                 </div>
             </div>
         </div>
@@ -284,18 +325,12 @@
 
         <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-4">
             <div class="flex justify-between items-center">
-                <h2 class="text-sm font-bold text-cyan-100">Weight Progression Graph</h2>
+                <h2 class="text-sm font-bold text-cyan-100">Weight History Log</h2>
                 <button onclick="clearHistory('weight')" class="text-[10px] font-bold text-rose-400 bg-rose-950/40 border border-rose-900 px-2.5 py-1 rounded-lg active:scale-95 transition-all cursor-pointer">Clear History</button>
             </div>
-            <div class="flex bg-[#0a1620] border border-teal-800/40 p-0.5 rounded-lg gap-0.5 self-start">
-                <button id="btn-range-wt-7"   onclick="changeWeightRange('7')"   class="px-2.5 py-1 text-[10px] font-bold rounded-md bg-teal-600 text-white transition-all cursor-pointer">7 Entries</button>
-                <button id="btn-range-wt-30"  onclick="changeWeightRange('30')"  class="px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer">Last 30</button>
-                <button id="btn-range-wt-all" onclick="changeWeightRange('all')" class="px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer">All Time</button>
+            <div id="weight-history-list" class="space-y-2 max-h-72 overflow-y-auto pr-1">
+                <div class="text-center text-xs text-slate-500 py-4">No weight logs yet. Add one above!</div>
             </div>
-            <div class="bg-[#0a1620] p-2 rounded-xl border border-cyan-900/30">
-                <canvas id="weightChart" width="100" height="60"></canvas>
-            </div>
-            <div id="weight-empty-msg" class="text-center text-xs text-slate-500 py-4 hidden">No weight logs yet. Add one above!</div>
         </div>
     </div>
 
@@ -385,17 +420,148 @@ if (cachedState) {
     catch(e) { console.error("State parse error", e); }
 }
 
-let calChartInstance = null;
-let weightChartInstance = null;
-let currentChartMetric = "calories";
 let _calcDebounceTimer = null;
 let _servingDebounceTimer = null;
-
 let _baseMacros = { protein: 0, carbs: 0, fats: 0, fiber: 0, calories: 0, baseGrams: 100 };
 let _isUserEditingMacros = false;
 
-let _calorieChartRange = '30';   // '7' | '30' | '90' | 'all'
-let _weightChartRange  = '7';    // '7' | '30' | 'all'
+// ─────────────────────────────────────────────
+// AVERAGES ENGINE
+// ─────────────────────────────────────────────
+
+function computeAverages() {
+    const history = state.calorieHistory;
+    if (!history || history.length === 0) return null;
+
+    const now = new Date();
+    const currentYear  = now.getFullYear();
+    const currentMonth = now.getMonth(); // 0-indexed
+
+    // Last 7 archived entries (calendar week = last 7 in array)
+    const weekEntries  = history.slice(-7);
+
+    // Current calendar month entries
+    const monthEntries = history.filter(function(d) {
+        if (!d.isoDate) return false;
+        const dt = new Date(d.isoDate + 'T12:00:00');
+        return dt.getFullYear() === currentYear && dt.getMonth() === currentMonth;
+    });
+
+    // All time
+    const allEntries = history;
+
+    function avg(arr, key) {
+        if (!arr || arr.length === 0) return null;
+        const sum = arr.reduce(function(s, d) { return s + (parseFloat(d[key]) || 0); }, 0);
+        return sum / arr.length;
+    }
+
+    function buildSet(arr) {
+        if (!arr || arr.length === 0) return null;
+        return {
+            calories: avg(arr, 'eaten'),
+            protein:  avg(arr, 'protein'),
+            carbs:    avg(arr, 'carbs'),
+            fats:     avg(arr, 'fats'),
+            fiber:    avg(arr, 'fiber'),
+            count:    arr.length
+        };
+    }
+
+    return {
+        week:    buildSet(weekEntries),
+        month:   buildSet(monthEntries),
+        allTime: buildSet(allEntries)
+    };
+}
+
+function renderAverageCell(value, colorClass, unit) {
+    const el = document.createElement('div');
+    el.className = 'flex flex-col items-center justify-center bg-[#132030]/60 rounded-xl py-2.5 px-1 border border-cyan-900/20';
+    if (value === null) {
+        el.innerHTML = '<span class="text-[13px] font-black text-slate-600">—</span><span class="text-[8px] text-slate-700 mt-0.5">' + unit + '</span>';
+    } else {
+        const display = unit === 'kcal' ? Math.round(value) : value.toFixed(1);
+        el.innerHTML = '<span class="text-[13px] font-black ' + colorClass + '">' + display + '</span><span class="text-[8px] text-slate-500 mt-0.5">' + unit + '</span>';
+    }
+    return el;
+}
+
+function renderAveragesUI() {
+    const avgs = computeAverages();
+    const history = state.calorieHistory;
+
+    const configs = [
+        { key: 'calories', colorClass: 'text-cyan-300',    unit: 'kcal' },
+        { key: 'protein',  colorClass: 'text-teal-300',    unit: 'g'    },
+        { key: 'carbs',    colorClass: 'text-sky-300',     unit: 'g'    },
+        { key: 'fats',     colorClass: 'text-rose-300',    unit: 'g'    },
+        { key: 'fiber',    colorClass: 'text-emerald-300', unit: 'g'    }
+    ];
+
+    function fillRow(containerId, dataset, rangeEl, rangeText) {
+        const container = document.getElementById(containerId);
+        const rangeSpan = document.getElementById(rangeEl);
+        container.innerHTML = '';
+        if (rangeSpan) rangeSpan.innerText = rangeText;
+
+        configs.forEach(function(cfg) {
+            const val = dataset ? dataset[cfg.key] : null;
+            container.appendChild(renderAverageCell(val, cfg.colorClass, cfg.unit));
+        });
+    }
+
+    // Week range label
+    const weekEntries = history.slice(-7);
+    let weekRangeLabel = '—';
+    if (weekEntries.length > 0) {
+        const first = weekEntries[0].date || '';
+        const last  = weekEntries[weekEntries.length - 1].date || '';
+        weekRangeLabel = weekEntries.length === 1 ? first : first + ' – ' + last;
+    }
+
+    // Month range label
+    const now = new Date();
+    const monthLabel = now.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+
+    // All time label
+    let allTimeLabel = '—';
+    if (history.length > 0) {
+        allTimeLabel = history.length + ' day' + (history.length !== 1 ? 's' : '') + ' logged';
+    }
+
+    fillRow('avg-week-row',    avgs ? avgs.week    : null, 'avg-week-range',    weekRangeLabel);
+    fillRow('avg-month-row',   avgs ? avgs.month   : null, 'avg-month-range',   monthLabel);
+    fillRow('avg-alltime-row', avgs ? avgs.allTime : null, 'avg-alltime-range', allTimeLabel);
+}
+
+// ─────────────────────────────────────────────
+// WEIGHT THIS-MONTH AVERAGE
+// ─────────────────────────────────────────────
+
+function computeWeightMonthAvg() {
+    const now = new Date();
+    const currentYear  = now.getFullYear();
+    const currentMonth = now.getMonth();
+
+    const monthEntries = state.weightHistory.filter(function(w) {
+        // weightHistory dates are short labels like "Jul 5"
+        // Try to match by reconstructing — use year assumption (current year)
+        if (!w.date) return false;
+        // Parse short label with current year
+        const parsed = new Date(w.date + ' ' + currentYear);
+        if (isNaN(parsed)) return false;
+        return parsed.getFullYear() === currentYear && parsed.getMonth() === currentMonth;
+    });
+
+    if (monthEntries.length === 0) return null;
+    const sum = monthEntries.reduce(function(s, w) { return s + (parseFloat(w.weight) || 0); }, 0);
+    return sum / monthEntries.length;
+}
+
+// ─────────────────────────────────────────────
+// CORE UTILITIES
+// ─────────────────────────────────────────────
 
 function getWeightJourney() {
     const base = parseFloat(state.profile.baseWeight);
@@ -445,6 +611,21 @@ function initInputs() {
 function setDefaultTime() {
     const now = new Date();
     document.getElementById('food-time').value = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+}
+
+function clearEntryForm() {
+    document.getElementById('food-name').value = '';
+    document.getElementById('food-p').value = '0';
+    document.getElementById('food-c').value = '0';
+    document.getElementById('food-f').value = '0';
+    document.getElementById('food-fiber').value = '0';
+    document.getElementById('food-cal').value = '';
+    document.getElementById('food-serving').value = 100;
+    document.getElementById('food-cal').className = "w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm font-bold text-cyan-300 focus:outline-none focus:border-cyan-500";
+    _baseMacros = { protein: 0, carbs: 0, fats: 0, fiber: 0, calories: 0, baseGrams: 100 };
+    document.getElementById('food-base-grams').innerText = '100g';
+    updateServingHint();
+    setDefaultTime();
 }
 
 async function parseMacrosFromClipboard() {
@@ -571,46 +752,8 @@ function switchTab(tab) {
     });
     document.getElementById('view-' + tab).classList.remove('hidden');
     document.getElementById('btn-' + tab).className = "py-2.5 text-xs font-bold rounded-lg bg-cyan-600 text-white transition-all active:scale-95 shadow-sm";
-    if (tab === 'trends') { renderCalorieChart(); renderLedgersUI(); }
-    if (tab === 'weight') { renderWeightChart(); }
-}
-
-function changeChartMetric(metric) {
-    currentChartMetric = metric;
-    const titles = { calories:'Calorie Target Baseline Trend', macros:'Macronutrient Balance Overview (g)', fiber:'Historical Fiber Intake Trends' };
-    document.getElementById('chart-title').innerText = titles[metric];
-    const btnMap = { calories:'cal', macros:'macros', fiber:'fiber' };
-    Object.keys(btnMap).forEach(function(m) {
-        const btn = document.getElementById('btn-chart-' + btnMap[m]);
-        btn.className = (m === metric)
-            ? "px-2.5 py-1 text-[10px] font-bold rounded-md bg-cyan-600 text-white transition-all cursor-pointer"
-            : "px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer";
-    });
-    renderCalorieChart();
-}
-
-function changeCalorieRange(range) {
-    _calorieChartRange = range;
-    ['7','30','90','all'].forEach(function(r) {
-        const btn = document.getElementById('btn-range-cal-' + r);
-        if (!btn) return;
-        btn.className = (r === range)
-            ? "px-2.5 py-1 text-[10px] font-bold rounded-md bg-teal-600 text-white transition-all cursor-pointer"
-            : "px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer";
-    });
-    renderCalorieChart();
-}
-
-function changeWeightRange(range) {
-    _weightChartRange = range;
-    ['7','30','all'].forEach(function(r) {
-        const btn = document.getElementById('btn-range-wt-' + r);
-        if (!btn) return;
-        btn.className = (r === range)
-            ? "px-2.5 py-1 text-[10px] font-bold rounded-md bg-teal-600 text-white transition-all cursor-pointer"
-            : "px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all cursor-pointer";
-    });
-    renderWeightChart();
+    if (tab === 'trends') { renderAveragesUI(); renderLedgersUI(); }
+    if (tab === 'weight') { renderWeightUI(); }
 }
 
 function calculateTargets() {
@@ -695,7 +838,6 @@ function archiveAndResetDay() {
     const monthNm = dateObj.toLocaleDateString(undefined, { month:'long' });
     const year = dateObj.getFullYear();
     const weekNum = DateUtils.getWeekOfMonth(dateObj);
-
     if (!confirm('Archive totals to ' + fullLbl + '?')) return;
 
     let totCal=0, totP=0, totC=0, totF=0, totFib=0;
@@ -721,6 +863,11 @@ function archiveAndResetDay() {
     state.lastArchivedDate = dateObj.toISOString();
     state.logs = [];
     state.steps = 0;
+
+    // Fix: update display after reset
+    document.getElementById('active-steps-display').innerText = '0';
+    document.getElementById('active-steps-bonus').innerText = '';
+
     saveAndRender();
     initInputs();
     alert('Archived to ' + fullLbl + '!');
@@ -828,6 +975,7 @@ function renderLedgersUI() {
         container.appendChild(monthBlock);
     });
 
+    // Grand total
     let grandEaten = 0, grandBurn = 0;
     state.calorieHistory.forEach(function(d) {
         grandEaten += d.eaten;
@@ -848,73 +996,75 @@ function renderLedgersUI() {
     container.appendChild(grandTotalBlock);
 }
 
-function renderCalorieChart() {
-    const ctx = document.getElementById('calorieChart').getContext('2d');
-    if (calChartInstance) { calChartInstance.destroy(); calChartInstance = null; }
-    if (state.calorieHistory.length === 0) { ctx.clearRect(0,0,1000,600); return; }
-
-    // Slice by selected range
-    let sliced;
-    if (_calorieChartRange === 'all') {
-        sliced = state.calorieHistory;
-    } else {
-        const n = parseInt(_calorieChartRange);
-        sliced = state.calorieHistory.slice(-n);
-    }
-
-    const labels = sliced.map(function(h) { return h.date; });
-    let datasets = [];
-    let scalesCfg = {
-        x: { grid:{ color:'#0f2438' }, ticks:{ color:'#67e8f9', font:{ size:9 } } },
-        y: { grid:{ color:'#0f2438' }, ticks:{ color:'#67e8f9', font:{ size:9 } } }
-    };
-
-    if (currentChartMetric === 'calories') {
-        datasets = [
-            { label:'Calories Eaten', data: sliced.map(function(h){return h.eaten;}), borderColor:'#22d3ee', backgroundColor:'rgba(34,211,238,0.1)', borderWidth:2, fill:true, tension:0.1, yAxisID:'y' },
-            { label:'Target', data: sliced.map(function(h){return h.target;}), borderColor:'#2dd4bf', borderWidth:1.5, borderDash:[4,4], fill:false, tension:0, yAxisID:'y' },
-            { label:'TDEE Burn', data: sliced.map(function(h){return h.tdee||h.target;}), borderColor:'#5eead4', borderWidth:1.5, borderDash:[2,2], fill:false, tension:0, yAxisID:'y' },
-            { label:'Steps', data: sliced.map(function(h){return h.steps;}), type:'bar', backgroundColor:'rgba(6,182,212,0.15)', yAxisID:'ySteps', barThickness:10 }
-        ];
-        scalesCfg.ySteps = { type:'linear', position:'right', grid:{ drawOnChartArea:false }, ticks:{ color:'#0891b2', font:{ size:8 } } };
-    } else if (currentChartMetric === 'macros') {
-        datasets = [
-            { label:'Protein', data: sliced.map(function(h){return h.protein||0;}), borderColor:'#2dd4bf', borderWidth:2, fill:false, tension:0.2 },
-            { label:'Carbs', data: sliced.map(function(h){return h.carbs||0;}), borderColor:'#38bdf8', borderWidth:2, fill:false, tension:0.2 },
-            { label:'Fats', data: sliced.map(function(h){return h.fats||0;}), borderColor:'#fb7185', borderWidth:2, fill:false, tension:0.2 }
-        ];
-    } else {
-        datasets = [
-            { label:'Fiber', data: sliced.map(function(h){return h.fiber||0;}), borderColor:'#5eead4', backgroundColor:'rgba(94,234,212,0.1)', borderWidth:2, fill:true, tension:0.1 }
-        ];
-    }
-
-    // Smart x-axis label thinning
-    let maxTicks = 10;
-    if (_calorieChartRange === '7')   maxTicks = 7;
-    if (_calorieChartRange === '30')  maxTicks = 8;
-    if (_calorieChartRange === '90')  maxTicks = 6;
-    if (_calorieChartRange === 'all') maxTicks = 6;
-    scalesCfg.x.ticks.maxTicksLimit = maxTicks;
-    scalesCfg.x.ticks.autoSkip = true;
-
-    calChartInstance = new Chart(ctx, {
-        type:'line', data:{ labels: labels, datasets: datasets },
-        options:{ responsive:true, scales: scalesCfg, plugins:{ legend:{ labels:{ color:'#e0f2fe', font:{ size:10 } } } } }
-    });
-}
-
 function clearHistory(type) {
     if (!confirm("Permanently delete this dataset?")) return;
     if (type === 'trends') {
         state.calorieHistory = []; state.weeklyLedger = []; state.monthlyLedger = [];
-        saveAndRender(); renderCalorieChart(); renderLedgersUI();
+        saveAndRender(); renderAveragesUI(); renderLedgersUI();
     }
     if (type === 'weight') {
         state.weightHistory = [];
         saveAndRender();
-        renderWeightChart();
+        renderWeightUI();
     }
+}
+
+// ─────────────────────────────────────────────
+// WEIGHT UI (replaces chart)
+// ─────────────────────────────────────────────
+
+function renderWeightUI() {
+    calculateWeightMilestonesUI();
+    renderWeightHistoryList();
+}
+
+function renderWeightHistoryList() {
+    const container = document.getElementById('weight-history-list');
+    container.innerHTML = '';
+
+    if (state.weightHistory.length === 0) {
+        container.innerHTML = '<div class="text-center text-xs text-slate-500 py-4">No weight logs yet. Add one above!</div>';
+        return;
+    }
+
+    // Show most recent first
+    const reversed = state.weightHistory.slice().reverse();
+    reversed.forEach(function(entry, i) {
+        const actualIdx = state.weightHistory.length - 1 - i;
+        const prev = state.weightHistory[actualIdx - 1];
+        let changeTxt = '';
+        let changeClass = 'text-slate-500';
+        if (prev) {
+            const diff = parseFloat(entry.weight) - parseFloat(prev.weight);
+            if (diff < 0) { changeTxt = ' (' + diff.toFixed(1) + 'kg)'; changeClass = 'text-teal-400'; }
+            else if (diff > 0) { changeTxt = ' (+' + diff.toFixed(1) + 'kg)'; changeClass = 'text-rose-400'; }
+            else { changeTxt = ' (=)'; changeClass = 'text-slate-500'; }
+        }
+
+        const row = document.createElement('div');
+        row.className = "flex justify-between items-center bg-[#0a1620]/60 border border-cyan-900/30 rounded-xl px-3 py-2.5 text-xs";
+        row.innerHTML =
+            '<span class="font-bold text-cyan-100">' + sanitize(entry.date) + '</span>' +
+            '<div class="flex items-center gap-3">' +
+                '<span class="font-black text-teal-300">' + parseFloat(entry.weight).toFixed(1) + ' kg' +
+                    '<span class="font-semibold ' + changeClass + '">' + changeTxt + '</span>' +
+                '</span>' +
+                '<button onclick="deleteWeightEntry(' + actualIdx + ')" class="text-slate-600 hover:text-rose-400 font-bold px-1 text-sm transition-colors">✕</button>' +
+            '</div>';
+        container.appendChild(row);
+    });
+}
+
+function deleteWeightEntry(idx) {
+    if (idx < 0 || idx >= state.weightHistory.length) return;
+    state.weightHistory.splice(idx, 1);
+    // Recalculate current weight from last entry if exists
+    if (state.weightHistory.length > 0) {
+        state.profile.weight = parseFloat(state.weightHistory[state.weightHistory.length - 1].weight);
+        document.getElementById('weight-input').value = state.profile.weight;
+    }
+    saveAndRender();
+    renderWeightUI();
 }
 
 function calculateWeightMilestonesUI() {
@@ -927,11 +1077,24 @@ function calculateWeightMilestonesUI() {
 
     const j = getWeightJourney();
 
+    // Update this-month weight average
+    const monthAvgEl = document.getElementById('weight-stat-month-avg');
+    if (monthAvgEl) {
+        const monthAvg = computeWeightMonthAvg();
+        if (monthAvg !== null) {
+            monthAvgEl.innerText = monthAvg.toFixed(1) + ' kg';
+            monthAvgEl.className = 'text-sm font-black text-teal-300 mt-0.5';
+        } else {
+            monthAvgEl.innerText = '— kg';
+            monthAvgEl.className = 'text-sm font-black text-slate-500 mt-0.5';
+        }
+    }
+
     if (j.direction === 'none') {
         document.getElementById('weight-progress-percent').innerText = '0%';
         document.getElementById('weight-progress-bar').style.width = '0%';
         document.getElementById('weight-stat-total').innerText = 'Set Base ⚠️';
-        document.getElementById('weight-stat-total').className = 'text-base font-black text-amber-400 mt-0.5';
+        document.getElementById('weight-stat-total').className = 'text-sm font-black text-amber-400 mt-0.5';
         document.getElementById('weight-stat-velocity').innerText = '— kg';
         if (label) label.innerText = 'Set a Base Weight in profile to start tracking.';
         if (journeyLabel) journeyLabel.innerText = 'Journey Progress';
@@ -952,17 +1115,17 @@ function calculateWeightMilestonesUI() {
 
     const totalEl = document.getElementById('weight-stat-total');
     if (j.direction === 'lose') {
-        if (journeyLabel) journeyLabel.innerText = 'Total Weight Lost';
-        totalEl.innerText = j.totalAchieved.toFixed(1) + ' kg dropped';
-        totalEl.className = 'text-base font-black text-teal-300 mt-0.5';
+        if (journeyLabel) journeyLabel.innerText = 'Weight Lost';
+        totalEl.innerText = j.totalAchieved.toFixed(1) + 'kg ↓';
+        totalEl.className = 'text-sm font-black text-teal-300 mt-0.5';
     } else if (j.direction === 'gain') {
-        if (journeyLabel) journeyLabel.innerText = 'Total Weight Gained';
-        totalEl.innerText = '+' + j.totalAchieved.toFixed(1) + ' kg gained';
-        totalEl.className = 'text-base font-black text-emerald-300 mt-0.5';
+        if (journeyLabel) journeyLabel.innerText = 'Weight Gained';
+        totalEl.innerText = '+' + j.totalAchieved.toFixed(1) + 'kg ↑';
+        totalEl.className = 'text-sm font-black text-emerald-300 mt-0.5';
     } else {
         if (journeyLabel) journeyLabel.innerText = 'Maintenance';
-        totalEl.innerText = 'Maintaining';
-        totalEl.className = 'text-base font-black text-sky-300 mt-0.5';
+        totalEl.innerText = 'On Track';
+        totalEl.className = 'text-sm font-black text-sky-300 mt-0.5';
     }
 
     if (label) {
@@ -975,12 +1138,11 @@ function calculateWeightMilestonesUI() {
         const last7 = state.weightHistory.slice(-7);
         let sum = 0;
         last7.forEach(function(w) { sum += parseFloat(w.weight) || 0; });
-        const avg = sum / last7.length;
-        velEl.innerText = avg.toFixed(1) + ' kg';
-        velEl.className = 'text-base font-black text-cyan-300 mt-0.5';
+        velEl.innerText = (sum / last7.length).toFixed(1) + ' kg';
+        velEl.className = 'text-sm font-black text-cyan-300 mt-0.5';
     } else {
         velEl.innerText = '— kg';
-        velEl.className = 'text-base font-black text-cyan-300 mt-0.5';
+        velEl.className = 'text-sm font-black text-cyan-300 mt-0.5';
     }
 
     const segments = 4;
@@ -991,7 +1153,9 @@ function calculateWeightMilestonesUI() {
 
     if (j.totalNeeded > 0) {
         for (let i = 1; i <= segments; i++) {
-            const mw = j.direction === 'lose' ? j.base - ((j.totalNeeded / segments) * i) : j.base + ((j.totalNeeded / segments) * i);
+            const mw = j.direction === 'lose'
+                ? j.base - ((j.totalNeeded / segments) * i)
+                : j.base + ((j.totalNeeded / segments) * i);
             milestones.push({ label: 'Reach ' + mw.toFixed(1) + 'kg', target: parseFloat(mw.toFixed(1)), symbol: symbols[i-1], type: 'weight' });
         }
     } else {
@@ -1018,141 +1182,16 @@ function calculateWeightMilestonesUI() {
         }
         const item = document.createElement('div');
         item.className = "flex items-center gap-2 bg-[#0a1620]/40 p-2 rounded-lg border border-cyan-900/30";
-        item.innerHTML = '<input type="checkbox" ' + (isDone ? 'checked' : '') + ' disabled class="accent-teal-500 rounded w-3.5 h-3.5 pointer-events-none"><span class="' + (isDone ? 'line-through text-slate-500 font-normal' : 'text-cyan-100 font-semibold') + ' text-[11px] flex items-center gap-1"><span>' + m.symbol + '</span><span>' + sanitize(m.label) + ' ' + (m.type === 'streak' ? '(' + m.currentStreak + '/' + m.targetStreak + 'd)' : '') + '</span></span>';
+        item.innerHTML = '<input type="checkbox" ' + (isDone ? 'checked' : '') + ' disabled class="accent-teal-500 rounded w-3.5 h-3.5 pointer-events-none"><span class="' + (isDone ? 'line-through text-slate-500 font-normal' : 'text-cyan-100 font-semibold') + ' text-[11px] flex items-center gap-1"><span>' + m.symbol + '</span><span>' + sanitize(m.label) + (m.type === 'streak' ? ' (' + m.currentStreak + '/' + m.targetStreak + 'd)' : '') + '</span></span>';
         grid.appendChild(item);
     });
 
     if (!nextSet) badge.innerText = "🎉 All Clear!";
 }
 
-function renderWeightChart() {
-    const canvas = document.getElementById('weightChart');
-    const emptyMsg = document.getElementById('weight-empty-msg');
-    const ctx = canvas.getContext('2d');
-    if (weightChartInstance) { weightChartInstance.destroy(); weightChartInstance = null; }
-    calculateWeightMilestonesUI();
-
-    if (state.weightHistory.length === 0) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        canvas.classList.add('hidden');
-        emptyMsg.classList.remove('hidden');
-        return;
-    }
-    canvas.classList.remove('hidden');
-    emptyMsg.classList.add('hidden');
-
-    const j = getWeightJourney();
-
-    // Slice weight history by range
-    let sliced;
-    if (_weightChartRange === 'all') {
-        sliced = state.weightHistory;
-    } else {
-        const n = parseInt(_weightChartRange);
-        sliced = state.weightHistory.slice(-n);
-    }
-
-    const rawLabels = sliced.map(function(w) { return w.date; });
-    const data = sliced.map(function(w) { return parseFloat(w.weight); });
-
-    // For 30D and All views → show only FIRST and LAST labels
-    let displayLabels = rawLabels;
-    if (_weightChartRange !== '7' && rawLabels.length > 2) {
-        displayLabels = rawLabels.map(function(lbl, idx) {
-            if (idx === 0 || idx === rawLabels.length - 1) return lbl;
-            return '';
-        });
-    }
-
-    // 7-day moving average line
-    const movingAvg = data.map(function(_, i) {
-        const start = Math.max(0, i - 6);
-        const window = data.slice(start, i + 1);
-        const sum = window.reduce(function(s, v) { return s + v; }, 0);
-        return +(sum / window.length).toFixed(2);
-    });
-
-    const datasets = [{
-        label: 'Body Mass (kg)',
-        data: data,
-        borderColor: 'rgba(34,211,238,0.5)',
-        backgroundColor: 'rgba(34,211,238,0.06)',
-        borderWidth: 1.5,
-        tension: 0.15,
-        fill: true,
-        pointRadius: _weightChartRange === '7' ? 4 : 2,
-        pointBackgroundColor: '#5eead4'
-    }];
-
-    if (data.length >= 3) {
-        datasets.push({
-            label: '7-Day Avg Trend',
-            data: movingAvg,
-            borderColor: '#22d3ee',
-            backgroundColor: 'transparent',
-            borderWidth: 2.5,
-            tension: 0.3,
-            fill: false,
-            pointRadius: 0,
-            pointHoverRadius: 4
-        });
-    }
-
-    if (j.goal > 0) {
-        datasets.push({
-            label: 'Goal (' + j.goal + 'kg)',
-            data: rawLabels.map(function(){return j.goal;}),
-            borderColor: '#2dd4bf',
-            borderWidth: 1.5,
-            borderDash: [5,5],
-            pointRadius: 0,
-            fill: false
-        });
-    }
-    if (j.base !== null && !isNaN(j.base)) {
-        datasets.push({
-            label: 'Base (' + j.base + 'kg)',
-            data: rawLabels.map(function(){return j.base;}),
-            borderColor: '#fb923c',
-            borderWidth: 1.5,
-            borderDash: [3,3],
-            pointRadius: 0,
-            fill: false
-        });
-    }
-
-    const xScaleCfg = {
-        grid: { color: '#0f2438' },
-        ticks: { color: '#67e8f9', font: { size: 9 }, autoSkip: false }
-    };
-
-    if (_weightChartRange !== '7') {
-        xScaleCfg.ticks.maxRotation = 0;
-        xScaleCfg.ticks.minRotation = 0;
-    }
-
-    weightChartInstance = new Chart(ctx, {
-        type: 'line',
-        data: { labels: displayLabels, datasets: datasets },
-        options: {
-            responsive: true,
-            scales: {
-                x: xScaleCfg,
-                y: { grid: { color: '#0f2438' }, ticks: { color: '#67e8f9', font: { size: 9 } } }
-            },
-            plugins: {
-                legend: { labels: { color: '#e0f2fe', font: { size: 9 } } },
-                tooltip: {
-                    callbacks: {
-                        title: function(items) {
-                            return rawLabels[items[0].dataIndex];
-                        }
-                    }
-                }
-            }
-        }
-    });
-}
+// ─────────────────────────────────────────────
+// FORM / MACRO HELPERS
+// ─────────────────────────────────────────────
 
 function captureBaseMacros(protein, carbs, fats, fiber, calories, baseGrams) {
     _baseMacros = {
@@ -1234,38 +1273,34 @@ function handleFormSubmit(e) {
         time: document.getElementById('food-time').value
     };
     state.logs.push(item);
-    document.getElementById('macro-log-form').reset();
-    document.getElementById('food-serving').value = 100;
-    _baseMacros = { protein: 0, carbs: 0, fats: 0, fiber: 0, calories: 0, baseGrams: 100 };
-    document.getElementById('food-base-grams').innerText = '100g';
-    updateServingHint();
-    setDefaultTime();
+    clearEntryForm();
     saveAndRender();
 }
 
-function logFormItem() {
+function logFormItem(saveAsFavorite) {
     const currentServing = parseFloat(document.getElementById('food-serving').value) || 100;
-    const currentP   = parseFloat(document.getElementById('food-p').value) || 0;
-    const currentC   = parseFloat(document.getElementById('food-c').value) || 0;
-    const currentF   = parseFloat(document.getElementById('food-f').value) || 0;
-    const currentFib = parseFloat(document.getElementById('food-fiber').value) || 0;
     const currentCal = parseFloat(document.getElementById('food-cal').value) || 0;
 
     if (!currentCal) { alert("Enter calories first!"); return; }
 
+    // Normalize to per-100g base for storage
     const factor = 100 / currentServing;
     const item = {
         name: document.getElementById('food-name').value || "Unnamed Preset",
-        protein:  +(currentP   * factor).toFixed(2),
-        carbs:    +(currentC   * factor).toFixed(2),
-        fats:     +(currentF   * factor).toFixed(2),
-        fiber:    +(currentFib * factor).toFixed(2),
+        protein:  +(( parseFloat(document.getElementById('food-p').value)    || 0) * factor).toFixed(2),
+        carbs:    +(( parseFloat(document.getElementById('food-c').value)    || 0) * factor).toFixed(2),
+        fats:     +(( parseFloat(document.getElementById('food-f').value)    || 0) * factor).toFixed(2),
+        fiber:    +(( parseFloat(document.getElementById('food-fiber').value)|| 0) * factor).toFixed(2),
         calories: +(currentCal * factor).toFixed(2),
         baseGrams: 100
     };
-    state.favorites.push(item);
-    saveAndRender();
-    alert('Saved to favorites! (normalized to 100g base)');
+
+    if (saveAsFavorite) {
+        state.favorites.push(item);
+        saveAndRender();
+        clearEntryForm();
+        alert('Saved to favorites! (normalized to 100g base)');
+    }
 }
 
 function deleteFavItem(idx, e) {
@@ -1287,6 +1322,7 @@ function selectFavItem(item) {
 }
 
 function deleteLogItem(idx) {
+    if (idx < 0 || idx >= state.logs.length) return;
     state.logs.splice(idx, 1);
     saveAndRender();
 }
@@ -1312,8 +1348,12 @@ function renderDashboardTotals() {
     document.getElementById('fill-c').style.width = pct(totC, state.targets.carbs) + '%';
     document.getElementById('fill-f').style.width = pct(totF, state.targets.fats) + '%';
 
+    // Favorites
     const favsEl = document.getElementById('favs-container');
     favsEl.innerHTML = '';
+    if (state.favorites.length === 0) {
+        favsEl.innerHTML = '<div class="text-[11px] text-slate-500 font-medium py-1">No favorites yet. Save items using ⭐</div>';
+    }
     state.favorites.forEach(function(item, idx) {
         const pill = document.createElement('button');
         pill.className = "bg-[#0a1620] hover:bg-cyan-950/40 border border-cyan-900/40 text-left text-xs px-3 py-1.5 rounded-xl flex items-center gap-2 text-cyan-100 font-medium transition-all active:scale-95";
@@ -1323,6 +1363,7 @@ function renderDashboardTotals() {
         favsEl.appendChild(pill);
     });
 
+    // Timeline
     const groupsEl = document.getElementById('food-timeline-groups');
     groupsEl.innerHTML = '';
     if (state.logs.length === 0) {
@@ -1350,12 +1391,16 @@ function renderDashboardTotals() {
             const servingLbl = item.servingGrams ? ' • ' + item.servingGrams + 'g' : '';
             const row = document.createElement('div');
             row.className = "bg-[#0a1620]/60 border border-cyan-900/30 rounded-xl p-2.5 flex justify-between items-center text-xs";
-            row.innerHTML = '<div><div class="font-bold text-cyan-100">' + sanitize(item.name) + '</div><div class="text-[10px] text-cyan-500/70 mt-0.5">⏱️ ' + (item.time || 'N/A') + servingLbl + ' • P: ' + item.protein + 'g • C: ' + item.carbs + 'g • F: ' + item.fats + 'g</div></div><div class="flex items-center gap-3"><span class="font-black text-teal-300">' + item.calories + ' kcal</span><button onclick="deleteLogItem(' + index + ')" class="text-slate-600 hover:text-rose-400 font-bold px-1 text-sm">✕</button></div>';
+            row.innerHTML = '<div><div class="font-bold text-cyan-100">' + sanitize(item.name) + '</div><div class="text-[10px] text-cyan-500/70 mt-0.5">⏱️ ' + sanitize(item.time || 'N/A') + servingLbl + ' • P: ' + item.protein + 'g • C: ' + item.carbs + 'g • F: ' + item.fats + 'g</div></div><div class="flex items-center gap-3"><span class="font-black text-teal-300">' + item.calories + ' kcal</span><button onclick="deleteLogItem(' + index + ')" class="text-slate-600 hover:text-rose-400 font-bold px-1 text-sm">✕</button></div>';
             block.appendChild(row);
         });
         groupsEl.appendChild(block);
     });
 }
+
+// ─────────────────────────────────────────────
+// BACKUP / IMPORT
+// ─────────────────────────────────────────────
 
 function runDualBackupEngine() {
     const jsonStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
@@ -1379,20 +1424,30 @@ function importStateData(e) {
     fr.onload = function(ev) {
         try {
             const parsed = JSON.parse(ev.target.result);
-            if (parsed.profile && parsed.targets) {
-                state = migrateState(parsed);
-                saveAndRender(); initInputs();
-                alert("State imported!");
-            }
-        } catch(err) { alert("Invalid backup file."); }
+            const required = ['profile', 'targets', 'logs', 'favorites', 'calorieHistory', 'weightHistory'];
+            const isValid = required.every(function(k) { return k in parsed; })
+                         && typeof parsed.profile.weight === 'number'
+                         && Array.isArray(parsed.logs);
+            if (!isValid) throw new Error('Schema mismatch');
+            state = migrateState(parsed);
+            saveAndRender();
+            initInputs();
+            alert("State imported successfully!");
+        } catch(err) {
+            alert("Invalid backup file: " + err.message);
+        }
     };
     fr.readAsText(e.target.files[0]);
 }
 
+// ─────────────────────────────────────────────
+// WEIGHT FORM
+// ─────────────────────────────────────────────
+
 document.getElementById('weight-log-form').addEventListener('submit', function(e) {
     e.preventDefault();
     const val = parseFloat(document.getElementById('daily-weight-val').value);
-    if (!val) return;
+    if (!val || isNaN(val)) return;
     const shortLbl = DateUtils.toShortLabel(new Date());
     const idx = state.weightHistory.findIndex(function(en) { return en.date === shortLbl; });
     if (idx > -1) state.weightHistory[idx].weight = val;
@@ -1408,8 +1463,12 @@ document.getElementById('weight-log-form').addEventListener('submit', function(e
     }
     document.getElementById('daily-weight-val').value = '';
     calculateTargets();
-    renderWeightChart();
+    renderWeightUI();
 });
+
+// ─────────────────────────────────────────────
+// PROFILE FORM
+// ─────────────────────────────────────────────
 
 document.getElementById('tdee-form').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -1425,10 +1484,14 @@ document.getElementById('tdee-form').addEventListener('submit', function(e) {
     };
     calculateTargets();
     if (!document.getElementById('view-weight').classList.contains('hidden')) {
-        renderWeightChart();
+        renderWeightUI();
     }
     alert("Profile updated!");
 });
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
 
 window.onload = function() {
     initInputs();
