@@ -14,10 +14,98 @@
         .week-row-surplus   { background: rgba(251,146,60,0.08); border-left: 3px solid #fb923c; }
         .month-row-deficit  { background: rgba(6,182,212,0.08); border-left: 3px solid #06b6d4; }
         .month-row-surplus  { background: rgba(251,146,60,0.08); border-left: 3px solid #fb923c; }
+
+        /* Save modal backdrop */
+        #fav-modal-backdrop {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 50;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        #fav-modal-backdrop.open { display: flex; }
     </style>
 </head>
 <body class="bg-[#0a1620] text-slate-100 font-sans antialiased min-h-screen p-4 md:p-6 select-none">
 
+<!-- ═══════════════════════════════════════════
+     SAVE-TO-FAVS MODAL
+════════════════════════════════════════════ -->
+<div id="fav-modal-backdrop" onclick="closeFavModal(event)">
+    <div id="fav-modal" class="bg-[#132030] border border-cyan-800/50 rounded-2xl shadow-2xl w-full max-w-sm p-5 space-y-4">
+        <h3 class="text-sm font-black text-cyan-100">⭐ Save to Favorites</h3>
+
+        <!-- Preview card -->
+        <div class="bg-[#0a1620] border border-cyan-900/30 rounded-xl p-3 space-y-1.5">
+            <div class="text-[10px] font-black text-cyan-400/70 uppercase tracking-wider">Saving:</div>
+            <div class="text-sm font-black text-white" id="modal-preview-name">—</div>
+            <div class="grid grid-cols-5 gap-1 mt-2 text-center">
+                <div class="bg-[#132030] rounded-lg py-1.5 px-0.5">
+                    <div class="text-[9px] text-cyan-400/60 font-bold">Cal</div>
+                    <div class="text-[11px] font-black text-cyan-300" id="modal-preview-cal">—</div>
+                </div>
+                <div class="bg-[#132030] rounded-lg py-1.5 px-0.5">
+                    <div class="text-[9px] text-teal-400/60 font-bold">Pro</div>
+                    <div class="text-[11px] font-black text-teal-300" id="modal-preview-p">—</div>
+                </div>
+                <div class="bg-[#132030] rounded-lg py-1.5 px-0.5">
+                    <div class="text-[9px] text-sky-400/60 font-bold">Carb</div>
+                    <div class="text-[11px] font-black text-sky-300" id="modal-preview-c">—</div>
+                </div>
+                <div class="bg-[#132030] rounded-lg py-1.5 px-0.5">
+                    <div class="text-[9px] text-rose-400/60 font-bold">Fat</div>
+                    <div class="text-[11px] font-black text-rose-300" id="modal-preview-f">—</div>
+                </div>
+                <div class="bg-[#132030] rounded-lg py-1.5 px-0.5">
+                    <div class="text-[9px] text-emerald-400/60 font-bold">Fiber</div>
+                    <div class="text-[11px] font-black text-emerald-300" id="modal-preview-fiber">—</div>
+                </div>
+            </div>
+            <div class="text-[10px] text-cyan-500/60 text-center mt-1" id="modal-preview-serving">for — g</div>
+        </div>
+
+        <div class="text-[11px] text-slate-400 font-medium leading-relaxed">
+            How do you want to save this?
+        </div>
+
+        <!-- Option A -->
+        <button onclick="confirmSaveFav('exact')"
+            class="w-full text-left bg-[#0a1620] hover:bg-cyan-950/40 border border-cyan-800/40 hover:border-cyan-600/60 rounded-xl p-3.5 transition-all active:scale-95 cursor-pointer space-y-1">
+            <div class="flex items-center gap-2">
+                <span class="text-base">📌</span>
+                <span class="text-xs font-black text-cyan-200">Save As-Is</span>
+                <span class="ml-auto text-[9px] font-bold text-cyan-500 bg-cyan-950/60 border border-cyan-800/40 px-1.5 py-0.5 rounded" id="modal-exact-badge">— g</span>
+            </div>
+            <p class="text-[10px] text-slate-500 pl-6 leading-relaxed">
+                Loads back exactly these macros every time. Best for a specific portion you eat regularly (e.g. "My 68g guava").
+            </p>
+        </button>
+
+        <!-- Option B -->
+        <button onclick="confirmSaveFav('per100')"
+            class="w-full text-left bg-[#0a1620] hover:bg-teal-950/40 border border-teal-800/40 hover:border-teal-600/60 rounded-xl p-3.5 transition-all active:scale-95 cursor-pointer space-y-1">
+            <div class="flex items-center gap-2">
+                <span class="text-base">⚖️</span>
+                <span class="text-xs font-black text-teal-200">Save per 100g Base</span>
+                <span class="ml-auto text-[9px] font-bold text-teal-500 bg-teal-950/60 border border-teal-800/40 px-1.5 py-0.5 rounded">100g</span>
+            </div>
+            <p class="text-[10px] text-slate-500 pl-6 leading-relaxed">
+                Normalises macros to per 100g. When you load it, use Scale mode to enter any serving size. Best for foods you eat at varying amounts.
+            </p>
+        </button>
+
+        <button onclick="closeFavModal()"
+            class="w-full text-center text-[11px] font-bold text-slate-500 hover:text-slate-300 py-1 transition-all cursor-pointer">
+            Cancel
+        </button>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     MAIN APP
+════════════════════════════════════════════ -->
 <div class="max-w-md mx-auto space-y-6">
 
     <header class="text-center py-2 flex justify-between items-center">
@@ -94,22 +182,22 @@
         <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-4">
             <h2 class="text-sm font-bold text-cyan-100">Daily Intake Summary</h2>
             <div class="grid grid-cols-2 gap-3">
-                <div id="card-cal" class="relative overflow-hidden bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30 transition-all duration-500">
+                <div class="relative overflow-hidden bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30 transition-all duration-500">
                     <div id="fill-cal" class="absolute top-0 left-0 bottom-0 bg-cyan-500/10 transition-all duration-500 pointer-events-none" style="width:0%"></div>
                     <div class="relative z-10 text-[10px] font-bold text-cyan-500/80 uppercase">Calories</div>
                     <div class="relative z-10 text-base font-black text-cyan-300 my-0.5" id="tot-cal">0 / 0 kcal</div>
                 </div>
-                <div id="card-p" class="relative overflow-hidden bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30 transition-all duration-500">
+                <div class="relative overflow-hidden bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30 transition-all duration-500">
                     <div id="fill-p" class="absolute top-0 left-0 bottom-0 bg-teal-500/10 transition-all duration-500 pointer-events-none" style="width:0%"></div>
                     <div class="relative z-10 text-[10px] font-bold text-cyan-500/80 uppercase">Protein</div>
                     <div class="relative z-10 text-base font-black text-teal-300 my-0.5" id="tot-p">0g / 0g</div>
                 </div>
-                <div id="card-c" class="relative overflow-hidden bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30 transition-all duration-500">
+                <div class="relative overflow-hidden bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30 transition-all duration-500">
                     <div id="fill-c" class="absolute top-0 left-0 bottom-0 bg-sky-500/10 transition-all duration-500 pointer-events-none" style="width:0%"></div>
                     <div class="relative z-10 text-[10px] font-bold text-cyan-500/80 uppercase">Carbs</div>
                     <div class="relative z-10 text-base font-black text-sky-300 my-0.5" id="tot-c">0g / 0g</div>
                 </div>
-                <div id="card-f" class="relative overflow-hidden bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30 transition-all duration-500">
+                <div class="relative overflow-hidden bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30 transition-all duration-500">
                     <div id="fill-f" class="absolute top-0 left-0 bottom-0 bg-rose-500/10 transition-all duration-500 pointer-events-none" style="width:0%"></div>
                     <div class="relative z-10 text-[10px] font-bold text-cyan-500/80 uppercase">Fats</div>
                     <div class="relative z-10 text-base font-black text-rose-300 my-0.5" id="tot-f">0g / 0g</div>
@@ -140,41 +228,74 @@
             <form id="macro-log-form" onsubmit="handleFormSubmit(event)" class="space-y-3">
                 <div>
                     <label class="block text-[10px] font-bold text-cyan-400/80 uppercase mb-1">Item Name</label>
-                    <input type="text" id="food-name" placeholder="e.g., Chicken Shawarma" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500" required>
+                    <input type="text" id="food-name" placeholder="e.g., Guava" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500" required>
                 </div>
-                <div class="bg-gradient-to-r from-teal-950/30 to-cyan-950/30 border border-teal-800/40 rounded-xl p-2.5">
-                    <div class="flex items-center justify-between mb-1">
-                        <label class="text-[10px] font-bold text-teal-300 uppercase tracking-wider">⚖️ Serving Size (g)</label>
-                        <button type="button" onclick="resetServingSize()" class="text-[9px] font-bold text-cyan-400 hover:text-cyan-200 bg-cyan-950/50 border border-cyan-800/50 px-2 py-0.5 rounded transition-all active:scale-95">🔄 Reset to 100g</button>
+
+                <!-- SERVING BLOCK -->
+                <div id="serving-block" class="rounded-xl p-2.5 border transition-all duration-300 bg-[#0a1620]/60 border-cyan-900/40">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="text-[10px] font-bold text-cyan-400/70 uppercase tracking-wider">⚖️ Serving / Portion</label>
+                        <div class="flex items-center bg-[#0a1620] border border-cyan-900/40 rounded-lg p-0.5 gap-0.5">
+                            <button type="button" id="btn-mode-manual" onclick="setServingMode('manual')"
+                                class="px-2 py-1 text-[9px] font-black rounded-md transition-all bg-cyan-600 text-white cursor-pointer">
+                                ✏️ Manual
+                            </button>
+                            <button type="button" id="btn-mode-scale" onclick="setServingMode('scale')"
+                                class="px-2 py-1 text-[9px] font-black rounded-md transition-all text-slate-400 cursor-pointer">
+                                ⚖️ Scale
+                            </button>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <input type="number" step="0.1" id="food-serving" value="100" oninput="scaleMacrosByServing()" class="flex-1 bg-[#0a1620] border border-teal-800/50 rounded-lg p-2 text-sm text-center font-bold text-teal-200 focus:outline-none focus:border-teal-500">
-                        <span class="text-[10px] text-cyan-500/80 font-medium">Base: <span id="food-base-grams" class="text-teal-300 font-bold">100g</span></span>
+
+                    <!-- Manual mode -->
+                    <div id="serving-manual-ui">
+                        <input type="number" step="0.1" id="food-serving" value="100"
+                            class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-lg p-2 text-sm text-center font-bold text-cyan-200 focus:outline-none focus:border-cyan-500"
+                            placeholder="grams eaten">
+                        <p class="text-[9px] text-cyan-500/50 mt-1.5 italic text-center">
+                            Just a label — macros you type are logged exactly as entered
+                        </p>
                     </div>
-                    <div class="text-[9px] text-cyan-500/60 mt-1 text-center italic" id="serving-hint">Macros scale automatically as you type</div>
+
+                    <!-- Scale mode -->
+                    <div id="serving-scale-ui" class="hidden">
+                        <div class="flex items-center gap-2 mb-1.5">
+                            <input type="number" step="0.1" id="food-serving-scale" value="100"
+                                oninput="scaleMacrosByServing()"
+                                class="flex-1 bg-[#0a1620] border border-teal-800/50 rounded-lg p-2 text-sm text-center font-bold text-teal-200 focus:outline-none focus:border-teal-500">
+                            <span class="text-[10px] text-cyan-500/80 font-medium whitespace-nowrap">
+                                Base: <span id="food-base-grams" class="text-teal-300 font-bold">100g</span>
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <p class="text-[9px] text-teal-300/70 italic" id="serving-hint">Macros scale automatically</p>
+                            <button type="button" onclick="resetServingSize()" class="text-[9px] font-bold text-cyan-400 bg-cyan-950/50 border border-cyan-800/50 px-2 py-0.5 rounded transition-all active:scale-95">🔄 Reset</button>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-[10px] font-bold text-cyan-400/80 uppercase mb-1">Protein (g)</label>
-                        <input type="number" step="0.1" id="food-p" placeholder="0" value="0" oninput="autoCalculateCalories(); syncBaseFromManualEntry();" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
+                        <input type="number" step="0.1" id="food-p" placeholder="0" value="0" oninput="autoCalculateCalories();" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-cyan-400/80 uppercase mb-1">Carbs (g)</label>
-                        <input type="number" step="0.1" id="food-c" placeholder="0" value="0" oninput="autoCalculateCalories(); syncBaseFromManualEntry();" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
+                        <input type="number" step="0.1" id="food-c" placeholder="0" value="0" oninput="autoCalculateCalories();" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-cyan-400/80 uppercase mb-1">Fats (g)</label>
-                        <input type="number" step="0.1" id="food-f" placeholder="0" value="0" oninput="autoCalculateCalories(); syncBaseFromManualEntry();" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
+                        <input type="number" step="0.1" id="food-f" placeholder="0" value="0" oninput="autoCalculateCalories();" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-cyan-400/80 uppercase mb-1">Calories (kcal)</label>
-                        <input type="number" step="0.1" id="food-cal" placeholder="0" oninput="checkCalorieDeviation(); syncBaseFromManualEntry();" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm font-bold text-cyan-300 focus:outline-none focus:border-cyan-500" required>
+                        <input type="number" step="0.1" id="food-cal" placeholder="0" oninput="checkCalorieDeviation();" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm font-bold text-cyan-300 focus:outline-none focus:border-cyan-500" required>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-[10px] font-bold text-cyan-400/80 uppercase mb-1">Dietary Fiber (g)</label>
-                        <input type="number" step="0.1" id="food-fiber" placeholder="0" value="0" oninput="syncBaseFromManualEntry();" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
+                        <input type="number" step="0.1" id="food-fiber" placeholder="0" value="0" class="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-cyan-400/80 uppercase mb-1">Time Eaten</label>
@@ -182,7 +303,7 @@
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-2 pt-2">
-                    <button type="button" onclick="logFormItem(true)" class="bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold py-3 rounded-xl transition-all active:scale-95 cursor-pointer">⭐ Save to Favs</button>
+                    <button type="button" onclick="openFavModal()" class="bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold py-3 rounded-xl transition-all active:scale-95 cursor-pointer">⭐ Save to Favs</button>
                     <button type="submit" class="bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold py-3 rounded-xl transition-all active:scale-95 cursor-pointer">Log Daily Entry</button>
                 </div>
             </form>
@@ -190,6 +311,10 @@
 
         <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-3">
             <h2 class="text-sm font-bold text-cyan-100">⭐ Favorite Presets</h2>
+            <p class="text-[10px] text-cyan-500/60 leading-relaxed">
+                <span class="text-cyan-400 font-bold">📌 Exact</span> presets load as-is in Manual mode. &nbsp;
+                <span class="text-teal-400 font-bold">⚖️ Per-100g</span> presets load in Scale mode — adjust serving to scale.
+            </p>
             <div id="favs-container" class="flex flex-wrap gap-2"></div>
         </div>
 
@@ -210,58 +335,41 @@
 
     <!-- ===================== TRENDS TAB ===================== -->
     <div id="view-trends" class="space-y-6 hidden">
-
-        <!-- Nutrition Averages Summary -->
         <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-4">
             <div class="flex items-center justify-between">
                 <h2 class="text-sm font-bold text-cyan-100">📊 Nutrition Averages</h2>
                 <span class="text-[9px] font-bold text-cyan-500/60 uppercase tracking-wider bg-cyan-950/30 px-2 py-1 rounded border border-cyan-900/30">Read Only</span>
             </div>
-
-            <!-- Column headers -->
-            <div class="grid grid-cols-5 gap-1.5 text-center mb-1">
-                <div class="text-[9px] font-black text-cyan-400/70 uppercase tracking-wide">🔥 Cal</div>
-                <div class="text-[9px] font-black text-teal-400/70 uppercase tracking-wide">🥩 Pro</div>
-                <div class="text-[9px] font-black text-sky-400/70 uppercase tracking-wide">🧪 Carb</div>
-                <div class="text-[9px] font-black text-rose-400/70 uppercase tracking-wide">🥑 Fat</div>
-                <div class="text-[9px] font-black text-emerald-400/70 uppercase tracking-wide">🌾 Fiber</div>
+            <div class="grid grid-cols-5 gap-1.5 text-center">
+                <div class="text-[9px] font-black text-cyan-400/70 uppercase">🔥 Cal</div>
+                <div class="text-[9px] font-black text-teal-400/70 uppercase">🥩 Pro</div>
+                <div class="text-[9px] font-black text-sky-400/70 uppercase">🧪 Carb</div>
+                <div class="text-[9px] font-black text-rose-400/70 uppercase">🥑 Fat</div>
+                <div class="text-[9px] font-black text-emerald-400/70 uppercase">🌾 Fiber</div>
             </div>
-
-            <!-- This Week -->
             <div class="bg-[#0a1620] border border-cyan-800/30 rounded-2xl overflow-hidden">
                 <div class="px-4 py-2 bg-gradient-to-r from-cyan-950/60 to-teal-950/60 border-b border-cyan-900/30 flex items-center justify-between">
                     <span class="text-[11px] font-black text-cyan-300 uppercase tracking-wider">📅 This Week</span>
                     <span class="text-[9px] text-cyan-600/60 font-semibold" id="avg-week-range">—</span>
                 </div>
-                <div class="grid grid-cols-5 gap-1.5 p-3" id="avg-week-row">
-                    <!-- filled by JS -->
-                </div>
+                <div class="grid grid-cols-5 gap-1.5 p-3" id="avg-week-row"></div>
             </div>
-
-            <!-- This Month -->
             <div class="bg-[#0a1620] border border-teal-800/30 rounded-2xl overflow-hidden">
                 <div class="px-4 py-2 bg-gradient-to-r from-teal-950/60 to-cyan-950/60 border-b border-teal-900/30 flex items-center justify-between">
                     <span class="text-[11px] font-black text-teal-300 uppercase tracking-wider">🗓️ This Month</span>
                     <span class="text-[9px] text-teal-600/60 font-semibold" id="avg-month-range">—</span>
                 </div>
-                <div class="grid grid-cols-5 gap-1.5 p-3" id="avg-month-row">
-                    <!-- filled by JS -->
-                </div>
+                <div class="grid grid-cols-5 gap-1.5 p-3" id="avg-month-row"></div>
             </div>
-
-            <!-- All Time -->
             <div class="bg-[#0a1620] border border-slate-700/30 rounded-2xl overflow-hidden">
                 <div class="px-4 py-2 bg-gradient-to-r from-slate-900/80 to-slate-800/40 border-b border-slate-700/30 flex items-center justify-between">
                     <span class="text-[11px] font-black text-slate-300 uppercase tracking-wider">🏆 All Time</span>
                     <span class="text-[9px] text-slate-500/70 font-semibold" id="avg-alltime-range">—</span>
                 </div>
-                <div class="grid grid-cols-5 gap-1.5 p-3" id="avg-alltime-row">
-                    <!-- filled by JS -->
-                </div>
+                <div class="grid grid-cols-5 gap-1.5 p-3" id="avg-alltime-row"></div>
             </div>
         </div>
 
-        <!-- Ledger -->
         <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-5">
             <div class="flex justify-between items-center">
                 <h2 class="text-sm font-bold text-cyan-100">📜 Historical Balance Ledgers</h2>
@@ -282,19 +390,16 @@
                 <input type="number" step="0.1" id="daily-weight-val" placeholder="e.g., 87.5" class="flex-1 bg-[#0a1620] border border-cyan-900/40 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-cyan-500" required>
                 <button type="submit" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs px-5 rounded-xl transition-all active:scale-95 cursor-pointer">Save Log</button>
             </form>
-
-            <!-- Stats grid: 3 cards -->
             <div class="grid grid-cols-3 gap-3 pt-1">
-                <div id="weight-glow-total" class="bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30 transition-all duration-500">
+                <div class="bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30">
                     <div class="text-[9px] font-bold text-cyan-400/80 uppercase tracking-wide leading-tight" id="journey-label">Journey Progress</div>
                     <div id="weight-stat-total" class="text-sm font-black text-teal-300 mt-0.5">0.0 kg</div>
                 </div>
-                <div id="weight-glow-velocity" class="bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30 transition-all duration-500">
+                <div class="bg-[#0a1620] p-3 rounded-xl border border-cyan-900/30">
                     <div class="text-[9px] font-bold text-cyan-400/80 uppercase tracking-wide leading-tight">Last 7 Avg</div>
                     <div id="weight-stat-velocity" class="text-sm font-black text-cyan-300 mt-0.5">— kg</div>
                 </div>
-                <!-- NEW: This Month Avg -->
-                <div class="bg-[#0a1620] p-3 rounded-xl border border-teal-800/40 transition-all duration-500">
+                <div class="bg-[#0a1620] p-3 rounded-xl border border-teal-800/40">
                     <div class="text-[9px] font-bold text-teal-400/80 uppercase tracking-wide leading-tight">This Month</div>
                     <div id="weight-stat-month-avg" class="text-sm font-black text-teal-300 mt-0.5">— kg</div>
                 </div>
@@ -304,19 +409,17 @@
         <div class="bg-[#132030] p-5 rounded-2xl border border-cyan-900/30 shadow-xl space-y-4">
             <div class="space-y-2">
                 <div class="flex justify-between items-center text-xs font-bold text-cyan-100">
-                    <span class="flex items-center gap-1.5">🏁 Goal Target Trajectory</span>
+                    <span>🏁 Goal Target Trajectory</span>
                     <span id="weight-progress-percent" class="text-teal-300 font-black bg-teal-950/50 px-2 py-0.5 rounded-md border border-teal-800/50">0%</span>
                 </div>
                 <div class="w-full bg-[#0a1620] rounded-full h-4 border border-cyan-900/30 p-0.5 overflow-hidden shadow-inner">
-                    <div id="weight-progress-bar" class="bg-gradient-to-r from-cyan-500 via-teal-400 to-emerald-400 h-full rounded-full transition-all duration-700 shadow-[0_0_10px_rgba(34,211,238,0.4)]" style="width:0%"></div>
+                    <div id="weight-progress-bar" class="bg-gradient-to-r from-cyan-500 via-teal-400 to-emerald-400 h-full rounded-full transition-all duration-700" style="width:0%"></div>
                 </div>
-                <div class="text-[10px] text-cyan-500/70 font-medium text-center" id="weight-progress-label">
-                    Set a Base Weight in your profile to begin tracking.
-                </div>
+                <div class="text-[10px] text-cyan-500/70 font-medium text-center" id="weight-progress-label">Set a Base Weight in your profile to begin tracking.</div>
             </div>
             <div class="bg-[#0a1620] p-4 border border-cyan-900/30 rounded-xl space-y-3">
                 <div class="text-[10px] font-extrabold text-cyan-400/80 uppercase tracking-wider border-b border-cyan-900/40 pb-1.5 flex justify-between items-center">
-                    <span>🏆 Milestone Roadmap Checklist</span>
+                    <span>🏆 Milestone Roadmap</span>
                     <span id="next-objective-badge" class="text-[9px] text-amber-400 font-bold bg-amber-950/40 border border-amber-900 px-2 py-0.5 rounded">Calculating...</span>
                 </div>
                 <div class="grid grid-cols-2 gap-2 text-xs font-medium" id="milestones-checkbox-grid"></div>
@@ -329,7 +432,7 @@
                 <button onclick="clearHistory('weight')" class="text-[10px] font-bold text-rose-400 bg-rose-950/40 border border-rose-900 px-2.5 py-1 rounded-lg active:scale-95 transition-all cursor-pointer">Clear History</button>
             </div>
             <div id="weight-history-list" class="space-y-2 max-h-72 overflow-y-auto pr-1">
-                <div class="text-center text-xs text-slate-500 py-4">No weight logs yet. Add one above!</div>
+                <div class="text-center text-xs text-slate-500 py-4">No weight logs yet.</div>
             </div>
         </div>
     </div>
@@ -337,6 +440,155 @@
 </div>
 
 <script>
+// ─────────────────────────────────────────────
+// SERVING MODE
+// ─────────────────────────────────────────────
+let _servingMode = 'manual';
+
+function setServingMode(mode) {
+    _servingMode = mode;
+    const manualUI  = document.getElementById('serving-manual-ui');
+    const scaleUI   = document.getElementById('serving-scale-ui');
+    const block     = document.getElementById('serving-block');
+    const btnM      = document.getElementById('btn-mode-manual');
+    const btnS      = document.getElementById('btn-mode-scale');
+    const base      = 'px-2 py-1 text-[9px] font-black rounded-md transition-all cursor-pointer';
+
+    if (mode === 'manual') {
+        manualUI.classList.remove('hidden');
+        scaleUI.classList.add('hidden');
+        block.className = 'rounded-xl p-2.5 border transition-all duration-300 bg-[#0a1620]/60 border-cyan-900/40';
+        btnM.className  = base + ' bg-cyan-600 text-white';
+        btnS.className  = base + ' text-slate-400';
+    } else {
+        manualUI.classList.add('hidden');
+        scaleUI.classList.remove('hidden');
+        block.className = 'rounded-xl p-2.5 border transition-all duration-300 bg-teal-950/20 border-teal-800/40';
+        btnM.className  = base + ' text-slate-400';
+        btnS.className  = base + ' bg-teal-600 text-white';
+    }
+}
+
+function getCurrentServingGrams() {
+    return _servingMode === 'manual'
+        ? parseFloat(document.getElementById('food-serving').value) || 0
+        : parseFloat(document.getElementById('food-serving-scale').value) || 0;
+}
+
+// ─────────────────────────────────────────────
+// FAV MODAL
+// ─────────────────────────────────────────────
+
+// Holds data captured when modal opens — used by confirmSaveFav
+let _pendingFavData = null;
+
+function openFavModal() {
+    const cal  = parseFloat(document.getElementById('food-cal').value)   || 0;
+    const name = document.getElementById('food-name').value.trim();
+
+    if (!cal)  { alert("Enter calories first!"); return; }
+    if (!name) { alert("Enter a food name first!"); return; }
+
+    const serving = getCurrentServingGrams() || 100;
+    const p   = parseFloat(document.getElementById('food-p').value)     || 0;
+    const c   = parseFloat(document.getElementById('food-c').value)     || 0;
+    const f   = parseFloat(document.getElementById('food-f').value)     || 0;
+    const fib = parseFloat(document.getElementById('food-fiber').value) || 0;
+
+    // Snapshot current values
+    _pendingFavData = { name, cal, p, c, f, fib, serving };
+
+    // Populate modal preview
+    document.getElementById('modal-preview-name').innerText  = name;
+    document.getElementById('modal-preview-cal').innerText   = cal + ' kcal';
+    document.getElementById('modal-preview-p').innerText     = p + 'g';
+    document.getElementById('modal-preview-c').innerText     = c + 'g';
+    document.getElementById('modal-preview-f').innerText     = f + 'g';
+    document.getElementById('modal-preview-fiber').innerText = fib + 'g';
+    document.getElementById('modal-preview-serving').innerText = 'for ' + serving + 'g';
+    document.getElementById('modal-exact-badge').innerText   = serving + 'g';
+
+    document.getElementById('fav-modal-backdrop').classList.add('open');
+}
+
+function closeFavModal(e) {
+    // Close only if clicking backdrop itself (not the modal card)
+    if (e && e.target !== document.getElementById('fav-modal-backdrop')) return;
+    document.getElementById('fav-modal-backdrop').classList.remove('open');
+    _pendingFavData = null;
+}
+
+function confirmSaveFav(mode) {
+    if (!_pendingFavData) return;
+    const { name, cal, p, c, f, fib, serving } = _pendingFavData;
+
+    let item;
+
+    if (mode === 'exact') {
+        // Store exactly what was entered — serving is just metadata
+        item = {
+            name:      name,
+            calories:  +cal.toFixed(2),
+            protein:   +p.toFixed(2),
+            carbs:     +c.toFixed(2),
+            fats:      +f.toFixed(2),
+            fiber:     +fib.toFixed(2),
+            baseGrams: serving,      // the actual gram amount this represents
+            saveType:  'exact'       // flag so we know how to load it
+        };
+    } else {
+        // Normalise to per-100g
+        const factor = serving > 0 ? 100 / serving : 1;
+        item = {
+            name:      name,
+            calories:  +(cal * factor).toFixed(2),
+            protein:   +(p   * factor).toFixed(2),
+            carbs:     +(c   * factor).toFixed(2),
+            fats:      +(f   * factor).toFixed(2),
+            fiber:     +(fib * factor).toFixed(2),
+            baseGrams: 100,          // normalised base
+            saveType:  'per100'
+        };
+    }
+
+    state.favorites.push(item);
+    saveAndRender();
+    document.getElementById('fav-modal-backdrop').classList.remove('open');
+    _pendingFavData = null;
+    clearEntryForm();
+    alert('"' + name + '" saved to favorites as ' + (mode === 'exact' ? serving + 'g exact' : 'per-100g base') + '!');
+}
+
+function selectFavItem(item) {
+    document.getElementById('food-name').value    = item.name;
+    document.getElementById('food-p').value       = item.protein;
+    document.getElementById('food-c').value       = item.carbs;
+    document.getElementById('food-f').value       = item.fats;
+    document.getElementById('food-fiber').value   = item.fiber;
+    document.getElementById('food-cal').value     = item.calories;
+
+    if (item.saveType === 'exact') {
+        // Load in Manual mode — serving shows the original gram amount
+        document.getElementById('food-serving').value = item.baseGrams;
+        setServingMode('manual');
+    } else {
+        // Load in Scale mode — user can adjust serving to scale macros
+        captureBaseMacros(item.protein, item.carbs, item.fats, item.fiber, item.calories, item.baseGrams);
+        setServingMode('scale');
+    }
+    checkCalorieDeviation();
+}
+
+function deleteFavItem(idx, e) {
+    if (e) e.stopPropagation();
+    if (!confirm('Remove this favorite?')) return;
+    state.favorites.splice(idx, 1);
+    saveAndRender();
+}
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
 const STATE_VERSION = 4;
 
 function safeGetItem(key) {
@@ -345,26 +597,23 @@ function safeGetItem(key) {
 }
 function safeSetItem(key, value) {
     try { localStorage.setItem(key, value); }
-    catch(e) { if(!window.__fallbackRAMState) window.__fallbackRAMState = {}; window.__fallbackRAMState[key] = value; }
+    catch(e) { if (!window.__fallbackRAMState) window.__fallbackRAMState = {}; window.__fallbackRAMState[key] = value; }
 }
 function safeRemoveItem(key) {
     try { localStorage.removeItem(key); }
-    catch(e) { if(window.__fallbackRAMState) delete window.__fallbackRAMState[key]; }
+    catch(e) { if (window.__fallbackRAMState) delete window.__fallbackRAMState[key]; }
 }
-
 function hardResetWholeAppStorage() {
-    if (!confirm("CRITICAL RESET: This will wipe out all local data. Proceed?")) return;
+    if (!confirm("CRITICAL RESET: Wipe all local data?")) return;
     safeRemoveItem('nutraProDeficitState');
     window.__fallbackRAMState = {};
     location.reload();
 }
-
 function sanitize(str) {
     const div = document.createElement('div');
     div.appendChild(document.createTextNode(String(str == null ? '' : str)));
     return div.innerHTML;
 }
-
 function buildDefaultState() {
     return {
         version: STATE_VERSION,
@@ -374,19 +623,14 @@ function buildDefaultState() {
         steps: 0, weeklyLedger: [], monthlyLedger: [], lastArchivedDate: ""
     };
 }
-
 function migrateState(loaded) {
     if (!loaded.version || loaded.version < 4) {
-        loaded.steps = loaded.steps != null ? loaded.steps : 0;
+        loaded.steps         = loaded.steps != null ? loaded.steps : 0;
         loaded.weightHistory = loaded.weightHistory || [];
-        loaded.weeklyLedger = loaded.weeklyLedger || [];
+        loaded.weeklyLedger  = loaded.weeklyLedger  || [];
         loaded.monthlyLedger = loaded.monthlyLedger || [];
         if (!loaded.profile) loaded.profile = {};
         loaded.profile.baseWeight = loaded.profile.baseWeight != null ? loaded.profile.baseWeight : null;
-        delete loaded.rollingWeeklyEaten;
-        delete loaded.rollingWeeklyTdee;
-        delete loaded.rollingMonthlyEaten;
-        delete loaded.rollingMonthlyTdee;
     }
     if (Array.isArray(loaded.calorieHistory)) {
         loaded.calorieHistory.forEach(function(day) {
@@ -394,18 +638,20 @@ function migrateState(loaded) {
                 if (day.date && day.year) {
                     const parsed = new Date(day.date + ' ' + day.year);
                     if (!isNaN(parsed)) {
-                        const yyyy = parsed.getFullYear();
-                        const mm = String(parsed.getMonth() + 1).padStart(2, '0');
-                        const dd = String(parsed.getDate()).padStart(2, '0');
-                        day.isoDate = yyyy + '-' + mm + '-' + dd;
+                        day.isoDate = parsed.getFullYear() + '-'
+                            + String(parsed.getMonth()+1).padStart(2,'0') + '-'
+                            + String(parsed.getDate()).padStart(2,'0');
                     }
                 }
             }
         });
     }
+    // Migrate old favorites that didn't have saveType
     if (Array.isArray(loaded.favorites)) {
         loaded.favorites.forEach(function(f) {
             if (f.baseGrams == null || isNaN(f.baseGrams)) f.baseGrams = 100;
+            // Old saves assumed per-100g — keep that behaviour
+            if (!f.saveType) f.saveType = 'per100';
         });
     }
     loaded.profile.activity = 1.2;
@@ -420,59 +666,34 @@ if (cachedState) {
     catch(e) { console.error("State parse error", e); }
 }
 
-let _calcDebounceTimer = null;
+let _calcDebounceTimer    = null;
 let _servingDebounceTimer = null;
 let _baseMacros = { protein: 0, carbs: 0, fats: 0, fiber: 0, calories: 0, baseGrams: 100 };
-let _isUserEditingMacros = false;
+let _isScaling  = false;
 
 // ─────────────────────────────────────────────
-// AVERAGES ENGINE
+// AVERAGES
 // ─────────────────────────────────────────────
-
 function computeAverages() {
     const history = state.calorieHistory;
     if (!history || history.length === 0) return null;
-
     const now = new Date();
-    const currentYear  = now.getFullYear();
-    const currentMonth = now.getMonth(); // 0-indexed
-
-    // Last 7 archived entries (calendar week = last 7 in array)
+    const cy  = now.getFullYear(), cm = now.getMonth();
     const weekEntries  = history.slice(-7);
-
-    // Current calendar month entries
     const monthEntries = history.filter(function(d) {
         if (!d.isoDate) return false;
         const dt = new Date(d.isoDate + 'T12:00:00');
-        return dt.getFullYear() === currentYear && dt.getMonth() === currentMonth;
+        return dt.getFullYear() === cy && dt.getMonth() === cm;
     });
-
-    // All time
-    const allEntries = history;
-
     function avg(arr, key) {
-        if (!arr || arr.length === 0) return null;
-        const sum = arr.reduce(function(s, d) { return s + (parseFloat(d[key]) || 0); }, 0);
-        return sum / arr.length;
+        if (!arr.length) return null;
+        return arr.reduce(function(s,d){return s+(parseFloat(d[key])||0);},0) / arr.length;
     }
-
     function buildSet(arr) {
-        if (!arr || arr.length === 0) return null;
-        return {
-            calories: avg(arr, 'eaten'),
-            protein:  avg(arr, 'protein'),
-            carbs:    avg(arr, 'carbs'),
-            fats:     avg(arr, 'fats'),
-            fiber:    avg(arr, 'fiber'),
-            count:    arr.length
-        };
+        if (!arr.length) return null;
+        return { calories:avg(arr,'eaten'), protein:avg(arr,'protein'), carbs:avg(arr,'carbs'), fats:avg(arr,'fats'), fiber:avg(arr,'fiber'), count:arr.length };
     }
-
-    return {
-        week:    buildSet(weekEntries),
-        month:   buildSet(monthEntries),
-        allTime: buildSet(allEntries)
-    };
+    return { week:buildSet(weekEntries), month:buildSet(monthEntries), allTime:buildSet(history) };
 }
 
 function renderAverageCell(value, colorClass, unit) {
@@ -482,226 +703,163 @@ function renderAverageCell(value, colorClass, unit) {
         el.innerHTML = '<span class="text-[13px] font-black text-slate-600">—</span><span class="text-[8px] text-slate-700 mt-0.5">' + unit + '</span>';
     } else {
         const display = unit === 'kcal' ? Math.round(value) : value.toFixed(1);
-        el.innerHTML = '<span class="text-[13px] font-black ' + colorClass + '">' + display + '</span><span class="text-[8px] text-slate-500 mt-0.5">' + unit + '</span>';
+        el.innerHTML  = '<span class="text-[13px] font-black ' + colorClass + '">' + display + '</span><span class="text-[8px] text-slate-500 mt-0.5">' + unit + '</span>';
     }
     return el;
 }
 
 function renderAveragesUI() {
-    const avgs = computeAverages();
+    const avgs    = computeAverages();
     const history = state.calorieHistory;
-
     const configs = [
-        { key: 'calories', colorClass: 'text-cyan-300',    unit: 'kcal' },
-        { key: 'protein',  colorClass: 'text-teal-300',    unit: 'g'    },
-        { key: 'carbs',    colorClass: 'text-sky-300',     unit: 'g'    },
-        { key: 'fats',     colorClass: 'text-rose-300',    unit: 'g'    },
-        { key: 'fiber',    colorClass: 'text-emerald-300', unit: 'g'    }
+        { key:'calories', colorClass:'text-cyan-300',    unit:'kcal' },
+        { key:'protein',  colorClass:'text-teal-300',    unit:'g'    },
+        { key:'carbs',    colorClass:'text-sky-300',     unit:'g'    },
+        { key:'fats',     colorClass:'text-rose-300',    unit:'g'    },
+        { key:'fiber',    colorClass:'text-emerald-300', unit:'g'    }
     ];
-
-    function fillRow(containerId, dataset, rangeEl, rangeText) {
-        const container = document.getElementById(containerId);
-        const rangeSpan = document.getElementById(rangeEl);
+    function fillRow(cid, dataset, rid, rangeText) {
+        const container = document.getElementById(cid);
+        const rangeSpan = document.getElementById(rid);
         container.innerHTML = '';
         if (rangeSpan) rangeSpan.innerText = rangeText;
-
         configs.forEach(function(cfg) {
-            const val = dataset ? dataset[cfg.key] : null;
-            container.appendChild(renderAverageCell(val, cfg.colorClass, cfg.unit));
+            container.appendChild(renderAverageCell(dataset ? dataset[cfg.key] : null, cfg.colorClass, cfg.unit));
         });
     }
-
-    // Week range label
-    const weekEntries = history.slice(-7);
-    let weekRangeLabel = '—';
-    if (weekEntries.length > 0) {
-        const first = weekEntries[0].date || '';
-        const last  = weekEntries[weekEntries.length - 1].date || '';
-        weekRangeLabel = weekEntries.length === 1 ? first : first + ' – ' + last;
-    }
-
-    // Month range label
-    const now = new Date();
-    const monthLabel = now.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
-
-    // All time label
-    let allTimeLabel = '—';
-    if (history.length > 0) {
-        allTimeLabel = history.length + ' day' + (history.length !== 1 ? 's' : '') + ' logged';
-    }
-
-    fillRow('avg-week-row',    avgs ? avgs.week    : null, 'avg-week-range',    weekRangeLabel);
-    fillRow('avg-month-row',   avgs ? avgs.month   : null, 'avg-month-range',   monthLabel);
-    fillRow('avg-alltime-row', avgs ? avgs.allTime : null, 'avg-alltime-range', allTimeLabel);
+    const we  = history.slice(-7);
+    const wLbl = we.length > 0 ? (we.length===1 ? we[0].date : we[0].date+' – '+we[we.length-1].date) : '—';
+    const now  = new Date();
+    fillRow('avg-week-row',    avgs?avgs.week:null,    'avg-week-range',    wLbl);
+    fillRow('avg-month-row',   avgs?avgs.month:null,   'avg-month-range',   now.toLocaleDateString(undefined,{month:'long',year:'numeric'}));
+    fillRow('avg-alltime-row', avgs?avgs.allTime:null, 'avg-alltime-range', history.length ? history.length+' day'+(history.length!==1?'s':'')+' logged' : '—');
 }
 
 // ─────────────────────────────────────────────
-// WEIGHT THIS-MONTH AVERAGE
+// WEIGHT MONTH AVG
 // ─────────────────────────────────────────────
-
 function computeWeightMonthAvg() {
     const now = new Date();
-    const currentYear  = now.getFullYear();
-    const currentMonth = now.getMonth();
-
-    const monthEntries = state.weightHistory.filter(function(w) {
-        // weightHistory dates are short labels like "Jul 5"
-        // Try to match by reconstructing — use year assumption (current year)
+    const cy  = now.getFullYear(), cm = now.getMonth();
+    const entries = state.weightHistory.filter(function(w) {
         if (!w.date) return false;
-        // Parse short label with current year
-        const parsed = new Date(w.date + ' ' + currentYear);
-        if (isNaN(parsed)) return false;
-        return parsed.getFullYear() === currentYear && parsed.getMonth() === currentMonth;
+        const p = new Date(w.date + ' ' + cy);
+        return !isNaN(p) && p.getFullYear()===cy && p.getMonth()===cm;
     });
-
-    if (monthEntries.length === 0) return null;
-    const sum = monthEntries.reduce(function(s, w) { return s + (parseFloat(w.weight) || 0); }, 0);
-    return sum / monthEntries.length;
+    if (!entries.length) return null;
+    return entries.reduce(function(s,w){return s+(parseFloat(w.weight)||0);},0) / entries.length;
 }
 
 // ─────────────────────────────────────────────
-// CORE UTILITIES
+// JOURNEY
 // ─────────────────────────────────────────────
-
 function getWeightJourney() {
-    const base = parseFloat(state.profile.baseWeight);
-    const goal = parseFloat(state.profile.goalWeight) || 0;
-    const hist = state.weightHistory;
-    const current = parseFloat(hist.length > 0 ? hist[hist.length - 1].weight : state.profile.weight);
-
+    const base    = parseFloat(state.profile.baseWeight);
+    const goal    = parseFloat(state.profile.goalWeight) || 0;
+    const hist    = state.weightHistory;
+    const current = parseFloat(hist.length > 0 ? hist[hist.length-1].weight : state.profile.weight);
     if (isNaN(base) || state.profile.baseWeight == null) {
-        return { direction: 'none', base: null, goal: goal, current: current, totalNeeded: 0, totalAchieved: 0, isComplete: false };
+        return { direction:'none', base:null, goal, current, totalNeeded:0, totalAchieved:0, isComplete:false };
     }
     const delta = base - goal;
-    let direction = 'maintain';
-    if (delta > 0) direction = 'lose';
-    else if (delta < 0) direction = 'gain';
-
-    const totalNeeded = Math.abs(delta);
-    let totalAchieved = 0;
-    let isComplete = false;
-
-    if (direction === 'lose') {
-        totalAchieved = Math.max(0, base - current);
-        isComplete = current <= goal;
-    } else if (direction === 'gain') {
-        totalAchieved = Math.max(0, current - base);
-        isComplete = current >= goal;
-    } else {
-        isComplete = true;
-    }
-    return { direction: direction, base: base, goal: goal, current: current, totalNeeded: totalNeeded, totalAchieved: totalAchieved, isComplete: isComplete };
+    let direction = delta > 0 ? 'lose' : delta < 0 ? 'gain' : 'maintain';
+    const totalNeeded    = Math.abs(delta);
+    let totalAchieved    = 0, isComplete = false;
+    if      (direction==='lose') { totalAchieved=Math.max(0,base-current); isComplete=current<=goal; }
+    else if (direction==='gain') { totalAchieved=Math.max(0,current-base); isComplete=current>=goal; }
+    else { isComplete=true; }
+    return { direction, base, goal, current, totalNeeded, totalAchieved, isComplete };
 }
 
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
 function initInputs() {
-    document.getElementById('weight-input').value = state.profile.weight;
-    document.getElementById('goal-weight-input').value = state.profile.goalWeight || 75;
-    document.getElementById('duration-input').value = state.profile.durationMonths || 6;
-    document.getElementById('height-input').value = state.profile.height;
-    document.getElementById('age-input').value = state.profile.age;
+    document.getElementById('weight-input').value       = state.profile.weight;
+    document.getElementById('goal-weight-input').value  = state.profile.goalWeight || 75;
+    document.getElementById('duration-input').value     = state.profile.durationMonths || 6;
+    document.getElementById('height-input').value       = state.profile.height;
+    document.getElementById('age-input').value          = state.profile.age;
     if (state.profile.baseWeight != null && !isNaN(state.profile.baseWeight)) {
         document.getElementById('base-weight-input').value = state.profile.baseWeight;
     }
     setDefaultTime();
-    document.getElementById('archive-date-picker').value = new Date().toISOString().split('T')[0];
-    document.getElementById('active-steps-display').innerText = (state.steps || 0).toLocaleString();
+    document.getElementById('archive-date-picker').value    = new Date().toISOString().split('T')[0];
+    document.getElementById('active-steps-display').innerText = (state.steps||0).toLocaleString();
     updateStepsBonusDisplay();
 }
 
 function setDefaultTime() {
     const now = new Date();
-    document.getElementById('food-time').value = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+    document.getElementById('food-time').value =
+        String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
 }
 
 function clearEntryForm() {
-    document.getElementById('food-name').value = '';
-    document.getElementById('food-p').value = '0';
-    document.getElementById('food-c').value = '0';
-    document.getElementById('food-f').value = '0';
-    document.getElementById('food-fiber').value = '0';
-    document.getElementById('food-cal').value = '';
-    document.getElementById('food-serving').value = 100;
-    document.getElementById('food-cal').className = "w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm font-bold text-cyan-300 focus:outline-none focus:border-cyan-500";
-    _baseMacros = { protein: 0, carbs: 0, fats: 0, fiber: 0, calories: 0, baseGrams: 100 };
-    document.getElementById('food-base-grams').innerText = '100g';
+    document.getElementById('food-name').value              = '';
+    document.getElementById('food-p').value                 = '0';
+    document.getElementById('food-c').value                 = '0';
+    document.getElementById('food-f').value                 = '0';
+    document.getElementById('food-fiber').value             = '0';
+    document.getElementById('food-cal').value               = '';
+    document.getElementById('food-serving').value           = '100';
+    document.getElementById('food-serving-scale').value     = '100';
+    document.getElementById('food-cal').className           =
+        "w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm font-bold text-cyan-300 focus:outline-none focus:border-cyan-500";
+    _baseMacros = { protein:0, carbs:0, fats:0, fiber:0, calories:0, baseGrams:100 };
+    document.getElementById('food-base-grams').innerText    = '100g';
     updateServingHint();
+    setServingMode('manual');
     setDefaultTime();
 }
 
+// ─────────────────────────────────────────────
+// CLIPBOARD
+// ─────────────────────────────────────────────
 async function parseMacrosFromClipboard() {
     try {
         const text = await navigator.clipboard.readText();
         if (!text) { alert("Clipboard is empty!"); return; }
-
-        function tryPatterns(patterns) {
-            for (let i = 0; i < patterns.length; i++) {
-                const m = text.match(patterns[i]);
-                if (m && m[1]) {
-                    const v = parseFloat(m[1]);
-                    if (!isNaN(v) && v >= 0) return v;
-                }
-            }
+        function tryP(patterns) {
+            for (let i=0;i<patterns.length;i++){const m=text.match(patterns[i]);if(m&&m[1]){const v=parseFloat(m[1]);if(!isNaN(v)&&v>=0)return v;}}
             return 0;
         }
-
-        const cal = tryPatterns([
-            /(?:calories|kcal|cals|energy)\s*[:=\-]?\s*(\d+(?:\.\d+)?)/i,
-            /(\d+(?:\.\d+)?)\s*(?:kcal|calories|cals)\b/i
-        ]);
-        const p = tryPatterns([
-            /protein\s*[:=\-]?\s*(\d+(?:\.\d+)?)/i,
-            /(\d+(?:\.\d+)?)\s*g?\s*protein\b/i
-        ]);
-        const c = tryPatterns([
-            /carb(?:s|ohydrates?)?\s*[:=\-]?\s*(\d+(?:\.\d+)?)/i,
-            /(\d+(?:\.\d+)?)\s*g?\s*carb(?:s|ohydrates?)?\b/i
-        ]);
-        const f = tryPatterns([
-            /fats?\s*[:=\-]?\s*(\d+(?:\.\d+)?)/i,
-            /(\d+(?:\.\d+)?)\s*g?\s*fats?\b/i
-        ]);
-        const fib = tryPatterns([
-            /fib(?:re|er)\s*[:=\-]?\s*(\d+(?:\.\d+)?)/i,
-            /(\d+(?:\.\d+)?)\s*g?\s*fib(?:re|er)\b/i
-        ]);
-
+        const cal = tryP([/(?:calories|kcal|cals|energy)\s*[:=\-]?\s*(\d+(?:\.\d+)?)/i,/(\d+(?:\.\d+)?)\s*(?:kcal|calories|cals)\b/i]);
+        const p   = tryP([/protein\s*[:=\-]?\s*(\d+(?:\.\d+)?)/i,/(\d+(?:\.\d+)?)\s*g?\s*protein\b/i]);
+        const c   = tryP([/carb(?:s|ohydrates?)?\s*[:=\-]?\s*(\d+(?:\.\d+)?)/i,/(\d+(?:\.\d+)?)\s*g?\s*carb(?:s|ohydrates?)?\b/i]);
+        const f   = tryP([/fats?\s*[:=\-]?\s*(\d+(?:\.\d+)?)/i,/(\d+(?:\.\d+)?)\s*g?\s*fats?\b/i]);
+        const fib = tryP([/fib(?:re|er)\s*[:=\-]?\s*(\d+(?:\.\d+)?)/i,/(\d+(?:\.\d+)?)\s*g?\s*fib(?:re|er)\b/i]);
         let found = false;
-        if (p > 0)   { document.getElementById('food-p').value = p; found = true; }
-        if (c > 0)   { document.getElementById('food-c').value = c; found = true; }
-        if (f > 0)   { document.getElementById('food-f').value = f; found = true; }
-        if (fib > 0) { document.getElementById('food-fiber').value = fib; found = true; }
-
-        if (found || cal > 0) {
-            if (cal > 0) { document.getElementById('food-cal').value = cal; checkCalorieDeviation(); }
-            else { autoCalculateCalories(); }
-
-            let detectedServing = 100;
-            const servingMatch = text.match(/(?:per|serving|portion|size)\s*[:=]?\s*(\d+(?:\.\d+)?)\s*g\b/i)
-                              || text.match(/(\d+(?:\.\d+)?)\s*g\s*(?:serving|portion)/i);
-            if (servingMatch && servingMatch[1]) {
-                const s = parseFloat(servingMatch[1]);
-                if (!isNaN(s) && s > 0) detectedServing = s;
-            }
-            captureBaseMacros(p, c, f, fib, cal || (p*4 + c*4 + f*9), detectedServing);
+        if (p>0)  {document.getElementById('food-p').value=p;found=true;}
+        if (c>0)  {document.getElementById('food-c').value=c;found=true;}
+        if (f>0)  {document.getElementById('food-f').value=f;found=true;}
+        if (fib>0){document.getElementById('food-fiber').value=fib;found=true;}
+        if (found||cal>0) {
+            if (cal>0){document.getElementById('food-cal').value=cal;checkCalorieDeviation();}
+            else autoCalculateCalories();
+            let detectedServing=100;
+            const sm=text.match(/(?:per|serving|portion|size)\s*[:=]?\s*(\d+(?:\.\d+)?)\s*g\b/i)||text.match(/(\d+(?:\.\d+)?)\s*g\s*(?:serving|portion)/i);
+            if(sm&&sm[1]){const s=parseFloat(sm[1]);if(!isNaN(s)&&s>0)detectedServing=s;}
+            captureBaseMacros(p,c,f,fib,cal||(p*4+c*4+f*9),detectedServing);
+            setServingMode('scale');
         } else {
             alert("Could not parse macros from clipboard text.");
         }
-    } catch(err) {
-        alert("Clipboard access blocked or unsupported.");
-        console.error(err);
-    }
+    } catch(err) { alert("Clipboard access blocked or unsupported."); console.error(err); }
 }
 
+// ─────────────────────────────────────────────
+// STEPS
+// ─────────────────────────────────────────────
 function updateStepsBonusDisplay() {
     const el = document.getElementById('active-steps-bonus');
     if (!el) return;
-    const bonus = Math.round((state.steps || 0) * 0.04);
-    el.innerText = bonus > 0 ? '🔥 +' + bonus + ' kcal activity boost!' : '';
+    const bonus = Math.round((state.steps||0)*0.04);
+    el.innerText = bonus > 0 ? '🔥 +'+bonus+' kcal activity boost!' : '';
 }
-
 function saveDailySteps(e) {
     if (e) e.preventDefault();
-    const val = parseInt(document.getElementById('daily-steps-val').value) || 0;
+    const val = parseInt(document.getElementById('daily-steps-val').value)||0;
     state.steps = val;
     document.getElementById('active-steps-display').innerText = val.toLocaleString();
     document.getElementById('daily-steps-val').value = '';
@@ -709,733 +867,539 @@ function saveDailySteps(e) {
     updateStepsBonusDisplay();
 }
 
+// ─────────────────────────────────────────────
+// CALORIE AUTO-CALC
+// ─────────────────────────────────────────────
 function autoCalculateCalories() {
     clearTimeout(_calcDebounceTimer);
     _calcDebounceTimer = setTimeout(function() {
-        const p = parseFloat(document.getElementById('food-p').value) || 0;
-        const c = parseFloat(document.getElementById('food-c').value) || 0;
-        const f = parseFloat(document.getElementById('food-f').value) || 0;
-        const cal = (p * 4) + (c * 4) + (f * 9);
+        if (_isScaling) return;
+        const p = parseFloat(document.getElementById('food-p').value)||0;
+        const c = parseFloat(document.getElementById('food-c').value)||0;
+        const f = parseFloat(document.getElementById('food-f').value)||0;
+        const cal = (p*4)+(c*4)+(f*9);
         const el = document.getElementById('food-cal');
-        el.value = cal > 0 ? cal.toFixed(1) : '';
+        el.value = cal>0 ? cal.toFixed(1) : '';
         el.className = "w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm font-bold text-cyan-300 focus:outline-none focus:border-cyan-500";
     }, 150);
 }
-
 function checkCalorieDeviation() {
-    const p = parseFloat(document.getElementById('food-p').value) || 0;
-    const c = parseFloat(document.getElementById('food-c').value) || 0;
-    const f = parseFloat(document.getElementById('food-f').value) || 0;
-    const ent = parseFloat(document.getElementById('food-cal').value) || 0;
-    const sum = (p * 4) + (c * 4) + (f * 9);
-    const el = document.getElementById('food-cal');
-    if (sum > 0 && Math.abs(ent - sum) > sum * 0.15) {
-        el.className = "w-full bg-[#0a1620] border border-amber-500 rounded-xl p-2.5 text-sm font-bold text-amber-400 focus:outline-none";
+    if (_isScaling) return;
+    const p=parseFloat(document.getElementById('food-p').value)||0;
+    const c=parseFloat(document.getElementById('food-c').value)||0;
+    const f=parseFloat(document.getElementById('food-f').value)||0;
+    const ent=parseFloat(document.getElementById('food-cal').value)||0;
+    const sum=(p*4)+(c*4)+(f*9);
+    const el=document.getElementById('food-cal');
+    if (sum>0&&Math.abs(ent-sum)>sum*0.15) {
+        el.className="w-full bg-[#0a1620] border border-amber-500 rounded-xl p-2.5 text-sm font-bold text-amber-400 focus:outline-none";
     } else {
-        el.className = "w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm font-bold text-cyan-300 focus:outline-none focus:border-cyan-500";
+        el.className="w-full bg-[#0a1620] border border-cyan-900/40 rounded-xl p-2.5 text-sm font-bold text-cyan-300 focus:outline-none focus:border-cyan-500";
     }
 }
 
+// ─────────────────────────────────────────────
+// SCALE MODE HELPERS
+// ─────────────────────────────────────────────
+function captureBaseMacros(protein,carbs,fats,fiber,calories,baseGrams) {
+    _baseMacros = {
+        protein:  parseFloat(protein)   || 0,
+        carbs:    parseFloat(carbs)     || 0,
+        fats:     parseFloat(fats)      || 0,
+        fiber:    parseFloat(fiber)     || 0,
+        calories: parseFloat(calories)  || 0,
+        baseGrams:parseFloat(baseGrams) || 100
+    };
+    document.getElementById('food-base-grams').innerText      = _baseMacros.baseGrams+'g';
+    document.getElementById('food-serving-scale').value       = _baseMacros.baseGrams;
+    updateServingHint();
+}
+function scaleMacrosByServing() {
+    if (_servingMode !== 'scale') return;
+    clearTimeout(_servingDebounceTimer);
+    _servingDebounceTimer = setTimeout(function() {
+        const serving = parseFloat(document.getElementById('food-serving-scale').value)||0;
+        if (serving<=0||_baseMacros.baseGrams<=0) return;
+        const factor = serving/_baseMacros.baseGrams;
+        _isScaling = true;
+        document.getElementById('food-p').value     = (_baseMacros.protein  *factor).toFixed(1);
+        document.getElementById('food-c').value     = (_baseMacros.carbs    *factor).toFixed(1);
+        document.getElementById('food-f').value     = (_baseMacros.fats     *factor).toFixed(1);
+        document.getElementById('food-fiber').value = (_baseMacros.fiber    *factor).toFixed(1);
+        document.getElementById('food-cal').value   = (_baseMacros.calories *factor).toFixed(1);
+        _isScaling = false;
+        updateServingHint();
+    }, 120);
+}
+function resetServingSize() {
+    document.getElementById('food-serving-scale').value = _baseMacros.baseGrams;
+    scaleMacrosByServing();
+}
+function updateServingHint() {
+    const hint    = document.getElementById('serving-hint');
+    if (!hint) return;
+    const serving = parseFloat(document.getElementById('food-serving-scale').value)||0;
+    if (serving === _baseMacros.baseGrams) {
+        hint.innerText  = 'Showing base '+_baseMacros.baseGrams+'g values';
+        hint.className  = 'text-[9px] text-cyan-500/60 italic';
+    } else {
+        const factor = _baseMacros.baseGrams > 0 ? (serving/_baseMacros.baseGrams).toFixed(2) : '—';
+        hint.innerText  = '✨ Scaled '+factor+'× from base '+_baseMacros.baseGrams+'g';
+        hint.className  = 'text-[9px] text-teal-300 italic font-semibold';
+    }
+}
+
+// ─────────────────────────────────────────────
+// MEAL TYPE
+// ─────────────────────────────────────────────
 function categorizeMealType(t) {
     if (!t) return "🍿 Snacks";
     const h = parseInt(t.split(':')[0]);
-    if (h >= 5 && h < 11) return "🌅 Breakfast";
-    if (h >= 11 && h < 16) return "☀️ Lunch";
-    if (h >= 16 && h < 23) return "🌙 Dinner";
+    if (h>=5  && h<11) return "🌅 Breakfast";
+    if (h>=11 && h<16) return "☀️ Lunch";
+    if (h>=16 && h<23) return "🌙 Dinner";
     return "🍿 Snacks";
 }
 
+// ─────────────────────────────────────────────
+// TAB SWITCHING
+// ─────────────────────────────────────────────
 function switchTab(tab) {
     ['tracker','trends','weight'].forEach(function(t) {
-        document.getElementById('view-' + t).classList.add('hidden');
-        document.getElementById('btn-' + t).className = "py-2.5 text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-800 transition-all active:scale-95";
+        document.getElementById('view-'+t).classList.add('hidden');
+        document.getElementById('btn-'+t).className = "py-2.5 text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-800 transition-all active:scale-95";
     });
-    document.getElementById('view-' + tab).classList.remove('hidden');
-    document.getElementById('btn-' + tab).className = "py-2.5 text-xs font-bold rounded-lg bg-cyan-600 text-white transition-all active:scale-95 shadow-sm";
-    if (tab === 'trends') { renderAveragesUI(); renderLedgersUI(); }
-    if (tab === 'weight') { renderWeightUI(); }
+    document.getElementById('view-'+tab).classList.remove('hidden');
+    document.getElementById('btn-'+tab).className   = "py-2.5 text-xs font-bold rounded-lg bg-cyan-600 text-white transition-all active:scale-95 shadow-sm";
+    if (tab==='trends') { renderAveragesUI(); renderLedgersUI(); }
+    if (tab==='weight') { renderWeightUI(); }
 }
 
+// ─────────────────────────────────────────────
+// TARGETS / TDEE
+// ─────────────────────────────────────────────
 function calculateTargets() {
-    const p = state.profile;
-    const bmr = (10 * p.weight) + (6.25 * p.height) - (5 * p.age) + 5;
-    const baseTdee = Math.round(bmr * 1.2);
-    const stepsBonus = Math.round((state.steps || 0) * 0.04);
-    const totalTdee = baseTdee + stepsBonus;
+    const p       = state.profile;
+    const bmr     = (10*p.weight)+(6.25*p.height)-(5*p.age)+5;
+    const baseTdee= Math.round(bmr*1.2);
+    const stepsB  = Math.round((state.steps||0)*0.04);
+    const totalTdee = baseTdee+stepsB;
     state.targets.tdee = totalTdee;
 
-    const tdeeValEl = document.getElementById('tdee-display-value');
-    const tdeeBreakEl = document.getElementById('tdee-display-breakdown');
-    if (tdeeValEl) tdeeValEl.innerText = totalTdee + ' kcal';
-    if (tdeeBreakEl) {
-        tdeeBreakEl.innerText = 'BMR ' + baseTdee + ' kcal' + (stepsBonus > 0 ? ' + Steps ' + stepsBonus + ' kcal' : ' (log steps for boost)');
+    const el1 = document.getElementById('tdee-display-value');
+    const el2 = document.getElementById('tdee-display-breakdown');
+    if (el1) el1.innerText = totalTdee+' kcal';
+    if (el2) el2.innerText = 'BMR '+baseTdee+' kcal'+(stepsB>0?' + Steps '+stepsB+' kcal':' (log steps for boost)');
+
+    const delta = p.weight-(p.goalWeight||75);
+    let adj=0, mode='maintain';
+    if (delta>0.5&&p.durationMonths>0) {
+        mode='lose'; adj=-Math.round((delta*7700)/(p.durationMonths*30.4));
+        adj=Math.max(-1000,Math.min(-300,adj));
+    } else if (delta<-0.5&&p.durationMonths>0) {
+        mode='gain'; adj=Math.round((Math.abs(delta)*7700)/(p.durationMonths*30.4));
+        adj=Math.min(700,Math.max(250,adj));
     }
-
-    const currentWeight = p.weight;
-    const goalWeight = p.goalWeight || 75;
-    const remainingDelta = currentWeight - goalWeight;
-
-    let calorieAdjustment = 0;
-    let mode = 'maintain';
-
-    if (remainingDelta > 0.5 && p.durationMonths > 0) {
-        mode = 'lose';
-        calorieAdjustment = -Math.round((remainingDelta * 7700) / (p.durationMonths * 30.4));
-        calorieAdjustment = Math.max(-1000, Math.min(-300, calorieAdjustment));
-    } else if (remainingDelta < -0.5 && p.durationMonths > 0) {
-        mode = 'gain';
-        calorieAdjustment = Math.round((Math.abs(remainingDelta) * 7700) / (p.durationMonths * 30.4));
-        calorieAdjustment = Math.min(700, Math.max(250, calorieAdjustment));
-    }
-
-    state.targets.calories = Math.max(1200, totalTdee + calorieAdjustment);
-    state.targets.protein = Math.round(p.weight * 2);
-    state.targets.fats = Math.round((state.targets.calories * 0.25) / 9);
-    const remaining = state.targets.calories - ((state.targets.protein * 4) + (state.targets.fats * 9));
-    state.targets.carbs = Math.max(0, Math.round(remaining / 4));
+    state.targets.calories = Math.max(1200,totalTdee+adj);
+    state.targets.protein  = Math.round(p.weight*2);
+    state.targets.fats     = Math.round((state.targets.calories*0.25)/9);
+    state.targets.carbs    = Math.max(0,Math.round((state.targets.calories-((state.targets.protein*4)+(state.targets.fats*9)))/4));
 
     const noticeEl = document.getElementById('dynamic-deficit-notice');
     if (noticeEl) {
-        const kgRemaining = Math.abs(remainingDelta).toFixed(1);
-        if (mode === 'lose') {
-            let txt = '🎯 Cutting Phase: -' + Math.abs(calorieAdjustment) + ' kcal/day to lose ' + kgRemaining + 'kg remaining in ' + p.durationMonths + ' months.';
-            if (stepsBonus > 0) txt += ' (+' + stepsBonus + ' kcal step boost).';
-            noticeEl.innerText = txt;
-            noticeEl.className = "text-[11px] text-cyan-200 bg-cyan-950/40 border border-cyan-800/40 p-2.5 rounded-xl font-medium";
-        } else if (mode === 'gain') {
-            let txt = '💪 Bulking Phase: +' + calorieAdjustment + ' kcal/day surplus to gain ' + kgRemaining + 'kg remaining in ' + p.durationMonths + ' months.';
-            if (stepsBonus > 0) txt += ' (+' + stepsBonus + ' kcal step boost).';
-            noticeEl.innerText = txt;
-            noticeEl.className = "text-[11px] text-emerald-300 bg-emerald-950/30 border border-emerald-900/50 p-2.5 rounded-xl font-medium";
+        const kgR = Math.abs(delta).toFixed(1);
+        if (mode==='lose') {
+            noticeEl.innerText  = '🎯 Cutting Phase: -'+Math.abs(adj)+' kcal/day to lose '+kgR+'kg in '+p.durationMonths+' months.'+(stepsB>0?' (+'+stepsB+' kcal step boost).':'');
+            noticeEl.className  = "text-[11px] text-cyan-200 bg-cyan-950/40 border border-cyan-800/40 p-2.5 rounded-xl font-medium";
+        } else if (mode==='gain') {
+            noticeEl.innerText  = '💪 Bulking Phase: +'+adj+' kcal/day surplus to gain '+kgR+'kg in '+p.durationMonths+' months.'+(stepsB>0?' (+'+stepsB+' kcal step boost).':'');
+            noticeEl.className  = "text-[11px] text-emerald-300 bg-emerald-950/30 border border-emerald-900/50 p-2.5 rounded-xl font-medium";
         } else {
-            noticeEl.innerText = "⚖️ Maintenance mode: you're at goal weight. Baseline calories.";
-            noticeEl.className = "text-[11px] text-sky-300 bg-sky-950/30 border border-sky-900/50 p-2.5 rounded-xl font-medium";
+            noticeEl.innerText  = "⚖️ Maintenance mode: you're at goal weight.";
+            noticeEl.className  = "text-[11px] text-sky-300 bg-sky-950/30 border border-sky-900/50 p-2.5 rounded-xl font-medium";
         }
     }
     saveAndRender();
 }
 
+// ─────────────────────────────────────────────
+// DATE UTILS
+// ─────────────────────────────────────────────
 const DateUtils = {
-    toShortLabel: function(d) { return d.toLocaleDateString(undefined, { month:'short', day:'numeric' }); },
-    toISODate: function(d) { return d.toISOString().split('T')[0]; },
-    fromISODate: function(s) { return new Date(s + 'T12:00:00'); },
+    toShortLabel:   function(d) { return d.toLocaleDateString(undefined,{month:'short',day:'numeric'}); },
+    fromISODate:    function(s) { return new Date(s+'T12:00:00'); },
     getWeekOfMonth: function(d) {
-        const firstDay = new Date(d.getFullYear(), d.getMonth(), 1).getDay();
-        return Math.ceil((d.getDate() + firstDay) / 7);
+        return Math.ceil((d.getDate()+new Date(d.getFullYear(),d.getMonth(),1).getDay())/7);
     }
 };
 
+// ─────────────────────────────────────────────
+// ARCHIVE
+// ─────────────────────────────────────────────
 function archiveAndResetDay() {
-    if (state.logs.length === 0 && state.steps === 0) {
-        alert("Log items or steps first!"); return;
-    }
+    if (state.logs.length===0&&state.steps===0) { alert("Log items or steps first!"); return; }
     const selectedVal = document.getElementById('archive-date-picker').value;
     if (!selectedVal) { alert("Pick a date!"); return; }
-
-    const dateObj = DateUtils.fromISODate(selectedVal);
+    const dateObj  = DateUtils.fromISODate(selectedVal);
     const shortLbl = DateUtils.toShortLabel(dateObj);
-    const fullLbl = dateObj.toLocaleDateString(undefined, { month:'short', day:'numeric', year:'numeric' });
-    const monthNm = dateObj.toLocaleDateString(undefined, { month:'long' });
-    const year = dateObj.getFullYear();
-    const weekNum = DateUtils.getWeekOfMonth(dateObj);
-    if (!confirm('Archive totals to ' + fullLbl + '?')) return;
+    const fullLbl  = dateObj.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+    const monthNm  = dateObj.toLocaleDateString(undefined,{month:'long'});
+    const year     = dateObj.getFullYear();
+    const weekNum  = DateUtils.getWeekOfMonth(dateObj);
+    if (!confirm('Archive totals to '+fullLbl+'?')) return;
 
-    let totCal=0, totP=0, totC=0, totF=0, totFib=0;
-    state.logs.forEach(function(i) {
-        totCal += i.calories;
-        totP += i.protein||0;
-        totC += i.carbs||0;
-        totF += i.fats||0;
-        totFib += i.fiber||0;
-    });
+    let totCal=0,totP=0,totC=0,totF=0,totFib=0;
+    state.logs.forEach(function(i){totCal+=i.calories;totP+=i.protein||0;totC+=i.carbs||0;totF+=i.fats||0;totFib+=i.fiber||0;});
 
     const payload = {
-        isoDate: selectedVal, date: shortLbl, year: year, monthName: monthNm, weekOfMonth: weekNum,
-        eaten: totCal, target: state.targets.calories, tdee: state.targets.tdee, steps: state.steps || 0,
-        protein: totP, carbs: totC, fats: totF, fiber: totFib
+        isoDate:selectedVal,date:shortLbl,year,monthName:monthNm,weekOfMonth:weekNum,
+        eaten:totCal,target:state.targets.calories,tdee:state.targets.tdee,steps:state.steps||0,
+        protein:totP,carbs:totC,fats:totF,fiber:totFib
     };
-
-    const idx = state.calorieHistory.findIndex(function(h) { return h.isoDate === selectedVal; });
-    if (idx > -1) state.calorieHistory[idx] = payload;
+    const idx = state.calorieHistory.findIndex(function(h){return h.isoDate===selectedVal;});
+    if (idx>-1) state.calorieHistory[idx]=payload;
     else state.calorieHistory.push(payload);
-
-    state.calorieHistory.sort(function(a,b) { return (a.isoDate||'').localeCompare(b.isoDate||''); });
+    state.calorieHistory.sort(function(a,b){return(a.isoDate||'').localeCompare(b.isoDate||'');});
     state.lastArchivedDate = dateObj.toISOString();
-    state.logs = [];
-    state.steps = 0;
-
-    // Fix: update display after reset
-    document.getElementById('active-steps-display').innerText = '0';
-    document.getElementById('active-steps-bonus').innerText = '';
-
-    saveAndRender();
-    initInputs();
-    alert('Archived to ' + fullLbl + '!');
+    state.logs=[];state.steps=0;
+    document.getElementById('active-steps-display').innerText='0';
+    document.getElementById('active-steps-bonus').innerText='';
+    saveAndRender(); initInputs();
+    alert('Archived to '+fullLbl+'!');
 }
 
+// ─────────────────────────────────────────────
+// LEDGER
+// ─────────────────────────────────────────────
 function formatDeficit(val) {
-    if (val >= 0) return '<span class="text-teal-400 font-bold">+' + val.toFixed(1) + ' kcal deficit</span>';
-    return '<span class="text-rose-400 font-extrabold">⚠️ ' + Math.abs(val).toFixed(1) + ' kcal surplus</span>';
+    if (val>=0) return '<span class="text-teal-400 font-bold">+'+val.toFixed(1)+' kcal deficit</span>';
+    return '<span class="text-rose-400 font-extrabold">⚠️ '+Math.abs(val).toFixed(1)+' kcal surplus</span>';
 }
 
 function renderLedgersUI() {
     const container = document.getElementById('ledger-daily-accordion');
-    container.innerHTML = '';
-    if (state.calorieHistory.length === 0) {
-        container.innerHTML = '<div class="text-center text-xs text-slate-500 py-4 font-semibold">No archived data yet.</div>';
-        return;
+    container.innerHTML='';
+    if (state.calorieHistory.length===0) {
+        container.innerHTML='<div class="text-center text-xs text-slate-500 py-4 font-semibold">No archived data yet.</div>'; return;
     }
-
     const monthMap = new Map();
     state.calorieHistory.forEach(function(day) {
-        let wKey, monthName = day.monthName, year = day.year;
+        let wKey,monthName=day.monthName,year=day.year;
         if (day.isoDate) {
-            const dObj = DateUtils.fromISODate(day.isoDate);
-            wKey = DateUtils.getWeekOfMonth(dObj);
-            monthName = dObj.toLocaleDateString(undefined, { month: 'long' });
-            year = dObj.getFullYear();
-        } else {
-            wKey = day.weekOfMonth || 1;
-        }
-        const mKey = year + '-' + monthName;
-        if (!monthMap.has(mKey)) monthMap.set(mKey, { monthName: monthName, year: year, weeks: new Map() });
-        const mData = monthMap.get(mKey);
-        if (!mData.weeks.has(wKey)) mData.weeks.set(wKey, []);
+            const dObj=DateUtils.fromISODate(day.isoDate);
+            wKey=DateUtils.getWeekOfMonth(dObj);
+            monthName=dObj.toLocaleDateString(undefined,{month:'long'});
+            year=dObj.getFullYear();
+        } else { wKey=day.weekOfMonth||1; }
+        const mKey=year+'-'+monthName;
+        if (!monthMap.has(mKey)) monthMap.set(mKey,{monthName,year,weeks:new Map()});
+        const mData=monthMap.get(mKey);
+        if (!mData.weeks.has(wKey)) mData.weeks.set(wKey,[]);
         mData.weeks.get(wKey).push(day);
     });
 
     monthMap.forEach(function(mData) {
-        const monthBlock = document.createElement('div');
-        monthBlock.className = "bg-[#0a1620]/70 border border-cyan-900/30 rounded-xl overflow-hidden mb-3";
-        let mEaten=0, mBurn=0;
-        mData.weeks.forEach(function(days) {
-            days.forEach(function(d) {
-                mEaten += d.eaten;
-                mBurn += Number(d.tdee || d.target || 0);
-            });
-        });
-        const mDeficit = mBurn - mEaten;
+        const monthBlock=document.createElement('div');
+        monthBlock.className="bg-[#0a1620]/70 border border-cyan-900/30 rounded-xl overflow-hidden mb-3";
+        let mEaten=0,mBurn=0;
+        mData.weeks.forEach(function(days){days.forEach(function(d){mEaten+=d.eaten;mBurn+=Number(d.tdee||d.target||0);});});
+        const mDef=mBurn-mEaten;
+        const mH=document.createElement('button');
+        mH.className="w-full text-left px-4 py-2.5 flex justify-between items-center cursor-pointer hover:bg-[#132030]/60 transition-colors";
+        mH.innerHTML='<span class="text-xs font-black text-cyan-300">📅 '+sanitize(mData.monthName)+' '+mData.year+'</span><span class="text-[10px] font-bold '+(mDef>=0?'text-teal-400':'text-rose-400')+'">'+(mDef>=0?'▼':'▲')+' '+Math.abs(mDef).toFixed(0)+' kcal '+(mDef>=0?'deficit':'surplus')+'</span>';
+        const mB=document.createElement('div');
+        mB.className="hidden divide-y divide-cyan-900/20";
+        mH.onclick=function(){mB.classList.toggle('hidden');};
 
-        const monthHeader = document.createElement('button');
-        monthHeader.className = "w-full text-left px-4 py-2.5 flex justify-between items-center cursor-pointer hover:bg-[#132030]/60 transition-colors";
-        monthHeader.innerHTML = '<span class="text-xs font-black text-cyan-300">📅 ' + sanitize(mData.monthName) + ' ' + mData.year + '</span><span class="text-[10px] font-bold ' + (mDeficit >= 0 ? 'text-teal-400' : 'text-rose-400') + '">' + (mDeficit >= 0 ? '▼' : '▲') + ' ' + Math.abs(mDeficit).toFixed(0) + ' kcal ' + (mDeficit >= 0 ? 'deficit' : 'surplus') + '</span>';
-
-        const monthBody = document.createElement('div');
-        monthBody.className = "hidden divide-y divide-cyan-900/20";
-        monthHeader.onclick = function() { monthBody.classList.toggle('hidden'); };
-
-        const sortedWeeks = Array.from(mData.weeks.keys()).sort(function(a,b) { return a - b; });
-        sortedWeeks.forEach(function(wKey) {
-            const days = mData.weeks.get(wKey);
-            let wEaten=0, wBurn=0;
-            days.forEach(function(d) {
-                wEaten += d.eaten;
-                wBurn += Number(d.tdee || d.target || 0);
-            });
-            const wDeficit = wBurn - wEaten;
-
-            const weekWrapper = document.createElement('div');
-            weekWrapper.className = "border-t border-cyan-900/20";
-
-            const weekHeader = document.createElement('button');
-            weekHeader.className = "w-full text-left px-5 py-2 flex justify-between items-center cursor-pointer hover:bg-slate-900/40 transition-colors " + (wDeficit >= 0 ? 'week-row-deficit' : 'week-row-surplus');
-            weekHeader.innerHTML = '<span class="text-[11px] font-bold text-cyan-100">Week ' + wKey + '</span><span class="text-[10px] font-bold ' + (wDeficit >= 0 ? 'text-teal-400' : 'text-rose-400') + '">' + (wDeficit >= 0 ? '+' : '') + wDeficit.toFixed(0) + ' kcal ' + (wDeficit >= 0 ? 'deficit' : 'surplus') + '</span>';
-
-            const weekBody = document.createElement('div');
-            weekBody.className = "hidden bg-[#0a1620]/60";
-            weekHeader.onclick = function() { weekBody.classList.toggle('hidden'); };
+        Array.from(mData.weeks.keys()).sort(function(a,b){return a-b;}).forEach(function(wKey) {
+            const days=mData.weeks.get(wKey);
+            let wEaten=0,wBurn=0;
+            days.forEach(function(d){wEaten+=d.eaten;wBurn+=Number(d.tdee||d.target||0);});
+            const wDef=wBurn-wEaten;
+            const wW=document.createElement('div'); wW.className="border-t border-cyan-900/20";
+            const wH=document.createElement('button');
+            wH.className="w-full text-left px-5 py-2 flex justify-between items-center cursor-pointer hover:bg-slate-900/40 transition-colors "+(wDef>=0?'week-row-deficit':'week-row-surplus');
+            wH.innerHTML='<span class="text-[11px] font-bold text-cyan-100">Week '+wKey+'</span><span class="text-[10px] font-bold '+(wDef>=0?'text-teal-400':'text-rose-400')+'">'+(wDef>=0?'+':'')+wDef.toFixed(0)+' kcal '+(wDef>=0?'deficit':'surplus')+'</span>';
+            const wB=document.createElement('div'); wB.className="hidden bg-[#0a1620]/60";
+            wH.onclick=function(){wB.classList.toggle('hidden');};
 
             days.forEach(function(day) {
-                const tg = Number(day.target || state.targets.calories);
-                const actualBurn = Number(day.tdee || tg);
-                const dd = actualBurn - day.eaten;
-                const row = document.createElement('div');
-                row.className = "px-6 py-2.5 border-t border-cyan-900/20 " + (dd >= 0 ? '' : 'bg-rose-950/10');
-                row.innerHTML = '<div class="flex justify-between items-start"><div class="space-y-0.5"><span class="font-extrabold text-cyan-100 text-[11px] block">' + sanitize(day.date) + '</span><span class="text-[9px] text-cyan-600/70 block">🐾 ' + day.steps.toLocaleString() + ' steps • 🔥 ' + actualBurn + ' burn</span><span class="text-[10px] text-cyan-400/70 flex items-center gap-2 mt-0.5 bg-[#132030]/40 px-1.5 py-0.5 rounded border border-cyan-900/20"><span>🧪 ' + Math.round(day.carbs||0) + 'g</span><span>🥩 ' + Math.round(day.protein||0) + 'g</span><span>🥑 ' + Math.round(day.fats||0) + 'g</span><span>🌾 ' + (day.fiber||0).toFixed(1) + 'g</span></span></div><div class="text-right space-y-0.5 self-start pt-0.5"><span class="block text-[11px] text-cyan-300/70">Ate ' + day.eaten.toFixed(0) + ' / Burn <span class="text-teal-300 font-bold">' + actualBurn + '</span></span><span class="block text-[11px]">' + formatDeficit(dd) + '</span></div></div>';
-                weekBody.appendChild(row);
+                const actualBurn=Number(day.tdee||day.target||state.targets.calories);
+                const dd=actualBurn-day.eaten;
+                const row=document.createElement('div');
+                row.className="px-6 py-2.5 border-t border-cyan-900/20 "+(dd>=0?'':'bg-rose-950/10');
+                row.innerHTML='<div class="flex justify-between items-start"><div class="space-y-0.5"><span class="font-extrabold text-cyan-100 text-[11px] block">'+sanitize(day.date)+'</span><span class="text-[9px] text-cyan-600/70 block">🐾 '+day.steps.toLocaleString()+' steps • 🔥 '+actualBurn+' burn</span><span class="text-[10px] text-cyan-400/70 flex items-center gap-2 mt-0.5 bg-[#132030]/40 px-1.5 py-0.5 rounded border border-cyan-900/20"><span>🧪 '+Math.round(day.carbs||0)+'g</span><span>🥩 '+Math.round(day.protein||0)+'g</span><span>🥑 '+Math.round(day.fats||0)+'g</span><span>🌾 '+(day.fiber||0).toFixed(1)+'g</span></span></div><div class="text-right space-y-0.5 self-start pt-0.5"><span class="block text-[11px] text-cyan-300/70">Ate '+day.eaten.toFixed(0)+' / Burn <span class="text-teal-300 font-bold">'+actualBurn+'</span></span><span class="block text-[11px]">'+formatDeficit(dd)+'</span></div></div>';
+                wB.appendChild(row);
             });
-
-            const weekFooter = document.createElement('div');
-            weekFooter.className = "px-6 py-2 border-t border-cyan-900/30 flex justify-between items-center text-[10px] font-bold " + (wDeficit >= 0 ? 'text-teal-400 bg-teal-950/20' : 'text-rose-400 bg-rose-950/20');
-            weekFooter.innerHTML = '<span>Week ' + wKey + ' Total</span><span>Ate ' + wEaten.toFixed(0) + ' / Burn ' + wBurn.toFixed(0) + ' → ' + formatDeficit(wDeficit) + '</span>';
-            weekBody.appendChild(weekFooter);
-
-            weekWrapper.appendChild(weekHeader);
-            weekWrapper.appendChild(weekBody);
-            monthBody.appendChild(weekWrapper);
+            const wF=document.createElement('div');
+            wF.className="px-6 py-2 border-t border-cyan-900/30 flex justify-between items-center text-[10px] font-bold "+(wDef>=0?'text-teal-400 bg-teal-950/20':'text-rose-400 bg-rose-950/20');
+            wF.innerHTML='<span>Week '+wKey+' Total</span><span>Ate '+wEaten.toFixed(0)+' / Burn '+wBurn.toFixed(0)+' → '+formatDeficit(wDef)+'</span>';
+            wB.appendChild(wF); wW.appendChild(wH); wW.appendChild(wB); mB.appendChild(wW);
         });
 
-        const monthFooter = document.createElement('div');
-        monthFooter.className = "px-4 py-2 flex justify-between items-center text-[10px] font-bold " + (mDeficit >= 0 ? 'text-cyan-300 bg-cyan-950/20 month-row-deficit' : 'text-amber-400 bg-amber-950/20 month-row-surplus') + " border-t border-cyan-900/30";
-        monthFooter.innerHTML = '<span>' + sanitize(mData.monthName) + ' Total</span><span>Ate ' + mEaten.toFixed(0) + ' / Burn ' + mBurn.toFixed(0) + ' → ' + formatDeficit(mDeficit) + '</span>';
-        monthBody.appendChild(monthFooter);
-
-        monthBlock.appendChild(monthHeader);
-        monthBlock.appendChild(monthBody);
+        const mF=document.createElement('div');
+        mF.className="px-4 py-2 flex justify-between items-center text-[10px] font-bold "+(mDef>=0?'text-cyan-300 bg-cyan-950/20 month-row-deficit':'text-amber-400 bg-amber-950/20 month-row-surplus')+" border-t border-cyan-900/30";
+        mF.innerHTML='<span>'+sanitize(mData.monthName)+' Total</span><span>Ate '+mEaten.toFixed(0)+' / Burn '+mBurn.toFixed(0)+' → '+formatDeficit(mDef)+'</span>';
+        mB.appendChild(mF); monthBlock.appendChild(mH); monthBlock.appendChild(mB);
         container.appendChild(monthBlock);
     });
 
-    // Grand total
-    let grandEaten = 0, grandBurn = 0;
-    state.calorieHistory.forEach(function(d) {
-        grandEaten += d.eaten;
-        grandBurn += Number(d.tdee || d.target || 0);
-    });
-    const grandDeficit = grandBurn - grandEaten;
-
-    const grandTotalBlock = document.createElement('div');
-    grandTotalBlock.className = "mt-4 rounded-xl overflow-hidden border-2 " + (grandDeficit >= 0 ? 'border-teal-500/50 bg-gradient-to-r from-teal-950/50 to-cyan-950/50' : 'border-rose-500/50 bg-gradient-to-r from-rose-950/50 to-amber-950/50');
-    grandTotalBlock.innerHTML =
-        '<div class="px-4 py-3">' +
-            '<div class="flex justify-between items-center mb-1.5">' +
-                '<span class="text-[10px] font-black uppercase tracking-widest ' + (grandDeficit >= 0 ? 'text-teal-300' : 'text-rose-300') + '">🏆 Grand Total (All Time)</span>' +
-                '<span class="text-[11px] font-black ' + (grandDeficit >= 0 ? 'text-teal-400' : 'text-rose-400') + '">' + (grandDeficit >= 0 ? '▼' : '▲') + ' ' + Math.abs(grandDeficit).toFixed(0) + ' kcal ' + (grandDeficit >= 0 ? 'deficit' : 'surplus') + '</span>' +
-            '</div>' +
-            '<div class="text-[10px] text-cyan-400/80 font-medium">Ate ' + grandEaten.toFixed(0) + ' kcal / Burn ' + grandBurn.toFixed(0) + ' kcal across ' + state.calorieHistory.length + ' logged days</div>' +
-        '</div>';
-    container.appendChild(grandTotalBlock);
+    let gE=0,gB=0;
+    state.calorieHistory.forEach(function(d){gE+=d.eaten;gB+=Number(d.tdee||d.target||0);});
+    const gDef=gB-gE;
+    const gBlock=document.createElement('div');
+    gBlock.className="mt-4 rounded-xl overflow-hidden border-2 "+(gDef>=0?'border-teal-500/50 bg-gradient-to-r from-teal-950/50 to-cyan-950/50':'border-rose-500/50 bg-gradient-to-r from-rose-950/50 to-amber-950/50');
+    gBlock.innerHTML='<div class="px-4 py-3"><div class="flex justify-between items-center mb-1.5"><span class="text-[10px] font-black uppercase tracking-widest '+(gDef>=0?'text-teal-300':'text-rose-300')+'">🏆 Grand Total (All Time)</span><span class="text-[11px] font-black '+(gDef>=0?'text-teal-400':'text-rose-400')+'">'+(gDef>=0?'▼':'▲')+' '+Math.abs(gDef).toFixed(0)+' kcal '+(gDef>=0?'deficit':'surplus')+'</span></div><div class="text-[10px] text-cyan-400/80 font-medium">Ate '+gE.toFixed(0)+' kcal / Burn '+gB.toFixed(0)+' kcal across '+state.calorieHistory.length+' logged days</div></div>';
+    container.appendChild(gBlock);
 }
 
 function clearHistory(type) {
     if (!confirm("Permanently delete this dataset?")) return;
-    if (type === 'trends') {
-        state.calorieHistory = []; state.weeklyLedger = []; state.monthlyLedger = [];
-        saveAndRender(); renderAveragesUI(); renderLedgersUI();
-    }
-    if (type === 'weight') {
-        state.weightHistory = [];
-        saveAndRender();
-        renderWeightUI();
-    }
+    if (type==='trends') { state.calorieHistory=[]; state.weeklyLedger=[]; state.monthlyLedger=[]; saveAndRender(); renderAveragesUI(); renderLedgersUI(); }
+    if (type==='weight') { state.weightHistory=[]; saveAndRender(); renderWeightUI(); }
 }
 
 // ─────────────────────────────────────────────
-// WEIGHT UI (replaces chart)
+// WEIGHT UI
 // ─────────────────────────────────────────────
-
-function renderWeightUI() {
-    calculateWeightMilestonesUI();
-    renderWeightHistoryList();
-}
+function renderWeightUI() { calculateWeightMilestonesUI(); renderWeightHistoryList(); }
 
 function renderWeightHistoryList() {
     const container = document.getElementById('weight-history-list');
-    container.innerHTML = '';
-
-    if (state.weightHistory.length === 0) {
-        container.innerHTML = '<div class="text-center text-xs text-slate-500 py-4">No weight logs yet. Add one above!</div>';
-        return;
+    container.innerHTML='';
+    if (state.weightHistory.length===0) {
+        container.innerHTML='<div class="text-center text-xs text-slate-500 py-4">No weight logs yet.</div>'; return;
     }
-
-    // Show most recent first
-    const reversed = state.weightHistory.slice().reverse();
-    reversed.forEach(function(entry, i) {
-        const actualIdx = state.weightHistory.length - 1 - i;
-        const prev = state.weightHistory[actualIdx - 1];
-        let changeTxt = '';
-        let changeClass = 'text-slate-500';
+    state.weightHistory.slice().reverse().forEach(function(entry,i) {
+        const actualIdx = state.weightHistory.length-1-i;
+        const prev = state.weightHistory[actualIdx-1];
+        let changeTxt='', changeClass='text-slate-500';
         if (prev) {
-            const diff = parseFloat(entry.weight) - parseFloat(prev.weight);
-            if (diff < 0) { changeTxt = ' (' + diff.toFixed(1) + 'kg)'; changeClass = 'text-teal-400'; }
-            else if (diff > 0) { changeTxt = ' (+' + diff.toFixed(1) + 'kg)'; changeClass = 'text-rose-400'; }
-            else { changeTxt = ' (=)'; changeClass = 'text-slate-500'; }
+            const diff=parseFloat(entry.weight)-parseFloat(prev.weight);
+            if      (diff<0) { changeTxt=' ('+diff.toFixed(1)+'kg)'; changeClass='text-teal-400'; }
+            else if (diff>0) { changeTxt=' (+'+diff.toFixed(1)+'kg)'; changeClass='text-rose-400'; }
+            else             { changeTxt=' (=)'; }
         }
-
-        const row = document.createElement('div');
-        row.className = "flex justify-between items-center bg-[#0a1620]/60 border border-cyan-900/30 rounded-xl px-3 py-2.5 text-xs";
-        row.innerHTML =
-            '<span class="font-bold text-cyan-100">' + sanitize(entry.date) + '</span>' +
-            '<div class="flex items-center gap-3">' +
-                '<span class="font-black text-teal-300">' + parseFloat(entry.weight).toFixed(1) + ' kg' +
-                    '<span class="font-semibold ' + changeClass + '">' + changeTxt + '</span>' +
-                '</span>' +
-                '<button onclick="deleteWeightEntry(' + actualIdx + ')" class="text-slate-600 hover:text-rose-400 font-bold px-1 text-sm transition-colors">✕</button>' +
-            '</div>';
+        const row=document.createElement('div');
+        row.className="flex justify-between items-center bg-[#0a1620]/60 border border-cyan-900/30 rounded-xl px-3 py-2.5 text-xs";
+        row.innerHTML='<span class="font-bold text-cyan-100">'+sanitize(entry.date)+'</span><div class="flex items-center gap-3"><span class="font-black text-teal-300">'+parseFloat(entry.weight).toFixed(1)+' kg<span class="font-semibold '+changeClass+'">'+changeTxt+'</span></span><button onclick="deleteWeightEntry('+actualIdx+')" class="text-slate-600 hover:text-rose-400 font-bold px-1 text-sm">✕</button></div>';
         container.appendChild(row);
     });
 }
 
 function deleteWeightEntry(idx) {
-    if (idx < 0 || idx >= state.weightHistory.length) return;
-    state.weightHistory.splice(idx, 1);
-    // Recalculate current weight from last entry if exists
-    if (state.weightHistory.length > 0) {
-        state.profile.weight = parseFloat(state.weightHistory[state.weightHistory.length - 1].weight);
-        document.getElementById('weight-input').value = state.profile.weight;
+    if (idx<0||idx>=state.weightHistory.length) return;
+    state.weightHistory.splice(idx,1);
+    if (state.weightHistory.length>0) {
+        state.profile.weight=parseFloat(state.weightHistory[state.weightHistory.length-1].weight);
+        document.getElementById('weight-input').value=state.profile.weight;
     }
-    saveAndRender();
-    renderWeightUI();
+    saveAndRender(); renderWeightUI();
 }
 
 function calculateWeightMilestonesUI() {
-    const grid = document.getElementById('milestones-checkbox-grid');
-    const badge = document.getElementById('next-objective-badge');
-    const label = document.getElementById('weight-progress-label');
-    const journeyLabel = document.getElementById('journey-label');
-    if (!grid || !badge) return;
-    grid.innerHTML = '';
+    const grid=document.getElementById('milestones-checkbox-grid');
+    const badge=document.getElementById('next-objective-badge');
+    const label=document.getElementById('weight-progress-label');
+    const jLabel=document.getElementById('journey-label');
+    if (!grid||!badge) return;
+    grid.innerHTML='';
 
-    const j = getWeightJourney();
-
-    // Update this-month weight average
-    const monthAvgEl = document.getElementById('weight-stat-month-avg');
+    // Month avg
+    const monthAvgEl=document.getElementById('weight-stat-month-avg');
     if (monthAvgEl) {
-        const monthAvg = computeWeightMonthAvg();
-        if (monthAvg !== null) {
-            monthAvgEl.innerText = monthAvg.toFixed(1) + ' kg';
-            monthAvgEl.className = 'text-sm font-black text-teal-300 mt-0.5';
-        } else {
-            monthAvgEl.innerText = '— kg';
-            monthAvgEl.className = 'text-sm font-black text-slate-500 mt-0.5';
-        }
+        const ma=computeWeightMonthAvg();
+        monthAvgEl.innerText=ma!==null ? ma.toFixed(1)+' kg' : '— kg';
+        monthAvgEl.className='text-sm font-black '+(ma!==null?'text-teal-300':'text-slate-500')+' mt-0.5';
     }
 
-    if (j.direction === 'none') {
-        document.getElementById('weight-progress-percent').innerText = '0%';
-        document.getElementById('weight-progress-bar').style.width = '0%';
-        document.getElementById('weight-stat-total').innerText = 'Set Base ⚠️';
-        document.getElementById('weight-stat-total').className = 'text-sm font-black text-amber-400 mt-0.5';
-        document.getElementById('weight-stat-velocity').innerText = '— kg';
-        if (label) label.innerText = 'Set a Base Weight in profile to start tracking.';
-        if (journeyLabel) journeyLabel.innerText = 'Journey Progress';
-        badge.innerText = 'Setup needed';
-        grid.innerHTML = '<div class="col-span-2 text-center text-[11px] text-slate-500 py-3">Add Base Weight in your profile to unlock milestones.</div>';
+    const j=getWeightJourney();
+    if (j.direction==='none') {
+        document.getElementById('weight-progress-percent').innerText='0%';
+        document.getElementById('weight-progress-bar').style.width='0%';
+        document.getElementById('weight-stat-total').innerText='Set Base ⚠️';
+        document.getElementById('weight-stat-total').className='text-sm font-black text-amber-400 mt-0.5';
+        document.getElementById('weight-stat-velocity').innerText='— kg';
+        if (label) label.innerText='Set a Base Weight in profile to start tracking.';
+        if (jLabel) jLabel.innerText='Journey Progress';
+        badge.innerText='Setup needed';
+        grid.innerHTML='<div class="col-span-2 text-center text-[11px] text-slate-500 py-3">Add Base Weight in profile to unlock milestones.</div>';
         return;
     }
 
-    let pct = 0;
-    if (j.totalNeeded > 0) {
-        pct = Math.min(100, Math.max(0, Math.round((j.totalAchieved / j.totalNeeded) * 100)));
-    } else if (j.isComplete) {
-        pct = 100;
-    }
+    let pct=0;
+    if (j.totalNeeded>0) pct=Math.min(100,Math.max(0,Math.round((j.totalAchieved/j.totalNeeded)*100)));
+    else if (j.isComplete) pct=100;
+    document.getElementById('weight-progress-percent').innerText=pct+'%';
+    document.getElementById('weight-progress-bar').style.width=pct+'%';
 
-    document.getElementById('weight-progress-percent').innerText = pct + '%';
-    document.getElementById('weight-progress-bar').style.width = pct + '%';
+    const totalEl=document.getElementById('weight-stat-total');
+    if (j.direction==='lose') { if(jLabel)jLabel.innerText='Weight Lost'; totalEl.innerText=j.totalAchieved.toFixed(1)+'kg ↓'; totalEl.className='text-sm font-black text-teal-300 mt-0.5'; }
+    else if (j.direction==='gain') { if(jLabel)jLabel.innerText='Weight Gained'; totalEl.innerText='+'+j.totalAchieved.toFixed(1)+'kg ↑'; totalEl.className='text-sm font-black text-emerald-300 mt-0.5'; }
+    else { if(jLabel)jLabel.innerText='Maintenance'; totalEl.innerText='On Track'; totalEl.className='text-sm font-black text-sky-300 mt-0.5'; }
 
-    const totalEl = document.getElementById('weight-stat-total');
-    if (j.direction === 'lose') {
-        if (journeyLabel) journeyLabel.innerText = 'Weight Lost';
-        totalEl.innerText = j.totalAchieved.toFixed(1) + 'kg ↓';
-        totalEl.className = 'text-sm font-black text-teal-300 mt-0.5';
-    } else if (j.direction === 'gain') {
-        if (journeyLabel) journeyLabel.innerText = 'Weight Gained';
-        totalEl.innerText = '+' + j.totalAchieved.toFixed(1) + 'kg ↑';
-        totalEl.className = 'text-sm font-black text-emerald-300 mt-0.5';
-    } else {
-        if (journeyLabel) journeyLabel.innerText = 'Maintenance';
-        totalEl.innerText = 'On Track';
-        totalEl.className = 'text-sm font-black text-sky-300 mt-0.5';
-    }
+    if (label) { const arr=j.direction==='gain'?'↑':j.direction==='lose'?'↓':'→'; label.innerText='Base: '+j.base+'kg '+arr+' Goal: '+j.goal+'kg ('+j.totalNeeded.toFixed(1)+'kg journey)'; }
 
-    if (label) {
-        const arrow = j.direction === 'gain' ? '↑' : (j.direction === 'lose' ? '↓' : '→');
-        label.innerText = 'Base: ' + j.base + 'kg ' + arrow + ' Goal: ' + j.goal + 'kg (' + j.totalNeeded.toFixed(1) + 'kg journey)';
-    }
+    const velEl=document.getElementById('weight-stat-velocity');
+    if (state.weightHistory.length>0) {
+        const l7=state.weightHistory.slice(-7);
+        velEl.innerText=(l7.reduce(function(s,w){return s+(parseFloat(w.weight)||0);},0)/l7.length).toFixed(1)+' kg';
+        velEl.className='text-sm font-black text-cyan-300 mt-0.5';
+    } else { velEl.innerText='— kg'; velEl.className='text-sm font-black text-cyan-300 mt-0.5'; }
 
-    const velEl = document.getElementById('weight-stat-velocity');
-    if (state.weightHistory.length > 0) {
-        const last7 = state.weightHistory.slice(-7);
-        let sum = 0;
-        last7.forEach(function(w) { sum += parseFloat(w.weight) || 0; });
-        velEl.innerText = (sum / last7.length).toFixed(1) + ' kg';
-        velEl.className = 'text-sm font-black text-cyan-300 mt-0.5';
-    } else {
-        velEl.innerText = '— kg';
-        velEl.className = 'text-sm font-black text-cyan-300 mt-0.5';
-    }
-
-    const segments = 4;
-    const lossSymbols = ['📉','🎯','🔥','👑'];
-    const gainSymbols = ['💪','🚀','🏋️','👑'];
-    const symbols = j.direction === 'gain' ? gainSymbols : lossSymbols;
-    const milestones = [];
-
-    if (j.totalNeeded > 0) {
-        for (let i = 1; i <= segments; i++) {
-            const mw = j.direction === 'lose'
-                ? j.base - ((j.totalNeeded / segments) * i)
-                : j.base + ((j.totalNeeded / segments) * i);
-            milestones.push({ label: 'Reach ' + mw.toFixed(1) + 'kg', target: parseFloat(mw.toFixed(1)), symbol: symbols[i-1], type: 'weight' });
+    const symbols=j.direction==='gain'?['💪','🚀','🏋️','👑']:['📉','🎯','🔥','👑'];
+    const milestones=[];
+    if (j.totalNeeded>0) {
+        for (let i=1;i<=4;i++) {
+            const mw=j.direction==='lose'?j.base-((j.totalNeeded/4)*i):j.base+((j.totalNeeded/4)*i);
+            milestones.push({label:'Reach '+mw.toFixed(1)+'kg',target:parseFloat(mw.toFixed(1)),symbol:symbols[i-1],type:'weight'});
         }
-    } else {
-        milestones.push({ label: 'Goal: ' + j.goal + 'kg', target: j.goal, symbol: '👑', type: 'weight' });
-    }
+    } else { milestones.push({label:'Goal: '+j.goal+'kg',target:j.goal,symbol:'👑',type:'weight'}); }
 
-    let streak = 0;
-    state.calorieHistory.forEach(function(day) {
-        if (day.steps >= 10000) streak++; else streak = 0;
-    });
-    milestones.push({ label: '7-Day 10k Steps Streak', currentStreak: streak, targetStreak: 7, symbol: '🐾', type: 'streak' });
+    let streak=0;
+    state.calorieHistory.forEach(function(day){if(day.steps>=10000)streak++;else streak=0;});
+    milestones.push({label:'7-Day 10k Steps Streak',currentStreak:streak,targetStreak:7,symbol:'🐾',type:'streak'});
 
-    let nextSet = false;
+    let nextSet=false;
     milestones.forEach(function(m) {
-        let isDone;
-        if (m.type === 'streak') {
-            isDone = m.currentStreak >= m.targetStreak;
-        } else {
-            isDone = j.direction === 'lose' ? j.current <= m.target : j.current >= m.target;
-        }
-        if (!isDone && !nextSet) {
-            badge.innerText = m.type === 'weight' ? 'Next: ' + m.target.toFixed(1) + 'kg' : 'Next: 10k Streak';
-            nextSet = true;
-        }
-        const item = document.createElement('div');
-        item.className = "flex items-center gap-2 bg-[#0a1620]/40 p-2 rounded-lg border border-cyan-900/30";
-        item.innerHTML = '<input type="checkbox" ' + (isDone ? 'checked' : '') + ' disabled class="accent-teal-500 rounded w-3.5 h-3.5 pointer-events-none"><span class="' + (isDone ? 'line-through text-slate-500 font-normal' : 'text-cyan-100 font-semibold') + ' text-[11px] flex items-center gap-1"><span>' + m.symbol + '</span><span>' + sanitize(m.label) + (m.type === 'streak' ? ' (' + m.currentStreak + '/' + m.targetStreak + 'd)' : '') + '</span></span>';
+        const isDone=m.type==='streak'?m.currentStreak>=m.targetStreak:(j.direction==='lose'?j.current<=m.target:j.current>=m.target);
+        if (!isDone&&!nextSet) { badge.innerText=m.type==='weight'?'Next: '+m.target.toFixed(1)+'kg':'Next: 10k Streak'; nextSet=true; }
+        const item=document.createElement('div');
+        item.className="flex items-center gap-2 bg-[#0a1620]/40 p-2 rounded-lg border border-cyan-900/30";
+        item.innerHTML='<input type="checkbox" '+(isDone?'checked':'')+' disabled class="accent-teal-500 rounded w-3.5 h-3.5 pointer-events-none"><span class="'+(isDone?'line-through text-slate-500 font-normal':'text-cyan-100 font-semibold')+' text-[11px] flex items-center gap-1"><span>'+m.symbol+'</span><span>'+sanitize(m.label)+(m.type==='streak'?' ('+m.currentStreak+'/'+m.targetStreak+'d)':'')+'</span></span>';
         grid.appendChild(item);
     });
-
-    if (!nextSet) badge.innerText = "🎉 All Clear!";
+    if (!nextSet) badge.innerText="🎉 All Clear!";
 }
 
 // ─────────────────────────────────────────────
-// FORM / MACRO HELPERS
+// FORM SUBMIT
 // ─────────────────────────────────────────────
-
-function captureBaseMacros(protein, carbs, fats, fiber, calories, baseGrams) {
-    _baseMacros = {
-        protein: parseFloat(protein) || 0,
-        carbs: parseFloat(carbs) || 0,
-        fats: parseFloat(fats) || 0,
-        fiber: parseFloat(fiber) || 0,
-        calories: parseFloat(calories) || 0,
-        baseGrams: parseFloat(baseGrams) || 100
-    };
-    document.getElementById('food-base-grams').innerText = _baseMacros.baseGrams + 'g';
-    document.getElementById('food-serving').value = _baseMacros.baseGrams;
-    updateServingHint();
-}
-
-function scaleMacrosByServing() {
-    clearTimeout(_servingDebounceTimer);
-    _servingDebounceTimer = setTimeout(function() {
-        const serving = parseFloat(document.getElementById('food-serving').value) || 0;
-        if (serving <= 0 || _baseMacros.baseGrams <= 0) return;
-
-        const factor = serving / _baseMacros.baseGrams;
-        _isUserEditingMacros = true;
-        document.getElementById('food-p').value     = (_baseMacros.protein  * factor).toFixed(1);
-        document.getElementById('food-c').value     = (_baseMacros.carbs    * factor).toFixed(1);
-        document.getElementById('food-f').value     = (_baseMacros.fats     * factor).toFixed(1);
-        document.getElementById('food-fiber').value = (_baseMacros.fiber    * factor).toFixed(1);
-        document.getElementById('food-cal').value   = (_baseMacros.calories * factor).toFixed(1);
-        _isUserEditingMacros = false;
-        updateServingHint();
-    }, 120);
-}
-
-function resetServingSize() {
-    document.getElementById('food-serving').value = _baseMacros.baseGrams;
-    scaleMacrosByServing();
-}
-
-function updateServingHint() {
-    const hint = document.getElementById('serving-hint');
-    if (!hint) return;
-    const serving = parseFloat(document.getElementById('food-serving').value) || 0;
-    if (serving === _baseMacros.baseGrams) {
-        hint.innerText = 'Showing base ' + _baseMacros.baseGrams + 'g values';
-        hint.className = 'text-[9px] text-cyan-500/60 mt-1 text-center italic';
-    } else {
-        const factor = (serving / _baseMacros.baseGrams).toFixed(2);
-        hint.innerText = '✨ Scaled ' + factor + '× from base ' + _baseMacros.baseGrams + 'g';
-        hint.className = 'text-[9px] text-teal-300 mt-1 text-center italic font-semibold';
-    }
-}
-
-function syncBaseFromManualEntry() {
-    if (_isUserEditingMacros) return;
-    const serving = parseFloat(document.getElementById('food-serving').value) || 100;
-    _baseMacros = {
-        protein: parseFloat(document.getElementById('food-p').value) || 0,
-        carbs: parseFloat(document.getElementById('food-c').value) || 0,
-        fats: parseFloat(document.getElementById('food-f').value) || 0,
-        fiber: parseFloat(document.getElementById('food-fiber').value) || 0,
-        calories: parseFloat(document.getElementById('food-cal').value) || 0,
-        baseGrams: serving
-    };
-    document.getElementById('food-base-grams').innerText = serving + 'g';
-    updateServingHint();
-}
-
 function handleFormSubmit(e) {
     e.preventDefault();
-    const servingG = parseFloat(document.getElementById('food-serving').value) || 0;
     const item = {
-        name: document.getElementById('food-name').value,
-        protein: parseFloat(document.getElementById('food-p').value) || 0,
-        carbs: parseFloat(document.getElementById('food-c').value) || 0,
-        fats: parseFloat(document.getElementById('food-f').value) || 0,
-        fiber: parseFloat(document.getElementById('food-fiber').value) || 0,
-        calories: parseFloat(document.getElementById('food-cal').value) || 0,
-        servingGrams: servingG,
-        time: document.getElementById('food-time').value
+        name:         document.getElementById('food-name').value,
+        protein:      parseFloat(document.getElementById('food-p').value)     || 0,
+        carbs:        parseFloat(document.getElementById('food-c').value)     || 0,
+        fats:         parseFloat(document.getElementById('food-f').value)     || 0,
+        fiber:        parseFloat(document.getElementById('food-fiber').value) || 0,
+        calories:     parseFloat(document.getElementById('food-cal').value)   || 0,
+        servingGrams: getCurrentServingGrams(),
+        time:         document.getElementById('food-time').value
     };
     state.logs.push(item);
     clearEntryForm();
     saveAndRender();
 }
 
-function logFormItem(saveAsFavorite) {
-    const currentServing = parseFloat(document.getElementById('food-serving').value) || 100;
-    const currentCal = parseFloat(document.getElementById('food-cal').value) || 0;
-
-    if (!currentCal) { alert("Enter calories first!"); return; }
-
-    // Normalize to per-100g base for storage
-    const factor = 100 / currentServing;
-    const item = {
-        name: document.getElementById('food-name').value || "Unnamed Preset",
-        protein:  +(( parseFloat(document.getElementById('food-p').value)    || 0) * factor).toFixed(2),
-        carbs:    +(( parseFloat(document.getElementById('food-c').value)    || 0) * factor).toFixed(2),
-        fats:     +(( parseFloat(document.getElementById('food-f').value)    || 0) * factor).toFixed(2),
-        fiber:    +(( parseFloat(document.getElementById('food-fiber').value)|| 0) * factor).toFixed(2),
-        calories: +(currentCal * factor).toFixed(2),
-        baseGrams: 100
-    };
-
-    if (saveAsFavorite) {
-        state.favorites.push(item);
-        saveAndRender();
-        clearEntryForm();
-        alert('Saved to favorites! (normalized to 100g base)');
-    }
-}
-
-function deleteFavItem(idx, e) {
-    if (e) e.stopPropagation();
-    state.favorites.splice(idx, 1);
-    saveAndRender();
-}
-
-function selectFavItem(item) {
-    const baseG = item.baseGrams || 100;
-    document.getElementById('food-name').value = item.name;
-    document.getElementById('food-p').value = item.protein;
-    document.getElementById('food-c').value = item.carbs;
-    document.getElementById('food-f').value = item.fats;
-    document.getElementById('food-fiber').value = item.fiber;
-    document.getElementById('food-cal').value = item.calories;
-    captureBaseMacros(item.protein, item.carbs, item.fats, item.fiber, item.calories, baseG);
-    checkCalorieDeviation();
-}
-
-function deleteLogItem(idx) {
-    if (idx < 0 || idx >= state.logs.length) return;
-    state.logs.splice(idx, 1);
-    saveAndRender();
-}
-
+// ─────────────────────────────────────────────
+// SAVE & RENDER
+// ─────────────────────────────────────────────
 function saveAndRender() {
     safeSetItem('nutraProDeficitState', JSON.stringify(state));
     renderDashboardTotals();
 }
 
 function renderDashboardTotals() {
-    let totCal=0, totP=0, totC=0, totF=0, totFib=0;
-    state.logs.forEach(function(l) { totCal+=l.calories; totP+=l.protein; totC+=l.carbs; totF+=l.fats; totFib+=l.fiber; });
-
-    document.getElementById('tot-cal').innerText = Math.round(totCal) + ' / ' + state.targets.calories + ' kcal';
-    document.getElementById('tot-p').innerText = Math.round(totP) + 'g / ' + state.targets.protein + 'g';
-    document.getElementById('tot-c').innerText = Math.round(totC) + 'g / ' + state.targets.carbs + 'g';
-    document.getElementById('tot-f').innerText = Math.round(totF) + 'g / ' + state.targets.fats + 'g';
-    document.getElementById('tot-fiber').innerText = Math.round(totFib) + 'g';
-
-    function pct(c, t) { return t > 0 ? Math.min(100,(c/t)*100) : 0; }
-    document.getElementById('fill-cal').style.width = pct(totCal, state.targets.calories) + '%';
-    document.getElementById('fill-p').style.width = pct(totP, state.targets.protein) + '%';
-    document.getElementById('fill-c').style.width = pct(totC, state.targets.carbs) + '%';
-    document.getElementById('fill-f').style.width = pct(totF, state.targets.fats) + '%';
+    let totCal=0,totP=0,totC=0,totF=0,totFib=0;
+    state.logs.forEach(function(l){totCal+=l.calories;totP+=l.protein;totC+=l.carbs;totF+=l.fats;totFib+=l.fiber;});
+    document.getElementById('tot-cal').innerText   = Math.round(totCal)+' / '+state.targets.calories+' kcal';
+    document.getElementById('tot-p').innerText     = Math.round(totP)+'g / '+state.targets.protein+'g';
+    document.getElementById('tot-c').innerText     = Math.round(totC)+'g / '+state.targets.carbs+'g';
+    document.getElementById('tot-f').innerText     = Math.round(totF)+'g / '+state.targets.fats+'g';
+    document.getElementById('tot-fiber').innerText = Math.round(totFib)+'g';
+    function pct(c,t){return t>0?Math.min(100,(c/t)*100):0;}
+    document.getElementById('fill-cal').style.width=pct(totCal,state.targets.calories)+'%';
+    document.getElementById('fill-p').style.width  =pct(totP,  state.targets.protein) +'%';
+    document.getElementById('fill-c').style.width  =pct(totC,  state.targets.carbs)   +'%';
+    document.getElementById('fill-f').style.width  =pct(totF,  state.targets.fats)    +'%';
 
     // Favorites
-    const favsEl = document.getElementById('favs-container');
-    favsEl.innerHTML = '';
-    if (state.favorites.length === 0) {
-        favsEl.innerHTML = '<div class="text-[11px] text-slate-500 font-medium py-1">No favorites yet. Save items using ⭐</div>';
+    const favsEl=document.getElementById('favs-container');
+    favsEl.innerHTML='';
+    if (state.favorites.length===0) {
+        favsEl.innerHTML='<div class="text-[11px] text-slate-500 font-medium py-1">No favorites yet. Use ⭐ to save items.</div>';
     }
-    state.favorites.forEach(function(item, idx) {
-        const pill = document.createElement('button');
-        pill.className = "bg-[#0a1620] hover:bg-cyan-950/40 border border-cyan-900/40 text-left text-xs px-3 py-1.5 rounded-xl flex items-center gap-2 text-cyan-100 font-medium transition-all active:scale-95";
-        pill.onclick = function() { selectFavItem(item); };
-        const baseLbl = item.baseGrams ? ' <span class="text-cyan-500/60 text-[9px]">(' + item.baseGrams + 'g)</span>' : '';
-        pill.innerHTML = '<span>' + sanitize(item.name) + ' <span class="text-teal-300 font-bold text-[10px]">' + item.calories + '</span>' + baseLbl + '</span><span onclick="deleteFavItem(' + idx + ', event)" class="text-[10px] text-slate-600 hover:text-rose-400 font-black pl-1">✕</span>';
+    state.favorites.forEach(function(item,idx) {
+        const isExact = item.saveType === 'exact';
+        const pill=document.createElement('button');
+        pill.className="bg-[#0a1620] hover:bg-cyan-950/40 border border-cyan-900/40 text-left text-xs px-3 py-1.5 rounded-xl flex items-center gap-2 text-cyan-100 font-medium transition-all active:scale-95";
+        pill.onclick=function(){selectFavItem(item);};
+
+        // Badge shows type clearly
+        const typeBadge = isExact
+            ? '<span class="text-[9px] font-black text-cyan-400 bg-cyan-950/60 border border-cyan-800/40 px-1 py-0.5 rounded">📌 '+item.baseGrams+'g</span>'
+            : '<span class="text-[9px] font-black text-teal-400 bg-teal-950/60 border border-teal-800/40 px-1 py-0.5 rounded">⚖️ /100g</span>';
+
+        pill.innerHTML=
+            '<span class="flex flex-col gap-0.5">'
+            +  '<span class="font-bold text-cyan-100 leading-tight">'+sanitize(item.name)+'</span>'
+            +  '<span class="flex items-center gap-1.5">'+typeBadge+'<span class="text-teal-300 font-bold text-[10px]">'+item.calories+' kcal</span></span>'
+            +'</span>'
+            +'<span onclick="deleteFavItem('+idx+', event)" class="text-[10px] text-slate-600 hover:text-rose-400 font-black pl-1 ml-auto">✕</span>';
         favsEl.appendChild(pill);
     });
 
     // Timeline
-    const groupsEl = document.getElementById('food-timeline-groups');
-    groupsEl.innerHTML = '';
-    if (state.logs.length === 0) {
-        groupsEl.innerHTML = '<div class="text-center text-xs text-slate-500 font-medium py-4">No items logged today.</div>';
-        return;
+    const groupsEl=document.getElementById('food-timeline-groups');
+    groupsEl.innerHTML='';
+    if (state.logs.length===0) {
+        groupsEl.innerHTML='<div class="text-center text-xs text-slate-500 font-medium py-4">No items logged today.</div>'; return;
     }
-
-    const buckets = { "🌅 Breakfast":[], "☀️ Lunch":[], "🌙 Dinner":[], "🍿 Snacks":[] };
-    state.logs.forEach(function(item, index) { buckets[categorizeMealType(item.time)].push({ item: item, index: index }); });
-
+    const buckets={"🌅 Breakfast":[],"☀️ Lunch":[],"🌙 Dinner":[],"🍿 Snacks":[]};
+    state.logs.forEach(function(item,index){buckets[categorizeMealType(item.time)].push({item,index});});
     Object.keys(buckets).forEach(function(key) {
-        const entries = buckets[key];
-        if (entries.length === 0) return;
-        const block = document.createElement('div');
-        block.className = "space-y-1.5 border-l-2 border-teal-800/40 pl-3 ml-1";
-        const subTotal = entries.reduce(function(s,e) { return s + e.item.calories; }, 0);
-        const title = document.createElement('h3');
-        title.className = "text-[11px] font-black text-cyan-400/80 uppercase tracking-wider mb-1 flex items-center justify-between";
-        title.innerHTML = '<span>' + key + '</span><span class="text-teal-300 font-bold text-[10px]">' + subTotal.toFixed(0) + ' kcal</span>';
+        const entries=buckets[key];
+        if (!entries.length) return;
+        const block=document.createElement('div');
+        block.className="space-y-1.5 border-l-2 border-teal-800/40 pl-3 ml-1";
+        const subTotal=entries.reduce(function(s,e){return s+e.item.calories;},0);
+        const title=document.createElement('h3');
+        title.className="text-[11px] font-black text-cyan-400/80 uppercase tracking-wider mb-1 flex items-center justify-between";
+        title.innerHTML='<span>'+key+'</span><span class="text-teal-300 font-bold text-[10px]">'+subTotal.toFixed(0)+' kcal</span>';
         block.appendChild(title);
-
         entries.forEach(function(entry) {
-            const item = entry.item;
-            const index = entry.index;
-            const servingLbl = item.servingGrams ? ' • ' + item.servingGrams + 'g' : '';
-            const row = document.createElement('div');
-            row.className = "bg-[#0a1620]/60 border border-cyan-900/30 rounded-xl p-2.5 flex justify-between items-center text-xs";
-            row.innerHTML = '<div><div class="font-bold text-cyan-100">' + sanitize(item.name) + '</div><div class="text-[10px] text-cyan-500/70 mt-0.5">⏱️ ' + sanitize(item.time || 'N/A') + servingLbl + ' • P: ' + item.protein + 'g • C: ' + item.carbs + 'g • F: ' + item.fats + 'g</div></div><div class="flex items-center gap-3"><span class="font-black text-teal-300">' + item.calories + ' kcal</span><button onclick="deleteLogItem(' + index + ')" class="text-slate-600 hover:text-rose-400 font-bold px-1 text-sm">✕</button></div>';
+            const item=entry.item, index=entry.index;
+            const servingLbl=item.servingGrams?' • '+item.servingGrams+'g':'';
+            const row=document.createElement('div');
+            row.className="bg-[#0a1620]/60 border border-cyan-900/30 rounded-xl p-2.5 flex justify-between items-center text-xs";
+            row.innerHTML='<div><div class="font-bold text-cyan-100">'+sanitize(item.name)+'</div><div class="text-[10px] text-cyan-500/70 mt-0.5">⏱️ '+sanitize(item.time||'N/A')+sanitize(servingLbl)+' • P: '+item.protein+'g • C: '+item.carbs+'g • F: '+item.fats+'g</div></div><div class="flex items-center gap-3"><span class="font-black text-teal-300">'+item.calories+' kcal</span><button onclick="deleteLogItem('+index+')" class="text-slate-600 hover:text-rose-400 font-bold px-1 text-sm">✕</button></div>';
             block.appendChild(row);
         });
         groupsEl.appendChild(block);
     });
 }
 
+function deleteLogItem(idx) {
+    if (idx<0||idx>=state.logs.length) return;
+    state.logs.splice(idx,1); saveAndRender();
+}
+
 // ─────────────────────────────────────────────
 // BACKUP / IMPORT
 // ─────────────────────────────────────────────
-
 function runDualBackupEngine() {
-    const jsonStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
-    const a = document.createElement('a');
-    a.setAttribute("href", jsonStr);
-    a.setAttribute("download", "nutra_pro_backup_" + new Date().toISOString().split('T')[0] + ".json");
+    const a=document.createElement('a');
+    a.setAttribute("href","data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(state)));
+    a.setAttribute("download","nutra_pro_backup_"+new Date().toISOString().split('T')[0]+".json");
     document.body.appendChild(a); a.click(); a.remove();
-
-    if (state.calorieHistory.length === 0) return;
-    const rows = state.calorieHistory.map(function(h) {
-        return { Date:h.date, ISODate:h.isoDate, Year:h.year, Month:h.monthName, Week:h.weekOfMonth, EatenKcal:h.eaten, TargetKcal:h.target, TdeeKcal:h.tdee, Steps:h.steps, ProteinG:h.protein, CarbsG:h.carbs, FatsG:h.fats, FiberG:h.fiber };
-    });
-    const ws = XLSX.utils.json_to_sheet(rows);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Calorie Ledger");
-    XLSX.writeFile(wb, "nutra_pro_ledger_" + new Date().getFullYear() + ".xlsx");
+    if (!state.calorieHistory.length) return;
+    const rows=state.calorieHistory.map(function(h){return{Date:h.date,ISODate:h.isoDate,Year:h.year,Month:h.monthName,Week:h.weekOfMonth,EatenKcal:h.eaten,TargetKcal:h.target,TdeeKcal:h.tdee,Steps:h.steps,ProteinG:h.protein,CarbsG:h.carbs,FatsG:h.fats,FiberG:h.fiber};});
+    const ws=XLSX.utils.json_to_sheet(rows);
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,"Calorie Ledger");
+    XLSX.writeFile(wb,"nutra_pro_ledger_"+new Date().getFullYear()+".xlsx");
 }
-
 function importStateData(e) {
-    const fr = new FileReader();
-    fr.onload = function(ev) {
+    const fr=new FileReader();
+    fr.onload=function(ev){
         try {
-            const parsed = JSON.parse(ev.target.result);
-            const required = ['profile', 'targets', 'logs', 'favorites', 'calorieHistory', 'weightHistory'];
-            const isValid = required.every(function(k) { return k in parsed; })
-                         && typeof parsed.profile.weight === 'number'
-                         && Array.isArray(parsed.logs);
-            if (!isValid) throw new Error('Schema mismatch');
-            state = migrateState(parsed);
-            saveAndRender();
-            initInputs();
+            const parsed=JSON.parse(ev.target.result);
+            const required=['profile','targets','logs','favorites','calorieHistory','weightHistory'];
+            if (!required.every(function(k){return k in parsed;})||typeof parsed.profile.weight!=='number'||!Array.isArray(parsed.logs)) throw new Error('Schema mismatch');
+            state=migrateState(parsed); saveAndRender(); initInputs();
             alert("State imported successfully!");
-        } catch(err) {
-            alert("Invalid backup file: " + err.message);
-        }
+        } catch(err) { alert("Invalid backup file: "+err.message); }
     };
     fr.readAsText(e.target.files[0]);
 }
@@ -1443,59 +1407,52 @@ function importStateData(e) {
 // ─────────────────────────────────────────────
 // WEIGHT FORM
 // ─────────────────────────────────────────────
-
-document.getElementById('weight-log-form').addEventListener('submit', function(e) {
+document.getElementById('weight-log-form').addEventListener('submit',function(e){
     e.preventDefault();
-    const val = parseFloat(document.getElementById('daily-weight-val').value);
-    if (!val || isNaN(val)) return;
-    const shortLbl = DateUtils.toShortLabel(new Date());
-    const idx = state.weightHistory.findIndex(function(en) { return en.date === shortLbl; });
-    if (idx > -1) state.weightHistory[idx].weight = val;
-    else state.weightHistory.push({ date: shortLbl, weight: val });
-
-    state.profile.weight = val;
-    document.getElementById('weight-input').value = val;
-
-    if (state.profile.baseWeight == null || isNaN(state.profile.baseWeight)) {
-        state.profile.baseWeight = val;
-        document.getElementById('base-weight-input').value = val;
-        alert('Base Weight auto-set to ' + val + 'kg. Update in Profile if needed.');
+    const val=parseFloat(document.getElementById('daily-weight-val').value);
+    if (!val||isNaN(val)) return;
+    const shortLbl=DateUtils.toShortLabel(new Date());
+    const idx=state.weightHistory.findIndex(function(en){return en.date===shortLbl;});
+    if (idx>-1) state.weightHistory[idx].weight=val;
+    else state.weightHistory.push({date:shortLbl,weight:val});
+    state.profile.weight=val;
+    document.getElementById('weight-input').value=val;
+    if (state.profile.baseWeight==null||isNaN(state.profile.baseWeight)) {
+        state.profile.baseWeight=val;
+        document.getElementById('base-weight-input').value=val;
+        alert('Base Weight auto-set to '+val+'kg. Update in Profile if needed.');
     }
-    document.getElementById('daily-weight-val').value = '';
-    calculateTargets();
-    renderWeightUI();
+    document.getElementById('daily-weight-val').value='';
+    calculateTargets(); renderWeightUI();
 });
 
 // ─────────────────────────────────────────────
 // PROFILE FORM
 // ─────────────────────────────────────────────
-
-document.getElementById('tdee-form').addEventListener('submit', function(e) {
+document.getElementById('tdee-form').addEventListener('submit',function(e){
     e.preventDefault();
-    const bwRaw = parseFloat(document.getElementById('base-weight-input').value);
-    state.profile = {
-        weight: parseFloat(document.getElementById('weight-input').value),
-        baseWeight: isNaN(bwRaw) ? state.profile.baseWeight : bwRaw,
-        goalWeight: parseFloat(document.getElementById('goal-weight-input').value),
+    const bwRaw=parseFloat(document.getElementById('base-weight-input').value);
+    state.profile={
+        weight:         parseFloat(document.getElementById('weight-input').value),
+        baseWeight:     isNaN(bwRaw)?state.profile.baseWeight:bwRaw,
+        goalWeight:     parseFloat(document.getElementById('goal-weight-input').value),
         durationMonths: parseInt(document.getElementById('duration-input').value),
-        height: parseFloat(document.getElementById('height-input').value),
-        age: parseInt(document.getElementById('age-input').value),
-        activity: 1.2
+        height:         parseFloat(document.getElementById('height-input').value),
+        age:            parseInt(document.getElementById('age-input').value),
+        activity:       1.2
     };
     calculateTargets();
-    if (!document.getElementById('view-weight').classList.contains('hidden')) {
-        renderWeightUI();
-    }
+    if (!document.getElementById('view-weight').classList.contains('hidden')) renderWeightUI();
     alert("Profile updated!");
 });
 
 // ─────────────────────────────────────────────
-// INIT
+// BOOT
 // ─────────────────────────────────────────────
-
-window.onload = function() {
+window.onload=function(){
     initInputs();
     calculateTargets();
+    setServingMode('manual');
 };
 </script>
 </body>
